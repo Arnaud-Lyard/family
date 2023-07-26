@@ -1,0 +1,36 @@
+{
+  "name": "portfolio-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "generate": "graphql-codegen"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.7.10",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-brands-svg-icons": "^6.4.0",
+    "@fortawesome/free-regular-svg-icons": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/vue-fontawesome": "^3.0.3",
+    "@graphql-codegen/cli": "^3.2.2",
+    "@graphql-codegen/typescript-operations": "^3.0.2",
+    "@graphql-codegen/typescript-vue-apollo": "^3.3.7",
+    "@vue/apollo-composable": "4.0.0-beta.4",
+    "cli@3.2.2": "link:graphql-codegen/cli@3.2.2",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
+    "pinia": "^2.0.33",
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.1.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.2.1",
+    "vue-tsc": "^1.2.0"
+  }
+}
