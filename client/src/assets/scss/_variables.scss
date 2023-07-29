@@ -5,11 +5,29 @@ $tertiary: #b2dbbf;
 $black: #2e2f35;
 $white: #fff;
 
+$border-grey: rgb(216, 218, 232);
+$grey-light: rgb(149, 157, 175);
+
+/* font size */
 $xxl: 2em;
 $xl: 1.5em;
 $nm: 1em;
 $xs: 0.75em;
 $xxs: 0.5em;
+
+/* media queries */
+$sm: 300px;
+$md: 500px;
+$lg: 700px;
+$xlg: 900px;
+
+/* space */
+$space-xxs: 0.3rem;
+$space-xs: 0.6rem;
+$space-s: 1rem;
+$space-md: 2rem;
+$space-lg: 3rem;
+$space-xl: 6rem;
 
 @font-face {
   font-family: "Titillium Web Black";

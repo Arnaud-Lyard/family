@@ -1,0 +1,63 @@
+.side-form {
+  min-width: 600px;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 10px;
+  @media screen and (max-width: $xlg) {
+    display: none;
+  }
+}
+.login {
+  display: flex;
+  flex-wrap: wrap;
+  width: 600px;
+  padding: $space-md;
+
+  label {
+    width: 100%;
+    font-size: $nm;
+    font-family: "Titillium Web Bold";
+    color: $black;
+  }
+  input {
+    width: 100%;
+    margin-bottom: $space-xs;
+    font-size: $nm;
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    text-align: left;
+    border: 1px solid $border-grey;
+    border-radius: 5px;
+    padding: 8px 8px 8px 8px;
+    font-family: "Titillium Web Regular";
+    overflow: hidden;
+    color: $primary;
+
+    &::placeholder {
+      font-size: 1em;
+    }
+
+    &[value] {
+      font-size: 1em;
+      font-family: Avenir-Book;
+      color: $grey-light;
+    }
+  }
+  button {
+    width: 100%;
+    margin-top: $space-md;
+  }
+}
+
+/* login form */
+.login-background {
+  background-image: url("/images/familly.jpg");
+}
+/* register form */
+.register-background {
+  background-image: url("/images/vue-js.png");
+}

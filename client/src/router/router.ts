@@ -3,11 +3,13 @@ import Home from "../pages/Home.vue";
 import { useUserStore } from "../store";
 import Dashboard from "../pages/Dashboard.vue";
 import Login from "../pages/Login.vue";
+import Register from "../pages/Register.vue";
 
 const routes = [
   { path: "/", component: Home, name: "home" },
   { path: "/dashboard", component: Dashboard, name: "dashboard" },
-  { path: "/login", component: Login, name: "login" },
+  { path: "/connexion", component: Login, name: "login" },
+  { path: "/inscription", component: Register, name: "register" },
 ];
 
 const router = createRouter({
