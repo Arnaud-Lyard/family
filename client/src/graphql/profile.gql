@@ -1,7 +1,5 @@
 query Profile {
   profile {
-    id
-    email
-    role
+    username
   }
 }

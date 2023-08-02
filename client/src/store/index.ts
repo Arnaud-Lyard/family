@@ -1,39 +1,27 @@
 import { defineStore } from "pinia";
-import {
-  useProfileLazyQuery,
-  useProfileQuery,
-} from "../graphql/generated/schema";
+import { useProfileQuery } from "../graphql/generated/schema";
 
 interface State {
-  email: string;
-  id: number | null;
+  username: string;
 }
 
 export const useUserStore = defineStore("user", {
   state: (): State => {
     return {
-      email: "",
-      id: null,
+      username: "",
     };
   },
   getters: {
-    getUserEmail(state) {
-      return state.email;
+    getUserUsername(state) {
+      return state.username;
     },
   },
   actions: {
     async userProfile() {
-      try {
-        const { result, onResult } = useProfileQuery();
-        onResult(() => {
-          if (result.value) {
-            this.email = result.value.profile.email;
-            this.id = result.value.profile.id;
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
+      const { result, onResult } = useProfileQuery();
+      onResult(() => {
+        this.username = result.value!.profile.username;
+      });
     },
   },
 });

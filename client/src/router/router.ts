@@ -17,10 +17,10 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
-  const userStore = useUserStore();
-  const authUser = userStore.email;
-  if (to.name === "dashboard" && !authUser) next({ name: "login" });
-  else next();
-});
+// router.beforeEach(async (to, from, next) => {
+//   const userStore = useUserStore();
+//   const authUser = userStore.username;
+//   if (to.name === "dashboard" && !authUser) next({ name: "login" });
+//   else next();
+// });
 export default router;

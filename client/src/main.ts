@@ -64,10 +64,10 @@ const apolloClient = new ApolloClient({
   cache,
   defaultOptions: {
     query: {
-      errorPolicy: "ignore",
+      errorPolicy: "all",
     },
     mutate: {
-      errorPolicy: "ignore",
+      errorPolicy: "all",
     },
   },
 });
