@@ -1,8 +1,8 @@
-import { IsEmail, Matches, MinLength } from "class-validator";
+import { IsEmail, IsString, Matches, MinLength } from "class-validator";
 import { Field, InputType } from "type-graphql";
 
 @InputType()
-export class UserInputDto {
+export class UserRegisterInputDto {
   @Field()
   @IsEmail()
   email: string;
@@ -11,4 +11,25 @@ export class UserInputDto {
   @MinLength(8)
   @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/)
   password: string;
+
+  @Field()
+  @MinLength(8)
+  username: string;
+}
+
+@InputType()
+export class UserLoginInputDto {
+  @Field()
+  @IsEmail()
+  email: string;
+
+  @Field()
+  @IsString()
+  password: string;
+}
+
+export interface UserToBeRegistered {
+  username: string;
+  email: string;
+  hashedPassword: string;
 }

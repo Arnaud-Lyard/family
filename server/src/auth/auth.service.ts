@@ -16,9 +16,4 @@ export class AuthService {
     hashedPassword: string
   ): Promise<boolean> =>
     await verify(hashedPassword, plainPassword, this.hashingOptions);
-
-  static getSafeAttributes = (user: User): User => ({
-    ...user,
-    hashedPassword: undefined,
-  });
 }

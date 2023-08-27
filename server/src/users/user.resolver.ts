@@ -1,31 +1,50 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import datasource from "../database";
-import User from "./entities/user.entity";
+import User, { UserLoggedIn } from "./entities/user.entity";
 import { ContextType } from "../index";
 import jwt from "jsonwebtoken";
 import config from "../config/config";
-import { UserInputDto } from "./dto/userInputDto";
+import {
+  UserLoginInputDto,
+  UserRegisterInputDto,
+  UserToBeRegistered,
+} from "./dto/userInputDto";
 import { AuthService } from "../auth/auth.service";
 
 @Resolver(User)
 export class UserResolver {
-  @Mutation(() => User)
-  async register(@Arg("data") data: UserInputDto): Promise<User> {
-    const exisitingUser = await datasource
+  @Mutation(() => UserLoggedIn)
+  async register(
+    @Arg("data") data: UserRegisterInputDto
+  ): Promise<UserLoggedIn> {
+    const exisitingEmail = await datasource
       .getRepository(User)
       .findOne({ where: { email: data.email } });
 
-    if (exisitingUser !== null) throw new Error("EMAIL_ALREADY_EXISTS");
+    if (exisitingEmail !== null) throw new Error("INTERNAL_SERVER_ERROR");
+
+    const existingUsername = await datasource
+      .getRepository(User)
+      .findOne({ where: { username: data.username } });
+
+    if (existingUsername !== null) throw new Error("USERNAME_ALREADY_EXISTS");
 
     const hashedPassword = await AuthService.hashPassword(data.password);
-    return await datasource
-      .getRepository(User)
-      .save({ ...data, hashedPassword });
+
+    const user: UserToBeRegistered = {
+      username: data.username,
+      email: data.email,
+      hashedPassword: hashedPassword,
+    };
+
+    const userRegistered = await datasource.getRepository(User).save(user);
+
+    return { username: userRegistered.username };
   }
 
   @Mutation(() => String)
   async login(
-    @Arg("data") { email, password }: UserInputDto,
+    @Arg("data") { email, password }: UserLoginInputDto,
     @Ctx() ctx: ContextType
   ): Promise<string> {
     const user = await datasource
@@ -34,10 +53,9 @@ export class UserResolver {
 
     if (
       user === null ||
-      typeof user.hashedPassword !== "string" ||
       !(await AuthService.verifyPassword(password, user.hashedPassword))
     )
-      throw new Error("invalid credentials");
+      throw new Error("INVALID_CREDENTIALS");
 
     const token = jwt.sign({ userId: user.id }, config.JWT_PRIVATE_KEY);
 
@@ -56,8 +74,11 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Query(() => User)
-  async profile(@Ctx() ctx: ContextType): Promise<User> {
-    return AuthService.getSafeAttributes(ctx.currentUser as User);
+  @Query(() => UserLoggedIn)
+  async profile(@Ctx() ctx: ContextType): Promise<UserLoggedIn> {
+    const profile = await datasource.getRepository(User).findOne({
+      where: { id: ctx.currentUser?.id },
+    });
+    return { username: profile?.username } as UserLoggedIn;
   }
 }

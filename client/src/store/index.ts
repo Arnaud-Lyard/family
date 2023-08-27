@@ -1,39 +1,36 @@
 import { defineStore } from "pinia";
-import {
-  useProfileLazyQuery,
-  useProfileQuery,
-} from "../graphql/generated/schema";
+import { useProfileQuery } from "../graphql/generated/schema";
+import router from "../router/router";
 
 interface State {
-  email: string;
-  id: number | null;
+  username: string;
 }
 
 export const useUserStore = defineStore("user", {
   state: (): State => {
     return {
-      email: "",
-      id: null,
+      username: JSON.parse(localStorage.getItem("username")!),
     };
   },
   getters: {
-    getUserEmail(state) {
-      return state.email;
+    getUsername: (state) => state.username,
+    isLoggedIn: (state) => {
+      return state.username ? true : false;
     },
   },
   actions: {
-    async userProfile() {
-      try {
-        const { result, onResult } = useProfileQuery();
-        onResult(() => {
-          if (result.value) {
-            this.email = result.value.profile.email;
-            this.id = result.value.profile.id;
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
+    login() {
+      const { result, onResult } = useProfileQuery();
+      onResult(() => {
+        this.username = result.value!.profile.username;
+        localStorage.setItem("username", JSON.stringify(this.username));
+        router.push({ name: "dashboard" });
+      });
+    },
+    logout() {
+      this.username = "";
+      localStorage.removeItem("username");
+      router.push({ name: "login" });
     },
   },
 });

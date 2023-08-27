@@ -20,58 +20,67 @@ export type Mutation = {
   __typename?: 'Mutation';
   login: Scalars['String'];
   logout: Scalars['String'];
-  register: User;
+  register: UserLoggedIn;
 };
 
 
 export type MutationLoginArgs = {
-  data: UserInputDto;
+  data: UserLoginInputDto;
 };
 
 
 export type MutationRegisterArgs = {
-  data: UserInputDto;
+  data: UserRegisterInputDto;
 };
 
 export type Query = {
   __typename?: 'Query';
-  profile: User;
+  profile: UserLoggedIn;
 };
 
-export type User = {
-  __typename?: 'User';
-  email: Scalars['String'];
-  id: Scalars['Float'];
-  role: Scalars['String'];
+export type UserLoggedIn = {
+  __typename?: 'UserLoggedIn';
+  username: Scalars['String'];
 };
 
-export type UserInputDto = {
+export type UserLoginInputDto = {
   email: Scalars['String'];
   password: Scalars['String'];
 };
 
+export type UserRegisterInputDto = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+  username: Scalars['String'];
+};
+
 export type LoginMutationVariables = Exact<{
-  data: UserInputDto;
+  data: UserLoginInputDto;
 }>;
 
 
 export type LoginMutation = { __typename?: 'Mutation', login: string };
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: string };
+
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: number, email: string, role: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserLoggedIn', username: string } };
 
 export type RegisterMutationVariables = Exact<{
-  data: UserInputDto;
+  data: UserRegisterInputDto;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', id: number, email: string, role: string } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserLoggedIn', username: string } };
 
 
 export const LoginDocument = gql`
-    mutation Login($data: UserInputDto!) {
+    mutation Login($data: UserLoginInputDto!) {
   login(data: $data)
 }
     `;
@@ -97,12 +106,33 @@ export function useLoginMutation(options: VueApolloComposable.UseMutationOptions
   return VueApolloComposable.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
 }
 export type LoginMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LoginMutation, LoginMutationVariables>;
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useLogoutMutation();
+ */
+export function useLogoutMutation(options: VueApolloComposable.UseMutationOptions<LogoutMutation, LogoutMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<LogoutMutation, LogoutMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+}
+export type LogoutMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LogoutMutation, LogoutMutationVariables>;
 export const ProfileDocument = gql`
     query Profile {
   profile {
-    id
-    email
-    role
+    username
   }
 }
     `;
@@ -127,11 +157,9 @@ export function useProfileLazyQuery(options: VueApolloComposable.UseQueryOptions
 }
 export type ProfileQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<ProfileQuery, ProfileQueryVariables>;
 export const RegisterDocument = gql`
-    mutation Register($data: UserInputDto!) {
+    mutation Register($data: UserRegisterInputDto!) {
   register(data: $data) {
-    id
-    email
-    role
+    username
   }
 }
     `;
