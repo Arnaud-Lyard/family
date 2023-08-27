@@ -7,7 +7,12 @@ import Register from "../pages/Register.vue";
 
 const routes = [
   { path: "/", component: Home, name: "home" },
-  { path: "/dashboard", component: Dashboard, name: "dashboard" },
+  {
+    path: "/dashboard",
+    component: Dashboard,
+    name: "dashboard",
+    meta: { requiresAuth: true },
+  },
   { path: "/connexion", component: Login, name: "login" },
   { path: "/inscription", component: Register, name: "register" },
 ];
@@ -17,10 +22,15 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach(async (to, from, next) => {
-//   const userStore = useUserStore();
-//   const authUser = userStore.username;
-//   if (to.name === "dashboard" && !authUser) next({ name: "login" });
-//   else next();
-// });
+router.beforeEach((to, from) => {
+  const userStore = useUserStore();
+  const isLoggedIn = userStore.isLoggedIn;
+  console.log("islogged", isLoggedIn);
+
+  if (to.meta.requiresAuth && !isLoggedIn && to.name !== "login") {
+    return {
+      name: "login",
+    };
+  }
+});
 export default router;

@@ -93,8 +93,7 @@ const submitForm = async () => {
       } else if (errors && errors[0].message.length > 0) {
         errorRegister.value = "Une erreur est survenue."
       } else {
-        userStore.userProfile();
-        router.push({ name: "dashboard" });
+        router.push({ name: "login" });
       }
     })
   }

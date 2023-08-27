@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useProfileQuery } from "../graphql/generated/schema";
+import router from "../router/router";
 
 interface State {
   username: string;
@@ -8,20 +9,28 @@ interface State {
 export const useUserStore = defineStore("user", {
   state: (): State => {
     return {
-      username: "",
+      username: JSON.parse(localStorage.getItem("username")!),
     };
   },
   getters: {
-    getUserUsername(state) {
-      return state.username;
+    getUsername: (state) => state.username,
+    isLoggedIn: (state) => {
+      return state.username ? true : false;
     },
   },
   actions: {
-    async userProfile() {
+    login() {
       const { result, onResult } = useProfileQuery();
       onResult(() => {
         this.username = result.value!.profile.username;
+        localStorage.setItem("username", JSON.stringify(this.username));
+        router.push({ name: "dashboard" });
       });
+    },
+    logout() {
+      this.username = "";
+      localStorage.removeItem("username");
+      router.push({ name: "login" });
     },
   },
 });

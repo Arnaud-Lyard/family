@@ -82,11 +82,7 @@ const app = createApp({
   render: () => h(App),
 });
 
-app
-  .component("font-awesome-icon", FontAwesomeIcon)
-  .use(router)
-  .use(pinia)
-  .mount("#app");
-
-const userStore = useUserStore();
-userStore.userProfile();
+app.component("font-awesome-icon", FontAwesomeIcon);
+app.use(pinia);
+app.use(router);
+app.mount("#app");
