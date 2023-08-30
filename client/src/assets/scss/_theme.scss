@@ -1,0 +1,87 @@
+@import "variables";
+$theme-map: null;
+@mixin theme() {
+  $theme-map: null !global;
+  @each $theme, $map in $themes {
+    $theme-map: $map !global;
+    .#{$theme} {
+    }
+  }
+}
+@include theme();
+
+@function theme-get($key) {
+  @return map-get($theme-map, $key);
+}
+
+.light-theme {
+  &.preference {
+    background-color: $--color-white;
+    color: $--color-black;
+    box-shadow: 4px 0 5px -2px $--color-border-grey;
+  }
+  nav {
+    background-color: $--color-white;
+    box-shadow: 0 0 10px $--color-border-grey;
+    li {
+      span {
+        color: $--color-black;
+      }
+      .router-link-active,
+      router-link-exact-active {
+        color: $--color-primary;
+      }
+      a {
+        color: $--color-black;
+        &:hover {
+          color: $--color-primary;
+        }
+        &::after {
+          background-color: $--color-primary;
+        }
+        &.router-link-active::after {
+          background-color: $--color-primary;
+        }
+      }
+    }
+  }
+  &.container {
+    background-color: $--color-white;
+  }
+}
+
+.dark-theme {
+  &.preference {
+    background-color: $--color-primary;
+    color: $--color-white;
+    box-shadow: 4px 0 5px -2px $--color-primary;
+  }
+  nav {
+    background-color: $--color-primary;
+    box-shadow: 0 0 10px $--color-primary;
+    li {
+      span {
+        color: $--color-white;
+      }
+      .router-link-active,
+      router-link-exact-active {
+        color: $--color-tertiary;
+      }
+      a {
+        color: $--color-white;
+        &:hover {
+          color: $--color-tertiary;
+        }
+        &::after {
+          background-color: $--color-tertiary;
+        }
+        &.router-link-active::after {
+          background-color: $--color-tertiary;
+        }
+      }
+    }
+  }
+  &.container {
+    background-color: $--color-primary-light;
+  }
+}

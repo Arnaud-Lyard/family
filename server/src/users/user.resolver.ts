@@ -1,6 +1,6 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import datasource from "../database";
-import User, { UserLoggedIn } from "./entities/user.entity";
+import User, { UserInformations, UserLoggedIn } from "./entities/user.entity";
 import { ContextType } from "../index";
 import jwt from "jsonwebtoken";
 import config from "../config/config";
@@ -80,5 +80,16 @@ export class UserResolver {
       where: { id: ctx.currentUser?.id },
     });
     return { username: profile?.username } as UserLoggedIn;
+  }
+  @Authorized()
+  @Query(() => UserInformations)
+  async personnalInformations(
+    @Ctx() ctx: ContextType
+  ): Promise<UserInformations> {
+    const personnalInformations = await datasource.getRepository(User).findOne({
+      where: { id: ctx.currentUser?.id },
+    });
+    if (!personnalInformations) throw new Error("INTERNAL_SERVER_ERROR");
+    return personnalInformations;
   }
 }

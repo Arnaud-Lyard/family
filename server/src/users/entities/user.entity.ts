@@ -36,3 +36,13 @@ export class UserLoggedIn
   @Field()
   username: string;
 }
+
+@ObjectType()
+export class UserInformations implements Omit<User, "hashedPassword" | "role"> {
+  @Field()
+  id: number;
+  @Field()
+  username: string;
+  @Field()
+  email: string;
+}
