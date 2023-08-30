@@ -4,9 +4,16 @@ import { useUserStore } from "../store";
 import Dashboard from "../pages/Dashboard.vue";
 import Login from "../pages/Login.vue";
 import Register from "../pages/Register.vue";
+import Profile from "../pages/Profile.vue";
 
 const routes = [
   { path: "/", component: Home, name: "home" },
+  {
+    path: "/profil",
+    component: Profile,
+    name: "profile",
+    meta: { requiresAuth: true },
+  },
   {
     path: "/dashboard",
     component: Dashboard,
@@ -25,8 +32,6 @@ const router = createRouter({
 router.beforeEach((to, from) => {
   const userStore = useUserStore();
   const isLoggedIn = userStore.isLoggedIn;
-  console.log("islogged", isLoggedIn);
-
   if (to.meta.requiresAuth && !isLoggedIn && to.name !== "login") {
     return {
       name: "login",

@@ -35,7 +35,15 @@ export type MutationRegisterArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  personnalInformations: UserInformations;
   profile: UserLoggedIn;
+};
+
+export type UserInformations = {
+  __typename?: 'UserInformations';
+  email: Scalars['String'];
+  id: Scalars['Float'];
+  username: Scalars['String'];
 };
 
 export type UserLoggedIn = {
@@ -65,6 +73,11 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: string };
+
+export type PersonnalInformationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PersonnalInformationsQuery = { __typename?: 'Query', personnalInformations: { __typename?: 'UserInformations', username: string, email: string } };
 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -129,6 +142,34 @@ export function useLogoutMutation(options: VueApolloComposable.UseMutationOption
   return VueApolloComposable.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
 }
 export type LogoutMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LogoutMutation, LogoutMutationVariables>;
+export const PersonnalInformationsDocument = gql`
+    query PersonnalInformations {
+  personnalInformations {
+    username
+    email
+  }
+}
+    `;
+
+/**
+ * __usePersonnalInformationsQuery__
+ *
+ * To run a query within a Vue component, call `usePersonnalInformationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePersonnalInformationsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = usePersonnalInformationsQuery();
+ */
+export function usePersonnalInformationsQuery(options: VueApolloComposable.UseQueryOptions<PersonnalInformationsQuery, PersonnalInformationsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<PersonnalInformationsQuery, PersonnalInformationsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<PersonnalInformationsQuery, PersonnalInformationsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<PersonnalInformationsQuery, PersonnalInformationsQueryVariables>(PersonnalInformationsDocument, {}, options);
+}
+export function usePersonnalInformationsLazyQuery(options: VueApolloComposable.UseQueryOptions<PersonnalInformationsQuery, PersonnalInformationsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<PersonnalInformationsQuery, PersonnalInformationsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<PersonnalInformationsQuery, PersonnalInformationsQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<PersonnalInformationsQuery, PersonnalInformationsQueryVariables>(PersonnalInformationsDocument, {}, options);
+}
+export type PersonnalInformationsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<PersonnalInformationsQuery, PersonnalInformationsQueryVariables>;
 export const ProfileDocument = gql`
     query Profile {
   profile {

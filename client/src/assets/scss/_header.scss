@@ -1,5 +1,4 @@
 header {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   img {
     width: 40px;
@@ -7,7 +6,6 @@ header {
   }
   nav {
     display: flex;
-    background-color: $white;
     padding: 1rem;
     color: $black;
     width: 100%;
@@ -25,21 +23,11 @@ header {
       @media screen and (max-width: $lg) {
         padding: 0 5px;
       }
-
-      .router-link-active,
-      router-link-exact-active {
-        color: $primary;
-      }
-
       a {
         position: relative;
         text-decoration: none;
-        color: $black;
         font-size: $nm;
         font-family: "Titillium Web Bold";
-        &:hover {
-          color: $primary;
-        }
         &::after {
           content: "";
           position: absolute;
@@ -48,7 +36,6 @@ header {
           height: 2px;
           top: 48px;
           left: 0;
-          background-color: $primary;
           transform: scaleX(0);
           transition: transform 0.3s ease;
         }
@@ -57,7 +44,6 @@ header {
         }
         &.router-link-active::after {
           transform: scaleX(1);
-          background-color: $primary;
         }
       }
       button,

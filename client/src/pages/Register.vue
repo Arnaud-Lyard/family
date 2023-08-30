@@ -1,24 +1,24 @@
 <template>
-  <div class="container flex flex-center">
+  <div class="container-center flex flex-center-align">
     <div class="side-form login-background"></div>
     <form @submit.prevent="submitForm()" class="login">
-      <label for="username">Nom d'utilisateur :</label>
+      <label for="username">Username :</label>
       <input @keyup="validateUsername()" @blue="validateUsername()" v-model.trim="username" type="text" name="email"
         id="username" required>
       <div class="error regular">{{ errorUsername }}</div>
-      <label for="email">Adresse email :</label>
+      <label for="email">Email address :</label>
       <input @keyup="validateEmail()" @blue="validateEmail()" v-model.trim="email" type="email" name="email" id="email"
         required>
       <div class="error regular">{{ errorEmail }}</div>
-      <label for="password">Mot de passe :</label>
+      <label for="password">Password :</label>
       <input @keyup="validatePassword(); validatePasswordConfirm()" @blue="validatePassword(); validatePasswordConfirm()"
         v-model.trim="password" type="password" name="password" id="password" required>
       <div class="error regular">{{ errorPassword }}</div>
-      <label for="password">Confirmer mot de passe :</label>
+      <label for="password">Password confirm :</label>
       <input @keyup="validatePasswordConfirm()" @blue="validatePasswordConfirm()" v-model.trim="passwordConfirm"
         type="password" name="passwordConfirm" id="passwordConfirm" required>
       <div class="error regular">{{ errorPasswordConfirm }}</div>
-      <button type="submit" class="button">Inscription</button>
+      <button type="submit" class="button">Registration</button>
       <div class="error regular">{{ errorRegister }}</div>
     </form>
   </div>
@@ -26,11 +26,9 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useUserStore } from '../store';
 import { useRouter } from 'vue-router';
 import { useRegisterMutation } from '../graphql/generated/schema';
 
-const userStore = useUserStore();
 const router = useRouter();
 
 const username = ref<string>("");
@@ -44,18 +42,18 @@ const errorUsername = ref<string>("");
 const errorRegister = ref<string>("");
 
 const validateEmail = () => {
-  errorEmail.value = email.value === "" ? "Le champ est requis." : "";
+  errorEmail.value = email.value === "" ? "The field is required." : "";
   let re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   errorEmail.value = !re.test(email.value)
-    ? `L'adresse ${email.value} n'est pas une adresse email valide.`
+    ? `Email address ${email.value} is not a valid email address.`
     : "";
 };
 
 const validatePassword = () => {
   const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
   errorPassword.value = !regex.test(password.value)
-    ? "Le mot de passe doit contenir au moins 8 caractères dont une majuscule et un chiffre."
+    ? "The password must contain at least 8 characters including a capital letter and a number."
     : "";
 };
 
@@ -63,13 +61,13 @@ const validatePasswordConfirm = () => {
   if (passwordConfirm.value.length > 0) {
     errorPasswordConfirm.value =
       password.value !== passwordConfirm.value
-        ? "Les mots de passe ne correspondent pas."
+        ? "Passwords do not match."
         : "";
   }
 };
 
 const validateUsername = () => {
-  errorUsername.value = username.value.length < 3 ? "Le nom d'utilisateur doit contenir au moins 3 caractères." : "";
+  errorUsername.value = username.value.length < 3 ? "Username must contain at least 3 characters." : "";
 }
 const submitForm = async () => {
   if (!errorEmail.value && !errorPassword.value && !errorPasswordConfirm.value && !errorUsername.value) {
@@ -89,9 +87,9 @@ const submitForm = async () => {
     email.value = "";
     onDone(({ errors }) => {
       if (errors && errors[0].message === "USERNAME_ALREADY_EXISTS") {
-        errorRegister.value = "Nom d'utilisateur déjà utilisé.";
+        errorRegister.value = "Username already in use.";
       } else if (errors && errors[0].message.length > 0) {
-        errorRegister.value = "Une erreur est survenue."
+        errorRegister.value = "Error, please try again later."
       } else {
         router.push({ name: "login" });
       }

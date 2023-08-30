@@ -1,0 +1,6 @@
+query PersonnalInformations {
+  personnalInformations {
+    username
+    email
+  }
+}

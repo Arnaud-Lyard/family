@@ -20,9 +20,9 @@ export const useUserStore = defineStore("user", {
   },
   actions: {
     login() {
-      const { result, onResult } = useProfileQuery();
-      onResult(() => {
-        this.username = result.value!.profile.username;
+      const { onResult } = useProfileQuery();
+      onResult(({ data }) => {
+        this.username = data.profile.username;
         localStorage.setItem("username", JSON.stringify(this.username));
         router.push({ name: "dashboard" });
       });

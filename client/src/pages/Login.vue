@@ -1,12 +1,12 @@
 <template>
-  <div class="container flex flex-center">
+  <div class="container flex flex-center-align">
     <div class="side-form login-background"></div>
     <form @submit.prevent="submitForm()" class="login">
-      <label for="email">Adresse email :</label>
+      <label for="email">Email address :</label>
       <input v-model.trim="email" type="email" name="email" id="email" required>
-      <label for="password">Mot de passe :</label>
+      <label for="password">Password :</label>
       <input v-model.trim="password" type="password" name="password" id="password" required>
-      <button type="submit" class="button">Connexion</button>
+      <button type="submit" class="button">Connection</button>
       <div class="error regular">{{ errorLogin }}</div>
     </form>
   </div>
@@ -36,9 +36,9 @@ const submitForm = () => {
   email.value = "";
   onDone(({ errors }) => {
     if (errors && errors[0].message === "INVALID_CREDENTIALS") {
-      errorLogin.value = "Identifiants invalides.";
+      errorLogin.value = "Invalid credentials.";
     } else if (errors && errors[0].message.length > 0) {
-      errorLogin.value = "Une erreur est survenue."
+      errorLogin.value = "Error, please try again later."
     } else {
       userStore.login()
     }
