@@ -92,4 +92,38 @@ export class UserResolver {
     if (!personnalInformations) throw new Error("INTERNAL_SERVER_ERROR");
     return personnalInformations;
   }
+  @Authorized()
+  @Mutation(() => UserInformations)
+  async promoteUser(
+    @Ctx() ctx: ContextType,
+    @Arg("data") userId: number
+  ): Promise<UserInformations> {
+    try {
+      if (ctx.currentUser?.role === "superadmin") {
+        const userToBePromoted = await datasource.getRepository(User).findOne({
+          where: { id: userId },
+        });
+        if (!userToBePromoted) throw new Error("INTERNAL_SERVER_ERROR");
+        userToBePromoted.role = "admin";
+        await datasource.getRepository(User).save(userToBePromoted);
+        return userToBePromoted;
+      } else {
+        throw new Error("INTERNAL_SERVER_ERROR");
+      }
+    } catch (err) {
+      console.error(err);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
+  @Authorized()
+  @Query(() => [UserInformations])
+  async getAllUsers(): Promise<UserInformations[]> {
+    try {
+      const users = await datasource.getRepository(User).find();
+      return users;
+    } catch (err) {
+      console.error(err);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
 }

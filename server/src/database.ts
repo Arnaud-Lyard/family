@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import User from "./users/entities/user.entity";
 import config from "./config/config";
+import { Article } from "./articles/entities/article.entity";
 
 export default new DataSource({
   type: "postgres",
@@ -10,6 +11,6 @@ export default new DataSource({
   password: config.DB_PASSWORD,
   database: config.DB_NAME,
   synchronize: true,
-  entities: [User],
+  entities: [User, Article],
   logging: ["error"],
 });
