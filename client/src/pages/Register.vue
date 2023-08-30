@@ -1,5 +1,5 @@
 <template>
-  <div class="container-center flex flex-center">
+  <div class="container-center flex flex-center-align">
     <div class="side-form login-background"></div>
     <form @submit.prevent="submitForm()" class="login">
       <label for="username">Username :</label>

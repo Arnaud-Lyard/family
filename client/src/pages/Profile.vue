@@ -1,5 +1,5 @@
 <template>
-    <div class="container-center flex flex-center">
+    <div class="container-center flex flex-center-align">
         <form @submit.prevent="submitForm()" class="login">
             <label for="email">Nom d'utilisateur :</label>
             <input v-model.trim="username" type="text" name="username" id="username" disabled required>
