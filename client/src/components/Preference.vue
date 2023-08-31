@@ -1,8 +1,8 @@
 <template >
-  <nav class="preference" v-if="isLoggedIn && isPreferenceActive">
+  <nav class="preference" v-if="isPreferenceActive">
     <ul>
       <li @click="$emit('lightMode'), selectMode('light')">
-        <i :class="activePreference">
+        <i :class="activeLightPreference">
           <font-awesome-icon icon="fa-solid fa-lightbulb" />
         </i>
       </li>
@@ -18,7 +18,7 @@
 import { computed, ref } from 'vue';
 import { useUserStore } from '../store';
 import { useDrawerActive } from '../composables/drawerActive';
-
+import { usePreferenceActive } from '../composables/preferenceActive';
 
 const userStore = useUserStore();
 const isLoggedIn = computed(() => {
@@ -26,24 +26,17 @@ const isLoggedIn = computed(() => {
 })
 
 const { isPreferenceActive } = useDrawerActive();
-
+const { isLightTheme, isDarkTheme, activeLightPreference, activeDarkPreference } = usePreferenceActive();
 const emit = defineEmits(['lightMode', 'darkMode'])
 
-const isLightModeActive = ref(true);
-const isDarkModeActive = ref(false);
-const activePreference = computed(() => ({
-  'light-active': isLightModeActive.value
-}))
-const activeDarkPreference = computed(() => ({
-  'dark-active': isDarkModeActive.value
-}))
+
 function selectMode(mode: string) {
   if (mode === 'light') {
-    isLightModeActive.value = true;
-    isDarkModeActive.value = false;
+    isLightTheme.value = true;
+    isDarkTheme.value = false;
   } else if (mode === 'dark') {
-    isLightModeActive.value = false;
-    isDarkModeActive.value = true;
+    isLightTheme.value = false;
+    isDarkTheme.value = true;
   }
 }
 </script>

@@ -41,6 +41,8 @@ export class UserLoggedIn
 {
   @Field()
   username: string;
+  @Field()
+  role?: Role;
 }
 
 @ObjectType()

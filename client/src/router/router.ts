@@ -5,6 +5,8 @@ import Dashboard from "../pages/Dashboard.vue";
 import Login from "../pages/Login.vue";
 import Register from "../pages/Register.vue";
 import Profile from "../pages/Profile.vue";
+import Admin from "../pages/Admin.vue";
+import SuperAdmin from "../pages/SuperAdmin.vue";
 
 const routes = [
   { path: "/", component: Home, name: "home" },
@@ -12,6 +14,18 @@ const routes = [
     path: "/profil",
     component: Profile,
     name: "profile",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/admin",
+    component: Admin,
+    name: "admin",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/superadmin",
+    component: SuperAdmin,
+    name: "superadmin",
     meta: { requiresAuth: true },
   },
   {

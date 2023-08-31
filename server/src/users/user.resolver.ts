@@ -79,7 +79,7 @@ export class UserResolver {
     const profile = await datasource.getRepository(User).findOne({
       where: { id: ctx.currentUser?.id },
     });
-    return { username: profile?.username } as UserLoggedIn;
+    return { username: profile?.username, role: profile?.role } as UserLoggedIn;
   }
   @Authorized()
   @Query(() => UserInformations)

@@ -20,6 +20,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   login: Scalars['String'];
   logout: Scalars['String'];
+  promoteUser: UserInformations;
   register: UserLoggedIn;
 };
 
@@ -29,12 +30,18 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationPromoteUserArgs = {
+  data: Scalars['Float'];
+};
+
+
 export type MutationRegisterArgs = {
   data: UserRegisterInputDto;
 };
 
 export type Query = {
   __typename?: 'Query';
+  getAllUsers: Array<UserInformations>;
   personnalInformations: UserInformations;
   profile: UserLoggedIn;
 };
@@ -48,6 +55,7 @@ export type UserInformations = {
 
 export type UserLoggedIn = {
   __typename?: 'UserLoggedIn';
+  role: Scalars['String'];
   username: Scalars['String'];
 };
 
@@ -61,6 +69,11 @@ export type UserRegisterInputDto = {
   password: Scalars['String'];
   username: Scalars['String'];
 };
+
+export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: Array<{ __typename?: 'UserInformations', id: number, username: string }> };
 
 export type LoginMutationVariables = Exact<{
   data: UserLoginInputDto;
@@ -82,7 +95,7 @@ export type PersonnalInformationsQuery = { __typename?: 'Query', personnalInform
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserLoggedIn', username: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserLoggedIn', username: string, role: string } };
 
 export type RegisterMutationVariables = Exact<{
   data: UserRegisterInputDto;
@@ -92,6 +105,34 @@ export type RegisterMutationVariables = Exact<{
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserLoggedIn', username: string } };
 
 
+export const GetAllUsersDocument = gql`
+    query GetAllUsers {
+  getAllUsers {
+    id
+    username
+  }
+}
+    `;
+
+/**
+ * __useGetAllUsersQuery__
+ *
+ * To run a query within a Vue component, call `useGetAllUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllUsersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetAllUsersQuery();
+ */
+export function useGetAllUsersQuery(options: VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, {}, options);
+}
+export function useGetAllUsersLazyQuery(options: VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, {}, options);
+}
+export type GetAllUsersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetAllUsersQuery, GetAllUsersQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($data: UserLoginInputDto!) {
   login(data: $data)
@@ -174,6 +215,7 @@ export const ProfileDocument = gql`
     query Profile {
   profile {
     username
+    role
   }
 }
     `;
