@@ -42,7 +42,7 @@ export class UserLoggedIn
   @Field()
   username: string;
   @Field()
-  role?: Role;
+  role: Role;
 }
 
 @ObjectType()
@@ -55,4 +55,16 @@ export class UserInformations
   username: string;
   @Field()
   email: string;
+}
+@ObjectType()
+export class UserAdminList
+  implements Omit<User, "hashedPassword" | "email" | "articles">
+{
+  @Field()
+  id: number;
+  @Field()
+  username: string;
+
+  @Field()
+  role: Role;
 }

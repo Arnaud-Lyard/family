@@ -16,6 +16,13 @@ export type Scalars = {
   Float: number;
 };
 
+export type Article = {
+  __typename?: 'Article';
+  content: Scalars['String'];
+  id: Scalars['Float'];
+  title: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   login: Scalars['String'];
@@ -31,7 +38,7 @@ export type MutationLoginArgs = {
 
 
 export type MutationPromoteUserArgs = {
-  data: Scalars['Float'];
+  data: PromoteUserInputDto;
 };
 
 
@@ -39,11 +46,23 @@ export type MutationRegisterArgs = {
   data: UserRegisterInputDto;
 };
 
+export type PromoteUserInputDto = {
+  id: Scalars['Float'];
+};
+
 export type Query = {
   __typename?: 'Query';
-  getAllUsers: Array<UserInformations>;
+  articles: Array<Article>;
+  getAllAdminUsers: Array<UserAdminList>;
   personnalInformations: UserInformations;
   profile: UserLoggedIn;
+};
+
+export type UserAdminList = {
+  __typename?: 'UserAdminList';
+  id: Scalars['Float'];
+  role: Scalars['String'];
+  username: Scalars['String'];
 };
 
 export type UserInformations = {
@@ -70,10 +89,10 @@ export type UserRegisterInputDto = {
   username: Scalars['String'];
 };
 
-export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllAdminUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: Array<{ __typename?: 'UserInformations', id: number, username: string }> };
+export type GetAllAdminUsersQuery = { __typename?: 'Query', getAllAdminUsers: Array<{ __typename?: 'UserAdminList', id: number, username: string, role: string }> };
 
 export type LoginMutationVariables = Exact<{
   data: UserLoginInputDto;
@@ -97,6 +116,13 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserLoggedIn', username: string, role: string } };
 
+export type PromoteUserMutationVariables = Exact<{
+  data: PromoteUserInputDto;
+}>;
+
+
+export type PromoteUserMutation = { __typename?: 'Mutation', promoteUser: { __typename?: 'UserInformations', username: string } };
+
 export type RegisterMutationVariables = Exact<{
   data: UserRegisterInputDto;
 }>;
@@ -105,34 +131,35 @@ export type RegisterMutationVariables = Exact<{
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserLoggedIn', username: string } };
 
 
-export const GetAllUsersDocument = gql`
-    query GetAllUsers {
-  getAllUsers {
+export const GetAllAdminUsersDocument = gql`
+    query getAllAdminUsers {
+  getAllAdminUsers {
     id
     username
+    role
   }
 }
     `;
 
 /**
- * __useGetAllUsersQuery__
+ * __useGetAllAdminUsersQuery__
  *
- * To run a query within a Vue component, call `useGetAllUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllUsersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * To run a query within a Vue component, call `useGetAllAdminUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllAdminUsersQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useGetAllUsersQuery();
+ * const { result, loading, error } = useGetAllAdminUsersQuery();
  */
-export function useGetAllUsersQuery(options: VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, {}, options);
+export function useGetAllAdminUsersQuery(options: VueApolloComposable.UseQueryOptions<GetAllAdminUsersQuery, GetAllAdminUsersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllAdminUsersQuery, GetAllAdminUsersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllAdminUsersQuery, GetAllAdminUsersQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetAllAdminUsersQuery, GetAllAdminUsersQueryVariables>(GetAllAdminUsersDocument, {}, options);
 }
-export function useGetAllUsersLazyQuery(options: VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllUsersQuery, GetAllUsersQueryVariables>> = {}) {
-  return VueApolloComposable.useLazyQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, {}, options);
+export function useGetAllAdminUsersLazyQuery(options: VueApolloComposable.UseQueryOptions<GetAllAdminUsersQuery, GetAllAdminUsersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllAdminUsersQuery, GetAllAdminUsersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllAdminUsersQuery, GetAllAdminUsersQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetAllAdminUsersQuery, GetAllAdminUsersQueryVariables>(GetAllAdminUsersDocument, {}, options);
 }
-export type GetAllUsersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetAllUsersQuery, GetAllUsersQueryVariables>;
+export type GetAllAdminUsersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetAllAdminUsersQuery, GetAllAdminUsersQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($data: UserLoginInputDto!) {
   login(data: $data)
@@ -239,6 +266,35 @@ export function useProfileLazyQuery(options: VueApolloComposable.UseQueryOptions
   return VueApolloComposable.useLazyQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, {}, options);
 }
 export type ProfileQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<ProfileQuery, ProfileQueryVariables>;
+export const PromoteUserDocument = gql`
+    mutation PromoteUser($data: PromoteUserInputDto!) {
+  promoteUser(data: $data) {
+    username
+  }
+}
+    `;
+
+/**
+ * __usePromoteUserMutation__
+ *
+ * To run a mutation, you first call `usePromoteUserMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `usePromoteUserMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = usePromoteUserMutation({
+ *   variables: {
+ *     data: // value for 'data'
+ *   },
+ * });
+ */
+export function usePromoteUserMutation(options: VueApolloComposable.UseMutationOptions<PromoteUserMutation, PromoteUserMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<PromoteUserMutation, PromoteUserMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<PromoteUserMutation, PromoteUserMutationVariables>(PromoteUserDocument, options);
+}
+export type PromoteUserMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<PromoteUserMutation, PromoteUserMutationVariables>;
 export const RegisterDocument = gql`
     mutation Register($data: UserRegisterInputDto!) {
   register(data: $data) {

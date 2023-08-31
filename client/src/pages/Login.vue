@@ -1,5 +1,5 @@
 <template>
-  <div class="container flex flex-center-align">
+  <div class="container flex flex-justify-center flex-align-center">
     <div class="side-form login-background"></div>
     <form @submit.prevent="submitForm()" class="login">
       <label for="email">Email address :</label>

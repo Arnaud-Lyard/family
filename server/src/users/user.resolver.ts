@@ -1,10 +1,15 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import datasource from "../database";
-import User, { UserInformations, UserLoggedIn } from "./entities/user.entity";
+import User, {
+  UserAdminList,
+  UserInformations,
+  UserLoggedIn,
+} from "./entities/user.entity";
 import { ContextType } from "../index";
 import jwt from "jsonwebtoken";
 import config from "../config/config";
 import {
+  PromoteUserInputDto,
   UserLoginInputDto,
   UserRegisterInputDto,
   UserToBeRegistered,
@@ -39,7 +44,7 @@ export class UserResolver {
 
     const userRegistered = await datasource.getRepository(User).save(user);
 
-    return { username: userRegistered.username };
+    return { username: userRegistered.username, role: userRegistered.role };
   }
 
   @Mutation(() => String)
@@ -96,12 +101,12 @@ export class UserResolver {
   @Mutation(() => UserInformations)
   async promoteUser(
     @Ctx() ctx: ContextType,
-    @Arg("data") userId: number
+    @Arg("data") { id }: PromoteUserInputDto
   ): Promise<UserInformations> {
     try {
       if (ctx.currentUser?.role === "superadmin") {
         const userToBePromoted = await datasource.getRepository(User).findOne({
-          where: { id: userId },
+          where: { id: id },
         });
         if (!userToBePromoted) throw new Error("INTERNAL_SERVER_ERROR");
         userToBePromoted.role = "admin";
@@ -116,8 +121,8 @@ export class UserResolver {
     }
   }
   @Authorized()
-  @Query(() => [UserInformations])
-  async getAllUsers(): Promise<UserInformations[]> {
+  @Query(() => [UserAdminList])
+  async getAllAdminUsers(): Promise<UserAdminList[]> {
     try {
       const users = await datasource.getRepository(User).find();
       return users;

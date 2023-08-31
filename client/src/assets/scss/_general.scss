@@ -20,15 +20,17 @@ body {
 .flex {
   display: flex;
 }
-.flex-center {
+.flex-justify-center {
   justify-content: center;
 }
-.flex-center-align {
-  justify-content: center;
+.flex-align-center {
   align-items: center;
 }
-.flex-end {
+.flex-justify-end {
   justify-content: flex-end;
+}
+.flex-direction-column {
+  flex-direction: column;
 }
 .error {
   color: red;
