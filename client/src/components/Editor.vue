@@ -84,12 +84,15 @@
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import { useDrawerActive } from '../composables/drawerActive';
+import { watch } from 'vue';
 
-const props = defineProps(['modelValue'])
+const props = defineProps<{
+  modelValue: string
+}>()
+
 const emit = defineEmits(['update:modelValue'])
 
 const { drawerActive } = useDrawerActive();
-
 
 const editor = useEditor({
   extensions: [
@@ -97,7 +100,16 @@ const editor = useEditor({
   ],
   content: props.modelValue,
   onUpdate: ({ editor }) => {
-    emit('update:modelValue', editor.getJSON())
+    emit('update:modelValue', editor.getHTML())
   }
 })
+
+watch(() => props.modelValue, (newValue, oldValue) => {
+  const isSame = newValue === oldValue;
+  if (isSame) {
+    return;
+  }
+  editor.value?.commands.setContent(newValue, false)
+});
+
 </script>

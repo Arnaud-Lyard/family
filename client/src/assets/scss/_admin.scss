@@ -4,3 +4,37 @@
 .button-center {
   margin-top: 10px;
 }
+.admin {
+  label {
+    width: 100%;
+    font-size: $nm;
+    font-family: "Titillium Web Bold";
+    color: $black;
+  }
+  input {
+    width: 100%;
+    margin-bottom: $space-xs;
+    font-size: $nm;
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    text-align: left;
+    border: 1px solid $border-grey;
+    border-radius: 5px;
+    font-family: "Titillium Web Regular";
+    overflow: hidden;
+    color: $primary;
+
+    &::placeholder {
+      font-size: 1em;
+    }
+
+    &[value] {
+      font-size: 1em;
+      font-family: Avenir-Book;
+      color: $grey-light;
+    }
+  }
+}

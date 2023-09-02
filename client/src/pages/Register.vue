@@ -1,7 +1,7 @@
 <template>
   <div class="container-center flex flex-justify-center flex-align-center">
     <div class="side-form login-background"></div>
-    <form @submit.prevent="submitForm()" class="login">
+    <form @submit.prevent="submitForm()" class="form">
       <label for="username">Username :</label>
       <input @keyup="validateUsername()" @blue="validateUsername()" v-model.trim="username" type="text" name="email"
         id="username" required>

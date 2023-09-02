@@ -23,12 +23,18 @@ export type Article = {
   title: Scalars['String'];
 };
 
+export type GetArticleInputDto = {
+  id: Scalars['Float'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   login: Scalars['String'];
   logout: Scalars['String'];
   promoteUser: UserInformations;
   register: UserLoggedIn;
+  saveArticle: Article;
+  updateArticle: Article;
 };
 
 
@@ -46,6 +52,16 @@ export type MutationRegisterArgs = {
   data: UserRegisterInputDto;
 };
 
+
+export type MutationSaveArticleArgs = {
+  data: SaveArticleInputDto;
+};
+
+
+export type MutationUpdateArticleArgs = {
+  data: UpdateArticleInputDto;
+};
+
 export type PromoteUserInputDto = {
   id: Scalars['Float'];
 };
@@ -53,9 +69,27 @@ export type PromoteUserInputDto = {
 export type Query = {
   __typename?: 'Query';
   articles: Array<Article>;
+  getAdminArticles: Array<Article>;
   getAllAdminUsers: Array<UserAdminList>;
+  getArticleByIdForAdmin: Article;
   personnalInformations: UserInformations;
   profile: UserLoggedIn;
+};
+
+
+export type QueryGetArticleByIdForAdminArgs = {
+  data: GetArticleInputDto;
+};
+
+export type SaveArticleInputDto = {
+  content: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type UpdateArticleInputDto = {
+  content: Scalars['String'];
+  id: Scalars['Float'];
+  title: Scalars['String'];
 };
 
 export type UserAdminList = {
@@ -89,10 +123,22 @@ export type UserRegisterInputDto = {
   username: Scalars['String'];
 };
 
+export type GetAdminArticlesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAdminArticlesQuery = { __typename?: 'Query', getAdminArticles: Array<{ __typename?: 'Article', id: number, title: string, content: string }> };
+
 export type GetAllAdminUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllAdminUsersQuery = { __typename?: 'Query', getAllAdminUsers: Array<{ __typename?: 'UserAdminList', id: number, username: string, role: string }> };
+
+export type GetArticleByIdForAdminQueryVariables = Exact<{
+  data: GetArticleInputDto;
+}>;
+
+
+export type GetArticleByIdForAdminQuery = { __typename?: 'Query', getArticleByIdForAdmin: { __typename?: 'Article', id: number, title: string, content: string } };
 
 export type LoginMutationVariables = Exact<{
   data: UserLoginInputDto;
@@ -130,7 +176,50 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserLoggedIn', username: string } };
 
+export type SaveArticleMutationVariables = Exact<{
+  data: SaveArticleInputDto;
+}>;
 
+
+export type SaveArticleMutation = { __typename?: 'Mutation', saveArticle: { __typename?: 'Article', title: string, content: string } };
+
+export type UpdateArticleMutationVariables = Exact<{
+  data: UpdateArticleInputDto;
+}>;
+
+
+export type UpdateArticleMutation = { __typename?: 'Mutation', updateArticle: { __typename?: 'Article', id: number, title: string, content: string } };
+
+
+export const GetAdminArticlesDocument = gql`
+    query GetAdminArticles {
+  getAdminArticles {
+    id
+    title
+    content
+  }
+}
+    `;
+
+/**
+ * __useGetAdminArticlesQuery__
+ *
+ * To run a query within a Vue component, call `useGetAdminArticlesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdminArticlesQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetAdminArticlesQuery();
+ */
+export function useGetAdminArticlesQuery(options: VueApolloComposable.UseQueryOptions<GetAdminArticlesQuery, GetAdminArticlesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAdminArticlesQuery, GetAdminArticlesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAdminArticlesQuery, GetAdminArticlesQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetAdminArticlesQuery, GetAdminArticlesQueryVariables>(GetAdminArticlesDocument, {}, options);
+}
+export function useGetAdminArticlesLazyQuery(options: VueApolloComposable.UseQueryOptions<GetAdminArticlesQuery, GetAdminArticlesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAdminArticlesQuery, GetAdminArticlesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAdminArticlesQuery, GetAdminArticlesQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetAdminArticlesQuery, GetAdminArticlesQueryVariables>(GetAdminArticlesDocument, {}, options);
+}
+export type GetAdminArticlesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetAdminArticlesQuery, GetAdminArticlesQueryVariables>;
 export const GetAllAdminUsersDocument = gql`
     query getAllAdminUsers {
   getAllAdminUsers {
@@ -160,6 +249,38 @@ export function useGetAllAdminUsersLazyQuery(options: VueApolloComposable.UseQue
   return VueApolloComposable.useLazyQuery<GetAllAdminUsersQuery, GetAllAdminUsersQueryVariables>(GetAllAdminUsersDocument, {}, options);
 }
 export type GetAllAdminUsersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetAllAdminUsersQuery, GetAllAdminUsersQueryVariables>;
+export const GetArticleByIdForAdminDocument = gql`
+    query GetArticleByIdForAdmin($data: GetArticleInputDto!) {
+  getArticleByIdForAdmin(data: $data) {
+    id
+    title
+    content
+  }
+}
+    `;
+
+/**
+ * __useGetArticleByIdForAdminQuery__
+ *
+ * To run a query within a Vue component, call `useGetArticleByIdForAdminQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArticleByIdForAdminQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetArticleByIdForAdminQuery({
+ *   data: // value for 'data'
+ * });
+ */
+export function useGetArticleByIdForAdminQuery(variables: GetArticleByIdForAdminQueryVariables | VueCompositionApi.Ref<GetArticleByIdForAdminQueryVariables> | ReactiveFunction<GetArticleByIdForAdminQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetArticleByIdForAdminQuery, GetArticleByIdForAdminQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetArticleByIdForAdminQuery, GetArticleByIdForAdminQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetArticleByIdForAdminQuery, GetArticleByIdForAdminQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetArticleByIdForAdminQuery, GetArticleByIdForAdminQueryVariables>(GetArticleByIdForAdminDocument, variables, options);
+}
+export function useGetArticleByIdForAdminLazyQuery(variables: GetArticleByIdForAdminQueryVariables | VueCompositionApi.Ref<GetArticleByIdForAdminQueryVariables> | ReactiveFunction<GetArticleByIdForAdminQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetArticleByIdForAdminQuery, GetArticleByIdForAdminQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetArticleByIdForAdminQuery, GetArticleByIdForAdminQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetArticleByIdForAdminQuery, GetArticleByIdForAdminQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetArticleByIdForAdminQuery, GetArticleByIdForAdminQueryVariables>(GetArticleByIdForAdminDocument, variables, options);
+}
+export type GetArticleByIdForAdminQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetArticleByIdForAdminQuery, GetArticleByIdForAdminQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($data: UserLoginInputDto!) {
   login(data: $data)
@@ -324,3 +445,64 @@ export function useRegisterMutation(options: VueApolloComposable.UseMutationOpti
   return VueApolloComposable.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
 }
 export type RegisterMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<RegisterMutation, RegisterMutationVariables>;
+export const SaveArticleDocument = gql`
+    mutation SaveArticle($data: SaveArticleInputDto!) {
+  saveArticle(data: $data) {
+    title
+    content
+  }
+}
+    `;
+
+/**
+ * __useSaveArticleMutation__
+ *
+ * To run a mutation, you first call `useSaveArticleMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useSaveArticleMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useSaveArticleMutation({
+ *   variables: {
+ *     data: // value for 'data'
+ *   },
+ * });
+ */
+export function useSaveArticleMutation(options: VueApolloComposable.UseMutationOptions<SaveArticleMutation, SaveArticleMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<SaveArticleMutation, SaveArticleMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<SaveArticleMutation, SaveArticleMutationVariables>(SaveArticleDocument, options);
+}
+export type SaveArticleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SaveArticleMutation, SaveArticleMutationVariables>;
+export const UpdateArticleDocument = gql`
+    mutation UpdateArticle($data: UpdateArticleInputDto!) {
+  updateArticle(data: $data) {
+    id
+    title
+    content
+  }
+}
+    `;
+
+/**
+ * __useUpdateArticleMutation__
+ *
+ * To run a mutation, you first call `useUpdateArticleMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateArticleMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateArticleMutation({
+ *   variables: {
+ *     data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateArticleMutation(options: VueApolloComposable.UseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<UpdateArticleMutation, UpdateArticleMutationVariables>(UpdateArticleDocument, options);
+}
+export type UpdateArticleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateArticleMutation, UpdateArticleMutationVariables>;
