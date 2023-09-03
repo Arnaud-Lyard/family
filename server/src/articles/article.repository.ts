@@ -37,15 +37,12 @@ export class ArticleRepository {
       title: params.title,
       content: params.content,
     });
-    console.log("article", article);
     return article;
   }
-  getOneArticleById(articleId: number): Promise<Article | null> {
-    const article = DataSource.getRepository(Article).findOne({
-      where: {
-        id: articleId,
-      },
+  static async getAllArticlesWithUsers(): Promise<Article[]> {
+    const articles = await DataSource.getRepository(Article).find({
+      relations: ["user"],
     });
-    return article;
+    return articles;
   }
 }

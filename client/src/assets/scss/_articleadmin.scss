@@ -1,5 +1,10 @@
 .articleAdmin {
   width: 33%;
+  padding: 10px;
+  border: 2px solid $--color-primary;
+  margin: 10px;
+  border-radius: 10px;
+  font-family: "Titillium Web Regular";
   li {
     list-style-type: none;
     padding: 5px 0;
@@ -7,8 +12,11 @@
       margin-left: 10px;
       &:hover {
         cursor: pointer;
-        color: $primary;
+        color: $--color-primary;
       }
+    }
+    hr {
+      margin-top: 5px;
     }
   }
 }

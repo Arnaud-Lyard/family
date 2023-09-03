@@ -21,6 +21,7 @@ export type Article = {
   content: Scalars['String'];
   id: Scalars['Float'];
   title: Scalars['String'];
+  user: User;
 };
 
 export type GetArticleInputDto = {
@@ -71,6 +72,7 @@ export type Query = {
   articles: Array<Article>;
   getAdminArticles: Array<Article>;
   getAllAdminUsers: Array<UserAdminList>;
+  getAllArticles: Array<Article>;
   getArticleByIdForAdmin: Article;
   personnalInformations: UserInformations;
   profile: UserLoggedIn;
@@ -90,6 +92,15 @@ export type UpdateArticleInputDto = {
   content: Scalars['String'];
   id: Scalars['Float'];
   title: Scalars['String'];
+};
+
+export type User = {
+  __typename?: 'User';
+  articles: Array<Article>;
+  email: Scalars['String'];
+  id: Scalars['Float'];
+  role: Scalars['String'];
+  username: Scalars['String'];
 };
 
 export type UserAdminList = {
@@ -127,6 +138,11 @@ export type GetAdminArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAdminArticlesQuery = { __typename?: 'Query', getAdminArticles: Array<{ __typename?: 'Article', id: number, title: string, content: string }> };
+
+export type GetAllArticlesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllArticlesQuery = { __typename?: 'Query', getAllArticles: Array<{ __typename?: 'Article', id: number, title: string, content: string, user: { __typename?: 'User', username: string } }> };
 
 export type GetAllAdminUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -220,6 +236,38 @@ export function useGetAdminArticlesLazyQuery(options: VueApolloComposable.UseQue
   return VueApolloComposable.useLazyQuery<GetAdminArticlesQuery, GetAdminArticlesQueryVariables>(GetAdminArticlesDocument, {}, options);
 }
 export type GetAdminArticlesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetAdminArticlesQuery, GetAdminArticlesQueryVariables>;
+export const GetAllArticlesDocument = gql`
+    query GetAllArticles {
+  getAllArticles {
+    id
+    title
+    content
+    user {
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllArticlesQuery__
+ *
+ * To run a query within a Vue component, call `useGetAllArticlesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllArticlesQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetAllArticlesQuery();
+ */
+export function useGetAllArticlesQuery(options: VueApolloComposable.UseQueryOptions<GetAllArticlesQuery, GetAllArticlesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllArticlesQuery, GetAllArticlesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllArticlesQuery, GetAllArticlesQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetAllArticlesQuery, GetAllArticlesQueryVariables>(GetAllArticlesDocument, {}, options);
+}
+export function useGetAllArticlesLazyQuery(options: VueApolloComposable.UseQueryOptions<GetAllArticlesQuery, GetAllArticlesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllArticlesQuery, GetAllArticlesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllArticlesQuery, GetAllArticlesQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetAllArticlesQuery, GetAllArticlesQueryVariables>(GetAllArticlesDocument, {}, options);
+}
+export type GetAllArticlesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetAllArticlesQuery, GetAllArticlesQueryVariables>;
 export const GetAllAdminUsersDocument = gql`
     query getAllAdminUsers {
   getAllAdminUsers {

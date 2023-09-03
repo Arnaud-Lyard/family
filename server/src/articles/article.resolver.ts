@@ -92,4 +92,14 @@ export class ArticleResolver {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
+  @Query(() => [Article])
+  async getAllArticles(): Promise<Article[]> {
+    try {
+      const articles = await ArticleService.getAllArticles();
+      return articles;
+    } catch (error) {
+      console.error("Error during articles recuperation", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
 }

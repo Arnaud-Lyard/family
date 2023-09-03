@@ -14,7 +14,7 @@ export class Article {
   @Field()
   @Column()
   content: string;
-
+  @Field(() => User)
   @ManyToOne(() => User, (u) => u.articles)
   user: User;
 }
