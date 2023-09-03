@@ -71,6 +71,7 @@
     <button @click="editor.chain().focus().setHardBreak().run()">
       hard break
     </button>
+    <button @click="addImage">img</button>
     <button @click="editor.chain().focus().undo().run()" :disabled="!editor.can().chain().focus().undo().run()">
       undo
     </button>
@@ -79,12 +80,22 @@
     </button>
   </div>
   <editor-content :editor="editor" :class="drawerActive" />
+  <Modal v-show="isModalVisible" @confirm="confirmAddImage" @close="closeModal">
+    <template v-slot:header> Add image link :</template>
+    <template v-slot:body>
+      <form action="" class="form"><input v-model.trim="imageUrl" type="email" name="email" id="email" required></form>
+    </template>
+    <template v-slot:buttonOne> Save </template>
+    <template v-slot:buttonTwo> Cancel </template>
+  </Modal>
 </template>
 <script lang="ts" setup>
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import { useDrawerActive } from '../composables/drawerActive';
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
+import Modal from '../components/Modal.vue';
+import Image from '@tiptap/extension-image'
 
 const props = defineProps<{
   modelValue: string
@@ -97,6 +108,7 @@ const { drawerActive } = useDrawerActive();
 const editor = useEditor({
   extensions: [
     StarterKit,
+    Image
   ],
   content: props.modelValue,
   onUpdate: ({ editor }) => {
@@ -111,5 +123,20 @@ watch(() => props.modelValue, (newValue, oldValue) => {
   }
   editor.value?.commands.setContent(newValue, false)
 });
+
+const isModalVisible = ref(false);
+const imageUrl = ref("");
+
+function addImage() {
+  isModalVisible.value = true;
+}
+function closeModal() {
+  isModalVisible.value = false;
+}
+function confirmAddImage() {
+  editor.value?.chain().focus().setImage({ src: imageUrl.value }).run();
+  imageUrl.value = "";
+  closeModal();
+}
 
 </script>

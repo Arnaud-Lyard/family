@@ -10,6 +10,7 @@ specifiers:
   '@graphql-codegen/cli': ^3.2.2
   '@graphql-codegen/typescript-operations': ^3.0.2
   '@graphql-codegen/typescript-vue-apollo': ^3.3.7
+  '@tiptap/extension-image': ^2.1.7
   '@tiptap/pm': ^2.1.7
   '@tiptap/starter-kit': ^2.1.7
   '@tiptap/vue-3': ^2.1.7
@@ -36,6 +37,7 @@ dependencies:
   '@graphql-codegen/cli': 3.3.1_y6lvnfxrge3po4r22c5odzmnk4
   '@graphql-codegen/typescript-operations': 3.0.4_graphql@16.7.1
   '@graphql-codegen/typescript-vue-apollo': 3.3.7_eg4flnrjkhodfvzwuqnm4tav2u
+  '@tiptap/extension-image': 2.1.7_@tiptap+core@2.1.7
   '@tiptap/pm': 2.1.7
   '@tiptap/starter-kit': 2.1.7_@tiptap+pm@2.1.7
   '@tiptap/vue-3': 2.1.7_exxj5imylk3a7pighgnlbfzwbu
@@ -1872,6 +1874,14 @@ packages:
     dependencies:
       '@tiptap/core': 2.1.7_@tiptap+pm@2.1.7
       '@tiptap/pm': 2.1.7
+    dev: false
+
+  /@tiptap/extension-image/2.1.7_@tiptap+core@2.1.7:
+    resolution: {integrity: sha512-aWa/NPMc1U9Z6xuV0gk1O1nk4H7BAwQMwqXWdvUQCJhmW5+LJPdEiKvt3P6j+ClIN7sdyokZCgr6eGr817qTLA==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.1.7_@tiptap+pm@2.1.7
     dev: false
 
   /@tiptap/extension-italic/2.1.7_@tiptap+core@2.1.7:

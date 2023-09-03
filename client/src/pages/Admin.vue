@@ -13,7 +13,13 @@
         <div class="success regular">{{ successSaveArticle }}</div>
       </form>
     </div>
-    <ArticleAdmin :articles-list="articlesList" @select-article="changeArticle" @update-article="updateArticle" />
+    <ArticleAdmin :articles-list="articlesList" @select-article="changeArticle" @update-article="waitingConfirmation" />
+    <Modal v-show="isModalVisible" @confirm="updateArticle" @close="closeModal">
+      <template v-slot:header> Update article : {{ modalTitle }}</template>
+      <template v-slot:body> Do you want to confirm article edition ? </template>
+      <template v-slot:buttonOne> Save </template>
+      <template v-slot:buttonTwo> Cancel </template>
+    </Modal>
   </div>
 </template>
 <script lang="ts" setup>
@@ -24,6 +30,7 @@ import { useDrawerActive } from "../composables/drawerActive";
 import { useSaveArticleMutation, useGetArticleByIdForAdminQuery } from "../graphql/generated/schema"
 import { useGetAdminArticlesQuery } from "../graphql/generated/schema";
 import { useUpdateArticleMutation } from "../graphql/generated/schema";
+import Modal from "../components/Modal.vue";
 
 interface ArticleRegistered {
   id: number;
@@ -36,6 +43,9 @@ const errorSaveArticle = ref("")
 const successSaveArticle = ref("")
 const articlesList = ref<ArticleRegistered[]>([]);
 const isArticleExist = ref(false);
+const isModalVisible = ref(false);
+const modalTitle = ref("");
+const articleToUpdate = ref<number>(0);
 
 const validateTitle = () => {
   errorSaveArticle.value = title.value === "" ? "The title is required." : "";
@@ -97,16 +107,23 @@ function reinitArticle() {
   title.value = "";
 }
 
-function updateArticle(id: number) {
+function waitingConfirmation(article: ArticleRegistered) {
+  modalTitle.value = article.title
+  isModalVisible.value = true;
+  articleToUpdate.value = article.id;
+}
+
+function updateArticle() {
   const { mutate: sendUpdateArticleMutation } = useUpdateArticleMutation({
     variables: {
       data: {
-        id,
+        id: articleToUpdate.value,
         title: title.value,
         content: articleContent.value
       }
     }
   });
+  isModalVisible.value = false;
   sendUpdateArticleMutation();
   sendGetAdminArticlesQuery();
 }
@@ -116,4 +133,10 @@ const isButtonDisabled = computed(() => {
 
 const { drawerActive } = useDrawerActive();
 
+function closeModal() {
+  isModalVisible.value = false;
+}
+function openModal() {
+  isModalVisible.value = true;
+}
 </script>

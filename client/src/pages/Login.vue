@@ -1,6 +1,6 @@
 <template>
   <div class="container flex flex-justify-center flex-align-center">
-    <div class="side-form login-background"></div>
+    <div class="side-form login-background full-height"></div>
     <form @submit.prevent="submitForm()" class="form">
       <label for="email">Email address :</label>
       <input v-model.trim="email" type="email" name="email" id="email" required>
