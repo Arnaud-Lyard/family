@@ -1,19 +1,21 @@
 <template>
-  <div class="container flex flex-justify-center">
-    <div class="editor-bloc">
-      <Editor v-model:model-value="articleContent" />
-      <form class="admin" :class="drawerActive">
-        <label for="password">Title :</label>
-        <input @keyup="validateTitle(); validateTitle()" @blue="validateTitle()" v-model.trim="title" type="text"
-          name="title" id="title" required>
-        <button type="submit" class="button button-center" :disabled="isButtonDisabled" @click="submitForm">Create new
-          article</button>
-        <button class="button button-center ml-s" @click="reinitArticle()">Reset</button>
-        <div class="error regular">{{ errorSaveArticle }}</div>
-        <div class="success regular">{{ successSaveArticle }}</div>
-      </form>
+  <div class="container" :class="drawerActive">
+    <div class="admin flex flex-justify-center">
+      <div class="editor-bloc">
+        <Editor v-model:model-value="articleContent" />
+        <form class="form">
+          <label for="password">Title :</label>
+          <input @keyup="validateTitle(); validateTitle()" @blue="validateTitle()" v-model.trim="title" type="text"
+            name="title" id="title" required>
+          <button type="submit" class="button button-center" :disabled="isButtonDisabled" @click="submitForm">Create new
+            article</button>
+          <button class="button button-center" @click="reinitArticle()">Reset</button>
+          <div class="error regular">{{ errorSaveArticle }}</div>
+          <div class="success regular">{{ successSaveArticle }}</div>
+        </form>
+      </div>
+      <ArticleAdmin :articles-list="articlesList" @select-article="changeArticle" @update-article="waitingConfirmation" />
     </div>
-    <ArticleAdmin :articles-list="articlesList" @select-article="changeArticle" @update-article="waitingConfirmation" />
     <Modal v-show="isModalVisible" @confirm="updateArticle" @close="closeModal">
       <template v-slot:header> Update article : {{ modalTitle }}</template>
       <template v-slot:body> Do you want to confirm article edition ? </template>

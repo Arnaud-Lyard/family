@@ -1,5 +1,5 @@
 <template>
-  <div class="container-center flex flex-justify-center flex-align-center">
+  <div class="container flex flex-justify-center flex-align-center" :class="drawerActive">
     <div class="side-form register-background full-height"></div>
     <form @submit.prevent="submitForm()" class="form">
       <label for="username">Username :</label>
@@ -28,6 +28,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRegisterMutation } from '../graphql/generated/schema';
+import { useDrawerActive } from '../composables/drawerActive';
 
 const router = useRouter();
 
@@ -96,5 +97,7 @@ const submitForm = async () => {
     })
   }
 };
+
+const { drawerActive } = useDrawerActive();
 
 </script>

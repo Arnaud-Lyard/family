@@ -1,18 +1,21 @@
 <template>
-  <div class="container flex flex-direction-column flex-align-center superadmin">
-    <li v-for="user in usersList" :key="user.id">
-      {{ user.username }}
-      <label class="switch">
-        <input type="checkbox" v-model="user.isAdmin" @click="promoteUser(user.id)">
-        <span class="slider"></span>
-      </label>
-    </li>
+  <div class="container flex flex-direction-column flex-align-center" :class="drawerActive">
+    <div class="superadmin">
+      <li v-for="user in usersList" :key="user.id">
+        {{ user.username }}
+        <label class="switch">
+          <input type="checkbox" v-model="user.isAdmin" @click="promoteUser(user.id)">
+          <span class="slider"></span>
+        </label>
+      </li>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useGetAllAdminUsersQuery } from '../graphql/generated/schema';
 import { usePromoteUserMutation } from '../graphql/generated/schema';
+import { useDrawerActive } from '../composables/drawerActive';
 interface User {
   id: number;
   username: string;
@@ -44,5 +47,8 @@ function promoteUser(userId: number) {
   sendPromoteUserMutation();
   sendGetAllAdminUsersQuery();
 }
+
+const { drawerActive } = useDrawerActive();
+
 
 </script>

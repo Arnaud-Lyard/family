@@ -1,5 +1,8 @@
-header {
+.header {
+  position: fixed;
+  width: 100%;
   display: flex;
+  z-index: 2;
   img {
     width: 40px;
     height: 40px;

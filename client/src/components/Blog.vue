@@ -1,6 +1,6 @@
 <template>
   <div class="blog">
-    <h2>Blog</h2>
+    <h2>News</h2>
     <div v-for="article in articlesList" :key="article.id" class="article">
       <h3>{{ article.title }}</h3>
       <p v-html="article.content"></p>
@@ -25,7 +25,7 @@ onResult(({ data }) => {
       return {
         id: article.id,
         title: article.title,
-        content: article.content,
+        content: article.content.substring(0, 300) + "...",
         username: article.user.username
       }
     })

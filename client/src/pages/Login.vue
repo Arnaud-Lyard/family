@@ -1,5 +1,5 @@
 <template>
-  <div class="container flex flex-justify-center flex-align-center">
+  <div class="container flex flex-justify-center flex-align-center" :class="drawerActive">
     <div class="side-form login-background full-height"></div>
     <form @submit.prevent="submitForm()" class="form">
       <label for="email">Email address :</label>
@@ -15,6 +15,7 @@
 import { ref } from 'vue';
 import { useLoginMutation } from '../graphql/generated/schema';
 import { useUserStore } from '../store';
+import { useDrawerActive } from '../composables/drawerActive';
 
 const userStore = useUserStore();
 
@@ -44,5 +45,7 @@ const submitForm = () => {
     }
   })
 };
+
+const { drawerActive } = useDrawerActive();
 
 </script>

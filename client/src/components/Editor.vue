@@ -57,10 +57,6 @@
       :class="{ 'is-active': editor.isActive('orderedList') }">
       ordered list
     </button>
-    <button @click="editor.chain().focus().toggleBlockquote().run()"
-      :class="{ 'is-active': editor.isActive('blockquote') }">
-      blockquote
-    </button>
     <button @click="editor.chain().focus().setHorizontalRule().run()">
       horizontal rule
     </button>

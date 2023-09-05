@@ -47,6 +47,7 @@ $theme-map: null;
   }
   &.container {
     background-color: $--color-white;
+    color: $--color-black;
   }
 }
 
@@ -83,5 +84,6 @@ $theme-map: null;
   }
   &.container {
     background-color: $--color-primary-light;
+    color: $--color-white;
   }
 }
