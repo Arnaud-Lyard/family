@@ -1,14 +1,15 @@
 .side-form {
   min-width: 600px;
-  height: 100%;
+  height: calc(100vh - 76px);
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 10px;
+  margin-top: 76px;
   @media screen and (max-width: $xlg) {
     display: none;
   }
 }
-.login {
+.form {
   display: flex;
   flex-wrap: wrap;
   width: 600px;

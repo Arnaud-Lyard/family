@@ -3,37 +3,40 @@
   margin: 0;
   padding: 0;
 }
-body {
-  background-color: #f5f5f5;
-  font-size: 16px;
-}
 .container-center {
   max-width: 1200px;
   margin: 0 auto;
-  height: calc(100vh - 76px);
+  min-height: calc(100vh - 76px);
 }
 .container {
   max-width: 100%;
   margin: 0 auto;
-  height: calc(100vh - 76px);
+  min-height: calc(100vh);
 }
 .flex {
   display: flex;
 }
-.flex-center {
+.flex-justify-center {
   justify-content: center;
 }
-.flex-center-align {
-  justify-content: center;
+.flex-align-center {
   align-items: center;
 }
-.flex-end {
+.flex-justify-end {
   justify-content: flex-end;
+}
+.flex-direction-column {
+  flex-direction: column;
 }
 .error {
   color: red;
 }
-
+.success {
+  color: green;
+}
+.background-grey-light {
+  background-color: $grey-light;
+}
 h1,
 h2,
 h3,
@@ -54,6 +57,12 @@ h5,
 h6 {
   font-size: $nm;
 }
+.ml-s {
+  margin-left: $space-s;
+}
+.full-height {
+  height: calc(100vh - 76px);
+}
 .black {
   font-family: "Titillium Web Black";
 }
@@ -63,10 +72,10 @@ h6 {
 .bold-italic {
   font-family: "Titillium Web Bold Italic";
 }
-extra-light {
+.extra-light {
   font-family: "Titillium Web Extra Light";
 }
-extra-light-italic {
+.extra-light-italic {
   font-family: "Titillium Web Extra Light Italic";
 }
 .italic {

@@ -1,0 +1,7 @@
+query GetArticleByIdForAdmin($data: GetArticleInputDto!) {
+  getArticleByIdForAdmin(data: $data) {
+    id
+    title
+    content
+  }
+}

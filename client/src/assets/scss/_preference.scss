@@ -1,10 +1,13 @@
 .preference {
   position: fixed;
   width: 50px;
-  height: calc(100vh - 76px);
+  height: calc(100vh);
+  z-index: 1;
   ul {
+    margin-top: 76px;
     list-style-type: none;
     li {
+      cursor: pointer;
       text-align: center;
       padding: 10px 0;
       i {

@@ -1,6 +1,6 @@
 <template>
-    <div class="container-center flex flex-center-align">
-        <form @submit.prevent="submitForm()" class="login">
+    <div class="container flex flex-justify-center flex-align-center">
+        <form @submit.prevent="submitForm()" class="form">
             <label for="email">Nom d'utilisateur :</label>
             <input v-model.trim="username" type="text" name="username" id="username" disabled required>
             <label for="email">Adresse email :</label>

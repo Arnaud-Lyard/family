@@ -1,7 +1,7 @@
 <template>
-  <div class="container-center flex flex-center-align">
-    <div class="side-form login-background"></div>
-    <form @submit.prevent="submitForm()" class="login">
+  <div class="container flex flex-justify-center flex-align-center" :class="drawerActive">
+    <div class="side-form register-background full-height"></div>
+    <form @submit.prevent="submitForm()" class="form">
       <label for="username">Username :</label>
       <input @keyup="validateUsername()" @blue="validateUsername()" v-model.trim="username" type="text" name="email"
         id="username" required>
@@ -28,6 +28,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRegisterMutation } from '../graphql/generated/schema';
+import { useDrawerActive } from '../composables/drawerActive';
 
 const router = useRouter();
 
@@ -96,5 +97,7 @@ const submitForm = async () => {
     })
   }
 };
+
+const { drawerActive } = useDrawerActive();
 
 </script>

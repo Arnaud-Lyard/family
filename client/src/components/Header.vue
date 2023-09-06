@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="header">
     <nav>
       <ul class="navigation">
         <li>
@@ -10,12 +10,18 @@
         </li>
       </ul>
       <ul class="usernavigation">
-        <li v-if="isLoggedIn">
+        <li>
           <span>Settings</span>
           <label class="switch">
             <input type="checkbox" @click="togglePreference()">
             <span class="slider"></span>
           </label>
+        </li>
+        <li v-if="isLoggedIn && isSuperAdmin">
+          <RouterLink to="/superadmin">Super Admin</RouterLink>
+        </li>
+        <li v-if="isLoggedIn && isAdmin || isLoggedIn && isSuperAdmin">
+          <RouterLink to="/admin">Admin</RouterLink>
         </li>
         <li v-if="!isLoggedIn">
           <RouterLink :to="{ name: 'login' }">Login</RouterLink>
@@ -27,7 +33,7 @@
           <RouterLink to="/profil">Profile</RouterLink>
         </li>
         <li v-if="isLoggedIn">
-          <a><button @click="logout()">Logout</button></a>
+          <a><button @click="$emit('logout')">Logout</button></a>
         </li>
       </ul>
     </nav>
@@ -35,20 +41,21 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useLogoutMutation } from '../graphql/generated/schema'
 import { useUserStore } from '../store';
 import { useDrawerActive } from '../composables/drawerActive';
+
+const emit = defineEmits(['logout'])
 
 const userStore = useUserStore();
 const isLoggedIn = computed(() => {
   return userStore.isLoggedIn;
 })
-
-const { mutate: sendLogoutMutation } = useLogoutMutation();
-const logout = () => {
-  sendLogoutMutation();
-  userStore.logout();
-}
+const isAdmin = computed(() => {
+  return userStore.getIsAdmin;
+})
+const isSuperAdmin = computed(() => {
+  return userStore.getIsSuperAdmin;
+})
 
 const { togglePreference } = useDrawerActive();
 </script>

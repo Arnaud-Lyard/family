@@ -1,5 +1,5 @@
 <template>
-    <div :class="drawerActive" class="container flex flex-center">
+    <div :class="drawerActive" class="container flex flex-justify-center">
         <Blog />
         <LeaderBoard />
     </div>

@@ -1,26 +1,22 @@
 <template>
-  <Header :class="scssMode" />
-  <Preference :class="scssMode" @light-mode="enableLightScss()" @dark-mode="enableDarkScss()" />
+  <Header :class="scssMode" @logout="logout()" />
+  <Preference :class="scssMode" @light-mode="enableLightTheme()" @dark-mode="enableDarkTheme()" />
   <router-view :class="scssMode"></router-view>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
 import Header from "./components/Header.vue";
 import Preference from "./components/Preference.vue";
+import { useLogoutMutation } from "./graphql/generated/schema";
+import { useUserStore } from "./store";
+import { usePreferenceActive } from './composables/preferenceActive';
+const userStore = useUserStore();
 
-const isLightThemeActive = ref(true);
-const isDarkThemeActive = ref(false);
-const enableLightScss = () => {
-  isLightThemeActive.value = true;
-  isDarkThemeActive.value = false;
-};
-const enableDarkScss = () => {
-  isLightThemeActive.value = false;
-  isDarkThemeActive.value = true;
-};
-const scssMode = computed(() => ({
-  'dark-theme': isDarkThemeActive.value,
-  'light-theme': isLightThemeActive.value,
-}))
+const { enableLightTheme, enableDarkTheme, scssMode } = usePreferenceActive();
+
+const { mutate: sendLogoutMutation } = useLogoutMutation();
+const logout = () => {
+  sendLogoutMutation();
+  userStore.logout();
+}
 </script>

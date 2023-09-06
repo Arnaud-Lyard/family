@@ -1,4 +1,10 @@
-import { IsEmail, IsString, Matches, MinLength } from "class-validator";
+import {
+  IsEmail,
+  IsNumber,
+  IsString,
+  Matches,
+  MinLength,
+} from "class-validator";
 import { Field, InputType } from "type-graphql";
 
 @InputType()
@@ -26,6 +32,15 @@ export class UserLoginInputDto {
   @Field()
   @IsString()
   password: string;
+}
+
+@InputType()
+export class PromoteUserInputDto {
+  @Field()
+  @IsNumber()
+  id: number;
+  @Field()
+  isAdmin: boolean;
 }
 
 export interface UserToBeRegistered {

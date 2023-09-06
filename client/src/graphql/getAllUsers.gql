@@ -1,0 +1,7 @@
+query getAllAdminUsers {
+  getAllAdminUsers {
+    id
+    username
+    role
+  }
+}
