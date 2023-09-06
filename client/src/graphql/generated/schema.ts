@@ -74,12 +74,18 @@ export type Query = {
   getAllAdminUsers: Array<UserAdminList>;
   getAllArticles: Array<Article>;
   getArticleByIdForAdmin: Article;
+  getOneArticle: Article;
   personnalInformations: UserInformations;
   profile: UserLoggedIn;
 };
 
 
 export type QueryGetArticleByIdForAdminArgs = {
+  data: GetArticleInputDto;
+};
+
+
+export type QueryGetOneArticleArgs = {
   data: GetArticleInputDto;
 };
 
@@ -155,6 +161,13 @@ export type GetArticleByIdForAdminQueryVariables = Exact<{
 
 
 export type GetArticleByIdForAdminQuery = { __typename?: 'Query', getArticleByIdForAdmin: { __typename?: 'Article', id: number, title: string, content: string } };
+
+export type GetOneArticleQueryVariables = Exact<{
+  data: GetArticleInputDto;
+}>;
+
+
+export type GetOneArticleQuery = { __typename?: 'Query', getOneArticle: { __typename?: 'Article', id: number, title: string, content: string, user: { __typename?: 'User', username: string } } };
 
 export type LoginMutationVariables = Exact<{
   data: UserLoginInputDto;
@@ -329,6 +342,41 @@ export function useGetArticleByIdForAdminLazyQuery(variables: GetArticleByIdForA
   return VueApolloComposable.useLazyQuery<GetArticleByIdForAdminQuery, GetArticleByIdForAdminQueryVariables>(GetArticleByIdForAdminDocument, variables, options);
 }
 export type GetArticleByIdForAdminQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetArticleByIdForAdminQuery, GetArticleByIdForAdminQueryVariables>;
+export const GetOneArticleDocument = gql`
+    query GetOneArticle($data: GetArticleInputDto!) {
+  getOneArticle(data: $data) {
+    id
+    title
+    content
+    user {
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetOneArticleQuery__
+ *
+ * To run a query within a Vue component, call `useGetOneArticleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOneArticleQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetOneArticleQuery({
+ *   data: // value for 'data'
+ * });
+ */
+export function useGetOneArticleQuery(variables: GetOneArticleQueryVariables | VueCompositionApi.Ref<GetOneArticleQueryVariables> | ReactiveFunction<GetOneArticleQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetOneArticleQuery, GetOneArticleQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetOneArticleQuery, GetOneArticleQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetOneArticleQuery, GetOneArticleQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetOneArticleQuery, GetOneArticleQueryVariables>(GetOneArticleDocument, variables, options);
+}
+export function useGetOneArticleLazyQuery(variables: GetOneArticleQueryVariables | VueCompositionApi.Ref<GetOneArticleQueryVariables> | ReactiveFunction<GetOneArticleQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetOneArticleQuery, GetOneArticleQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetOneArticleQuery, GetOneArticleQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetOneArticleQuery, GetOneArticleQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetOneArticleQuery, GetOneArticleQueryVariables>(GetOneArticleDocument, variables, options);
+}
+export type GetOneArticleQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetOneArticleQuery, GetOneArticleQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($data: UserLoginInputDto!) {
   login(data: $data)

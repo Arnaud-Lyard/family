@@ -1,5 +1,5 @@
 <template>
-  <div v-if="editor" :class="drawerActive" class="editor-menu">
+  <div v-if="editor" class="editor-menu">
     <button @click="editor.chain().focus().toggleBold().run()"
       :disabled="!editor.can().chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
       bold
@@ -71,7 +71,7 @@
       redo
     </button>
   </div>
-  <editor-content :editor="editor" :class="drawerActive" />
+  <editor-content :editor="editor" />
   <Modal v-show="isModalVisible" @confirm="confirmAddImage" @close="closeModal">
     <template v-slot:header> Add image link :</template>
     <template v-slot:body>

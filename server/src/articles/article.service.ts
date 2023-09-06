@@ -41,4 +41,15 @@ export class ArticleService {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
+  static async getOneArticle(articleId: number): Promise<Article> {
+    try {
+      const article = await ArticleRepository.getOneArticleByIdWithUser(
+        articleId
+      );
+      return article;
+    } catch (error) {
+      console.error("Error while getting article", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
 }

@@ -1,0 +1,10 @@
+query GetOneArticle($data: GetArticleInputDto!) {
+  getOneArticle(data: $data) {
+    id
+    title
+    content
+    user {
+      username
+    }
+  }
+}

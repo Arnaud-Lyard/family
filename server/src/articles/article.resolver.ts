@@ -102,4 +102,14 @@ export class ArticleResolver {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
+  @Query(() => Article)
+  async getOneArticle(@Arg("data") data: GetArticleInputDto): Promise<Article> {
+    try {
+      const article = await ArticleService.getOneArticle(data.id);
+      return article;
+    } catch (error) {
+      console.error("Error during one article recuperation", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
 }

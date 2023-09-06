@@ -45,4 +45,14 @@ export class ArticleRepository {
     });
     return articles;
   }
+  static async getOneArticleByIdWithUser(articleId: number): Promise<Article> {
+    const article = await DataSource.getRepository(Article).findOne({
+      where: { id: articleId },
+      relations: ["user"],
+    });
+    if (!article) {
+      throw new Error("ARTICLE_NOT_FOUND");
+    }
+    return article;
+  }
 }
