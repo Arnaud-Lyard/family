@@ -1,4 +1,5 @@
-import { PlayerModeToBeChanged } from "./dto/profileInputDto";
+import { ContextType } from "..";
+import { TogglePlayerModeUpdateInputDto } from "./dto/profileInputDto";
 import { Profile } from "./entities/profile.entity";
 import { ProfileRepository } from "./profile.repository";
 
@@ -12,11 +13,17 @@ export class ProfileService {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
-  static async togglePlayerMode(
-    params: PlayerModeToBeChanged
+  static async togglePlayerModeUpdate(
+    ctx: ContextType,
+    params: TogglePlayerModeUpdateInputDto
   ): Promise<Profile> {
     try {
-      const playerMode = await ProfileRepository.togglePlayerMode(params);
+      const userId = ctx.currentUser!.id;
+
+      const playerMode = await ProfileRepository.togglePlayerModeUpdate(
+        userId,
+        params
+      );
       return playerMode;
     } catch (error) {
       console.error("Error while switching player mode", error);

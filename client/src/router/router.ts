@@ -50,7 +50,12 @@ router.beforeEach((to, from) => {
   const isLoggedIn = userStore.isLoggedIn;
   const isAdmin = userStore.getIsAdmin;
   const isSuperAdmin = userStore.getIsSuperAdmin;
-  if (to.meta.requiresAuth && !isAdmin && to.name === "admin") {
+  if (
+    to.meta.requiresAuth &&
+    !isAdmin &&
+    !isSuperAdmin &&
+    to.name === "admin"
+  ) {
     return {
       name: "home",
     };

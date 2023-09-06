@@ -1,9 +1,10 @@
-import { Arg, Authorized, Ctx, Mutation, Query } from "type-graphql";
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Profile } from "./entities/profile.entity";
 import { ProfileService } from "./profile.service";
 import { ContextType } from "../index";
-import { TogglePlayerModeInputDto } from "./dto/profileInputDto";
+import { TogglePlayerModeUpdateInputDto } from "./dto/profileInputDto";
 
+@Resolver(Profile)
 export class ProfileResolver {
   @Authorized()
   @Query(() => [Profile])
@@ -20,13 +21,12 @@ export class ProfileResolver {
   }
   @Authorized()
   @Mutation(() => Profile)
-  async togglePlayerMode(
+  async togglePlayerModeUpdate(
     @Ctx() ctx: ContextType,
-    @Arg("data") data: TogglePlayerModeInputDto
+    @Arg("data") data: TogglePlayerModeUpdateInputDto
   ): Promise<Profile> {
-    const params = { isPlayer: data.isPlayer, userId: ctx.currentUser!.id };
     try {
-      const playerMode = await ProfileService.togglePlayerMode(params);
+      const playerMode = await ProfileService.togglePlayerModeUpdate(ctx, data);
       return playerMode;
     } catch (error) {
       console.error("Error while switching player mode", error);

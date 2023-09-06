@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Article } from "../../articles/entities/article.entity";
 import { Profile } from "../../profiles/entities/profile.entity";
+import { Player } from "../../players/entities/player.entity";
 
 export type Role = "visitor" | "admin" | "superadmin";
 
@@ -39,9 +40,13 @@ class User {
   articles: Article[];
 
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
-  @JoinColumn()
   @Field(() => Profile)
   profile: Profile;
+
+  @OneToOne(() => Player, (player) => player.user)
+  @JoinColumn()
+  @Field(() => Player)
+  player: Player;
 }
 export default User;
 
@@ -50,7 +55,13 @@ export class UserLoggedIn
   implements
     Omit<
       User,
-      "id" | "email" | "hashedPassword" | "role" | "articles" | "profile"
+      | "id"
+      | "email"
+      | "hashedPassword"
+      | "role"
+      | "articles"
+      | "profile"
+      | "player"
     >
 {
   @Field()
@@ -61,7 +72,8 @@ export class UserLoggedIn
 
 @ObjectType()
 export class UserInformations
-  implements Omit<User, "hashedPassword" | "role" | "articles" | "profile">
+  implements
+    Omit<User, "hashedPassword" | "role" | "articles" | "profile" | "player">
 {
   @Field()
   id: number;
@@ -72,7 +84,8 @@ export class UserInformations
 }
 @ObjectType()
 export class UserAdminList
-  implements Omit<User, "hashedPassword" | "email" | "articles" | "profile">
+  implements
+    Omit<User, "hashedPassword" | "email" | "articles" | "profile" | "player">
 {
   @Field()
   id: number;
