@@ -13,7 +13,7 @@ import config from "./config/config";
 import cookie from "cookie";
 import database from "./database";
 import { ArticleResolver } from "./articles/article.resolver";
-
+import { ProfileResolver } from "./profiles/profile.resolver";
 export interface ContextType {
   req: express.Request;
   res: express.Response;
@@ -27,7 +27,7 @@ async function start(): Promise<void> {
   const httpServer = http.createServer(app);
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, ArticleResolver],
+    resolvers: [UserResolver, ArticleResolver, ProfileResolver],
     validate: false,
     authChecker: async ({ context }: { context: ContextType }, roles = []) => {
       const { req } = context;

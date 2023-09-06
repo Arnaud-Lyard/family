@@ -6,8 +6,6 @@ import User, {
   UserLoggedIn,
 } from "./entities/user.entity";
 import { ContextType } from "../index";
-import jwt from "jsonwebtoken";
-import config from "../config/config";
 import {
   PromoteUserInputDto,
   UserLoginInputDto,
@@ -15,6 +13,7 @@ import {
   UserToBeRegistered,
 } from "./dto/userInputDto";
 import { AuthService } from "../auth/auth.service";
+import { UserService } from "./user.service";
 
 @Resolver(User)
 export class UserResolver {
@@ -49,85 +48,75 @@ export class UserResolver {
 
   @Mutation(() => String)
   async login(
-    @Arg("data") { email, password }: UserLoginInputDto,
+    @Arg("data") params: UserLoginInputDto,
     @Ctx() ctx: ContextType
   ): Promise<string> {
-    const user = await datasource
-      .getRepository(User)
-      .findOne({ where: { email } });
-
-    if (
-      user === null ||
-      !(await AuthService.verifyPassword(password, user.hashedPassword))
-    )
+    try {
+      const token = await UserService.login(params, ctx);
+      return token;
+    } catch (err) {
+      console.error("error when login process", err);
       throw new Error("INVALID_CREDENTIALS");
-
-    const token = jwt.sign({ userId: user.id }, config.JWT_PRIVATE_KEY);
-
-    ctx.res.cookie("token", token, {
-      secure: config.NODE_ENV === "production",
-      httpOnly: true,
-    });
-
-    return token;
+    }
   }
   @Authorized()
   @Mutation(() => String)
   async logout(@Ctx() ctx: ContextType): Promise<string> {
-    ctx.res.clearCookie("token");
-    return "OK";
+    try {
+      await UserService.logout(ctx);
+      return "OK";
+    } catch (err) {
+      console.error("error when logout process", err);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
   }
 
   @Authorized()
   @Query(() => UserLoggedIn)
   async profile(@Ctx() ctx: ContextType): Promise<UserLoggedIn> {
-    const profile = await datasource.getRepository(User).findOne({
-      where: { id: ctx.currentUser?.id },
-    });
-    return { username: profile?.username, role: profile?.role } as UserLoggedIn;
+    try {
+      const userLoggedIn = await UserService.getProfile(ctx);
+      return userLoggedIn;
+    } catch (err) {
+      console.error("error when getting profile", err);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
   }
   @Authorized()
   @Query(() => UserInformations)
   async personnalInformations(
     @Ctx() ctx: ContextType
   ): Promise<UserInformations> {
-    const personnalInformations = await datasource.getRepository(User).findOne({
-      where: { id: ctx.currentUser?.id },
-    });
-    if (!personnalInformations) throw new Error("INTERNAL_SERVER_ERROR");
-    return personnalInformations;
+    try {
+      const personnalInformations = UserService.getPersonnalInformations(ctx);
+      return personnalInformations;
+    } catch (err) {
+      console.error("error when getting personnal informations", err);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
   }
   @Authorized()
   @Mutation(() => UserInformations)
-  async promoteUser(
+  async toggleAdminRole(
     @Ctx() ctx: ContextType,
-    @Arg("data") { id }: PromoteUserInputDto
+    @Arg("data") data: PromoteUserInputDto
   ): Promise<UserInformations> {
     try {
-      if (ctx.currentUser?.role === "superadmin") {
-        const userToBePromoted = await datasource.getRepository(User).findOne({
-          where: { id: id },
-        });
-        if (!userToBePromoted) throw new Error("INTERNAL_SERVER_ERROR");
-        userToBePromoted.role = "admin";
-        await datasource.getRepository(User).save(userToBePromoted);
-        return userToBePromoted;
-      } else {
-        throw new Error("INTERNAL_SERVER_ERROR");
-      }
+      const user = await UserService.toggleAdminRole(ctx, data);
+      return user;
     } catch (err) {
-      console.error(err);
+      console.error("error when promoting user", err);
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
   @Authorized()
   @Query(() => [UserAdminList])
-  async getAllAdminUsers(): Promise<UserAdminList[]> {
+  async getAllAdminUsers(@Ctx() ctx: ContextType): Promise<UserAdminList[]> {
     try {
-      const users = await datasource.getRepository(User).find();
-      return users;
+      const adminList = await UserService.getAllAdminUsers(ctx);
+      return adminList;
     } catch (err) {
-      console.error(err);
+      console.error("error when getting admin list", err);
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }

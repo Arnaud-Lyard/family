@@ -1,5 +1,0 @@
-mutation PromoteUser($data: PromoteUserInputDto!) {
-  promoteUser(data: $data) {
-    username
-  }
-}

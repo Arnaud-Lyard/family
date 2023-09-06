@@ -32,20 +32,16 @@ export type Mutation = {
   __typename?: 'Mutation';
   login: Scalars['String'];
   logout: Scalars['String'];
-  promoteUser: UserInformations;
   register: UserLoggedIn;
   saveArticle: Article;
+  toggleAdminRole: UserInformations;
+  togglePlayerMode: Profile;
   updateArticle: Article;
 };
 
 
 export type MutationLoginArgs = {
   data: UserLoginInputDto;
-};
-
-
-export type MutationPromoteUserArgs = {
-  data: PromoteUserInputDto;
 };
 
 
@@ -59,12 +55,29 @@ export type MutationSaveArticleArgs = {
 };
 
 
+export type MutationToggleAdminRoleArgs = {
+  data: PromoteUserInputDto;
+};
+
+
+export type MutationTogglePlayerModeArgs = {
+  data: TogglePlayerModeInputDto;
+};
+
+
 export type MutationUpdateArticleArgs = {
   data: UpdateArticleInputDto;
 };
 
+export type Profile = {
+  __typename?: 'Profile';
+  isPlayer: Scalars['Boolean'];
+  user: User;
+};
+
 export type PromoteUserInputDto = {
   id: Scalars['Float'];
+  isAdmin: Scalars['Boolean'];
 };
 
 export type Query = {
@@ -73,6 +86,7 @@ export type Query = {
   getAdminArticles: Array<Article>;
   getAllAdminUsers: Array<UserAdminList>;
   getAllArticles: Array<Article>;
+  getAllProfiles: Array<Profile>;
   getArticleByIdForAdmin: Article;
   getOneArticle: Article;
   personnalInformations: UserInformations;
@@ -94,6 +108,10 @@ export type SaveArticleInputDto = {
   title: Scalars['String'];
 };
 
+export type TogglePlayerModeInputDto = {
+  isPlayer: Scalars['Boolean'];
+};
+
 export type UpdateArticleInputDto = {
   content: Scalars['String'];
   id: Scalars['Float'];
@@ -105,6 +123,7 @@ export type User = {
   articles: Array<Article>;
   email: Scalars['String'];
   id: Scalars['Float'];
+  profile: Profile;
   role: Scalars['String'];
   username: Scalars['String'];
 };
@@ -191,13 +210,6 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserLoggedIn', username: string, role: string } };
 
-export type PromoteUserMutationVariables = Exact<{
-  data: PromoteUserInputDto;
-}>;
-
-
-export type PromoteUserMutation = { __typename?: 'Mutation', promoteUser: { __typename?: 'UserInformations', username: string } };
-
 export type RegisterMutationVariables = Exact<{
   data: UserRegisterInputDto;
 }>;
@@ -211,6 +223,13 @@ export type SaveArticleMutationVariables = Exact<{
 
 
 export type SaveArticleMutation = { __typename?: 'Mutation', saveArticle: { __typename?: 'Article', title: string, content: string } };
+
+export type ToggleAdminRoleMutationVariables = Exact<{
+  data: PromoteUserInputDto;
+}>;
+
+
+export type ToggleAdminRoleMutation = { __typename?: 'Mutation', toggleAdminRole: { __typename?: 'UserInformations', username: string } };
 
 export type UpdateArticleMutationVariables = Exact<{
   data: UpdateArticleInputDto;
@@ -483,35 +502,6 @@ export function useProfileLazyQuery(options: VueApolloComposable.UseQueryOptions
   return VueApolloComposable.useLazyQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, {}, options);
 }
 export type ProfileQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<ProfileQuery, ProfileQueryVariables>;
-export const PromoteUserDocument = gql`
-    mutation PromoteUser($data: PromoteUserInputDto!) {
-  promoteUser(data: $data) {
-    username
-  }
-}
-    `;
-
-/**
- * __usePromoteUserMutation__
- *
- * To run a mutation, you first call `usePromoteUserMutation` within a Vue component and pass it any options that fit your needs.
- * When your component renders, `usePromoteUserMutation` returns an object that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
- *
- * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
- *
- * @example
- * const { mutate, loading, error, onDone } = usePromoteUserMutation({
- *   variables: {
- *     data: // value for 'data'
- *   },
- * });
- */
-export function usePromoteUserMutation(options: VueApolloComposable.UseMutationOptions<PromoteUserMutation, PromoteUserMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<PromoteUserMutation, PromoteUserMutationVariables>> = {}) {
-  return VueApolloComposable.useMutation<PromoteUserMutation, PromoteUserMutationVariables>(PromoteUserDocument, options);
-}
-export type PromoteUserMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<PromoteUserMutation, PromoteUserMutationVariables>;
 export const RegisterDocument = gql`
     mutation Register($data: UserRegisterInputDto!) {
   register(data: $data) {
@@ -571,6 +561,35 @@ export function useSaveArticleMutation(options: VueApolloComposable.UseMutationO
   return VueApolloComposable.useMutation<SaveArticleMutation, SaveArticleMutationVariables>(SaveArticleDocument, options);
 }
 export type SaveArticleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SaveArticleMutation, SaveArticleMutationVariables>;
+export const ToggleAdminRoleDocument = gql`
+    mutation ToggleAdminRole($data: PromoteUserInputDto!) {
+  toggleAdminRole(data: $data) {
+    username
+  }
+}
+    `;
+
+/**
+ * __useToggleAdminRoleMutation__
+ *
+ * To run a mutation, you first call `useToggleAdminRoleMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useToggleAdminRoleMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useToggleAdminRoleMutation({
+ *   variables: {
+ *     data: // value for 'data'
+ *   },
+ * });
+ */
+export function useToggleAdminRoleMutation(options: VueApolloComposable.UseMutationOptions<ToggleAdminRoleMutation, ToggleAdminRoleMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<ToggleAdminRoleMutation, ToggleAdminRoleMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<ToggleAdminRoleMutation, ToggleAdminRoleMutationVariables>(ToggleAdminRoleDocument, options);
+}
+export type ToggleAdminRoleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<ToggleAdminRoleMutation, ToggleAdminRoleMutationVariables>;
 export const UpdateArticleDocument = gql`
     mutation UpdateArticle($data: UpdateArticleInputDto!) {
   updateArticle(data: $data) {

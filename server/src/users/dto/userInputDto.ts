@@ -39,6 +39,8 @@ export class PromoteUserInputDto {
   @Field()
   @IsNumber()
   id: number;
+  @Field()
+  isAdmin: boolean;
 }
 
 export interface UserToBeRegistered {

@@ -4,7 +4,7 @@
       <li v-for="user in usersList" :key="user.id">
         {{ user.username }}
         <label class="switch">
-          <input type="checkbox" v-model="user.isAdmin" @click="promoteUser(user.id)">
+          <input type="checkbox" v-model="user.isAdmin" @click="toggleUserRole(user)">
           <span class="slider"></span>
         </label>
       </li>
@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useGetAllAdminUsersQuery } from '../graphql/generated/schema';
-import { usePromoteUserMutation } from '../graphql/generated/schema';
+import { useToggleAdminRoleMutation } from '../graphql/generated/schema';
 import { useDrawerActive } from '../composables/drawerActive';
 interface User {
   id: number;
@@ -36,11 +36,12 @@ onResult(({ data }) => {
   }
 });
 
-function promoteUser(userId: number) {
-  const { mutate: sendPromoteUserMutation } = usePromoteUserMutation({
+function toggleUserRole(user: User) {
+  const { mutate: sendPromoteUserMutation } = useToggleAdminRoleMutation({
     variables: {
       data: {
-        id: userId,
+        id: user.id,
+        isAdmin: user.isAdmin,
       }
     },
   });
