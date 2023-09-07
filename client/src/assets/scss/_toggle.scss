@@ -5,7 +5,7 @@
 .switch {
   margin-left: 10px;
   display: inline-block;
-  width: 20px; /*=w*/
+  width: 20px !important; /*=w*/
   height: 10px; /*=h*/
   position: relative;
 }

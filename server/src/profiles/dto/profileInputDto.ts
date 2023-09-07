@@ -1,17 +1,15 @@
 import { Field, InputType } from "type-graphql";
 
 @InputType()
-export class TogglePlayerModeUpdateInputDto {
-  @Field()
-  isPlayer: boolean;
-  @Field()
-  battletag: string;
-}
-
-@InputType()
 export class UpdateProfileInputDto {
   @Field()
   battletag: string;
+  @Field()
+  isPlayer: boolean;
+  @Field()
+  username: string;
+  @Field()
+  email: string;
 }
 export interface PlayerModeToBeChanged {
   isPlayer: boolean;

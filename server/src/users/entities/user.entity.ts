@@ -72,8 +72,7 @@ export class UserLoggedIn
 
 @ObjectType()
 export class UserInformations
-  implements
-    Omit<User, "hashedPassword" | "role" | "articles" | "profile" | "player">
+  implements Omit<User, "hashedPassword" | "role" | "articles" | "player">
 {
   @Field()
   id: number;
@@ -81,6 +80,8 @@ export class UserInformations
   username: string;
   @Field()
   email: string;
+  @Field()
+  profile: Profile;
 }
 @ObjectType()
 export class UserAdminList

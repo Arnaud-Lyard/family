@@ -14,13 +14,13 @@ import { Player } from "../../players/entities/player.entity";
 export class Profile {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
+  @Column({ nullable: true, default: false })
   @Field()
   isPlayer: boolean;
-  @Column()
+  @Column({ nullable: true, default: "" })
   @Field()
   battletag: string;
-  @OneToOne(() => User, (user) => user.profile)
+  @OneToOne(() => User, (user) => user.profile, { onDelete: "CASCADE" })
   @JoinColumn()
   @Field(() => User)
   user: User;

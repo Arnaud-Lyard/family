@@ -1,7 +1,7 @@
 import DataSource from "../database";
 import User from "../users/entities/user.entity";
 import { UserRepository } from "../users/user.repository";
-import { TogglePlayerModeUpdateInputDto } from "./dto/profileInputDto";
+import { UpdateProfileInputDto } from "./dto/profileInputDto";
 import { Profile } from "./entities/profile.entity";
 
 export class ProfileRepository {
@@ -14,9 +14,9 @@ export class ProfileRepository {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
-  static async togglePlayerModeUpdate(
+  static async updateProfile(
     userId: number,
-    params: TogglePlayerModeUpdateInputDto
+    params: UpdateProfileInputDto
   ): Promise<Profile> {
     try {
       const { isPlayer, battletag } = params;
@@ -28,6 +28,17 @@ export class ProfileRepository {
       return userProfileUpdated.profile;
     } catch (error) {
       console.error("Error when switching player mode request", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
+  static async create(user: User): Promise<Profile> {
+    try {
+      const profile = await DataSource.getRepository(Profile).save({
+        user: user,
+      });
+      return profile;
+    } catch (error) {
+      console.error("Error during profile creation request", error);
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }

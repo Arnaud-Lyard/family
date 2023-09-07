@@ -2,5 +2,9 @@ query PersonnalInformations {
   personnalInformations {
     username
     email
+    profile {
+      battletag
+      isPlayer
+    }
   }
 }

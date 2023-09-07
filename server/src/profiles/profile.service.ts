@@ -1,5 +1,6 @@
 import { ContextType } from "..";
-import { TogglePlayerModeUpdateInputDto } from "./dto/profileInputDto";
+import { UserRepository } from "../users/user.repository";
+import { UpdateProfileInputDto } from "./dto/profileInputDto";
 import { Profile } from "./entities/profile.entity";
 import { ProfileRepository } from "./profile.repository";
 
@@ -13,21 +14,40 @@ export class ProfileService {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
-  static async togglePlayerModeUpdate(
+  static async updateProfile(
     ctx: ContextType,
-    params: TogglePlayerModeUpdateInputDto
+    params: UpdateProfileInputDto
   ): Promise<Profile> {
     try {
       const userId = ctx.currentUser!.id;
-
-      const playerMode = await ProfileRepository.togglePlayerModeUpdate(
+      const emailAlreadyUsed = await UserRepository.checkIfEmailIsAlreadyUsed(
         userId,
-        params
+        params.email
       );
+      if (emailAlreadyUsed) throw new Error("EMAIL_ALREADY_USED");
+
+      const usernameAlreadyUsed =
+        await UserRepository.checkIfUsernameIsAlreadyUsed(
+          userId,
+          params.username
+        );
+
+      if (usernameAlreadyUsed) throw new Error("USERNAME_ALREADY_USED");
+
+      const playerMode = await ProfileRepository.updateProfile(userId, params);
       return playerMode;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error while switching player mode", error);
-      throw new Error("INTERNAL_SERVER_ERROR");
+      switch (error.message) {
+        case "EMAIL_ALREADY_USED":
+          throw new Error("EMAIL_ALREADY_USED");
+          break;
+        case "USERNAME_ALREADY_USED":
+          throw new Error("USERNAME_ALREADY_USED");
+          break;
+        default:
+          throw new Error("INTERNAL_SERVER_ERROR");
+      }
     }
   }
 }

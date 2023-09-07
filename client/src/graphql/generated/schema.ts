@@ -35,8 +35,8 @@ export type Mutation = {
   register: UserLoggedIn;
   saveArticle: Article;
   toggleAdminRole: UserInformations;
-  togglePlayerMode: Profile;
   updateArticle: Article;
+  updateProfile: Profile;
 };
 
 
@@ -60,18 +60,28 @@ export type MutationToggleAdminRoleArgs = {
 };
 
 
-export type MutationTogglePlayerModeArgs = {
-  data: TogglePlayerModeInputDto;
-};
-
-
 export type MutationUpdateArticleArgs = {
   data: UpdateArticleInputDto;
 };
 
+
+export type MutationUpdateProfileArgs = {
+  data: UpdateProfileInputDto;
+};
+
+export type Player = {
+  __typename?: 'Player';
+  id: Scalars['Float'];
+  profile: Profile;
+  rank: Scalars['Float'];
+  user: User;
+};
+
 export type Profile = {
   __typename?: 'Profile';
+  battletag: Scalars['String'];
   isPlayer: Scalars['Boolean'];
+  player: Player;
   user: User;
 };
 
@@ -108,14 +118,17 @@ export type SaveArticleInputDto = {
   title: Scalars['String'];
 };
 
-export type TogglePlayerModeInputDto = {
-  isPlayer: Scalars['Boolean'];
-};
-
 export type UpdateArticleInputDto = {
   content: Scalars['String'];
   id: Scalars['Float'];
   title: Scalars['String'];
+};
+
+export type UpdateProfileInputDto = {
+  battletag: Scalars['String'];
+  email: Scalars['String'];
+  isPlayer: Scalars['Boolean'];
+  username: Scalars['String'];
 };
 
 export type User = {
@@ -123,6 +136,7 @@ export type User = {
   articles: Array<Article>;
   email: Scalars['String'];
   id: Scalars['Float'];
+  player: Player;
   profile: Profile;
   role: Scalars['String'];
   username: Scalars['String'];
@@ -139,6 +153,7 @@ export type UserInformations = {
   __typename?: 'UserInformations';
   email: Scalars['String'];
   id: Scalars['Float'];
+  profile: Profile;
   username: Scalars['String'];
 };
 
@@ -158,6 +173,13 @@ export type UserRegisterInputDto = {
   password: Scalars['String'];
   username: Scalars['String'];
 };
+
+export type UpdateProfileMutationVariables = Exact<{
+  data: UpdateProfileInputDto;
+}>;
+
+
+export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'Profile', isPlayer: boolean } };
 
 export type GetAdminArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -203,7 +225,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: string };
 export type PersonnalInformationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PersonnalInformationsQuery = { __typename?: 'Query', personnalInformations: { __typename?: 'UserInformations', username: string, email: string } };
+export type PersonnalInformationsQuery = { __typename?: 'Query', personnalInformations: { __typename?: 'UserInformations', username: string, email: string, profile: { __typename?: 'Profile', battletag: string, isPlayer: boolean } } };
 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -239,6 +261,35 @@ export type UpdateArticleMutationVariables = Exact<{
 export type UpdateArticleMutation = { __typename?: 'Mutation', updateArticle: { __typename?: 'Article', id: number, title: string, content: string } };
 
 
+export const UpdateProfileDocument = gql`
+    mutation UpdateProfile($data: UpdateProfileInputDto!) {
+  updateProfile(data: $data) {
+    isPlayer
+  }
+}
+    `;
+
+/**
+ * __useUpdateProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfileMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfileMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateProfileMutation({
+ *   variables: {
+ *     data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateProfileMutation(options: VueApolloComposable.UseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<UpdateProfileMutation, UpdateProfileMutationVariables>(UpdateProfileDocument, options);
+}
+export type UpdateProfileMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateProfileMutation, UpdateProfileMutationVariables>;
 export const GetAdminArticlesDocument = gql`
     query GetAdminArticles {
   getAdminArticles {
@@ -451,6 +502,10 @@ export const PersonnalInformationsDocument = gql`
   personnalInformations {
     username
     email
+    profile {
+      battletag
+      isPlayer
+    }
   }
 }
     `;
