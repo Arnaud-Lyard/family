@@ -39,6 +39,9 @@ class User {
   @Field(() => [Article])
   articles: Article[];
 
+  @Field()
+  playerId: number;
+
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
   @Field(() => Profile)
   profile: Profile;
@@ -62,6 +65,7 @@ export class UserLoggedIn
       | "articles"
       | "profile"
       | "player"
+      | "playerId"
     >
 {
   @Field()
@@ -72,7 +76,8 @@ export class UserLoggedIn
 
 @ObjectType()
 export class UserInformations
-  implements Omit<User, "hashedPassword" | "role" | "articles" | "player">
+  implements
+    Omit<User, "hashedPassword" | "role" | "articles" | "player" | "playerId">
 {
   @Field()
   id: number;
@@ -86,7 +91,15 @@ export class UserInformations
 @ObjectType()
 export class UserAdminList
   implements
-    Omit<User, "hashedPassword" | "email" | "articles" | "profile" | "player">
+    Omit<
+      User,
+      | "hashedPassword"
+      | "email"
+      | "articles"
+      | "profile"
+      | "player"
+      | "playerId"
+    >
 {
   @Field()
   id: number;

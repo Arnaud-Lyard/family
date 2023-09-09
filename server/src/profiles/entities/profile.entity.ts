@@ -20,6 +20,10 @@ export class Profile {
   @Column({ nullable: true, default: "" })
   @Field()
   battletag: string;
+  @Column()
+  userId: number;
+  @Field()
+  playerId: number;
   @OneToOne(() => User, (user) => user.profile, { onDelete: "CASCADE" })
   @JoinColumn()
   @Field(() => User)

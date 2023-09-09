@@ -74,6 +74,7 @@ export type Player = {
   id: Scalars['Float'];
   profile: Profile;
   rank: Scalars['Float'];
+  rating: Scalars['Float'];
   user: User;
 };
 
@@ -82,6 +83,7 @@ export type Profile = {
   battletag: Scalars['String'];
   isPlayer: Scalars['Boolean'];
   player: Player;
+  playerId: Scalars['Float'];
   user: User;
 };
 
@@ -137,6 +139,7 @@ export type User = {
   email: Scalars['String'];
   id: Scalars['Float'];
   player: Player;
+  playerId: Scalars['Float'];
   profile: Profile;
   role: Scalars['String'];
   username: Scalars['String'];

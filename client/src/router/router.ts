@@ -12,7 +12,7 @@ import Article from "../pages/Article.vue";
 const routes = [
   { path: "/", component: Home, name: "home" },
   {
-    path: "/profil",
+    path: "/profile",
     component: Profile,
     name: "profile",
     meta: { requiresAuth: true },

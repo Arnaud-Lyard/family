@@ -15,13 +15,20 @@ export class Player {
   @PrimaryGeneratedColumn()
   @Field()
   id: number;
-  @Column()
+  @Column({ nullable: true })
   @Field()
   rank: number;
-  @OneToOne(() => User, (user) => user.player, { cascade: true })
+  @Column({ nullable: true, default: 1000 })
+  @Field()
+  rating: number;
+  @OneToOne(() => User, (user) => user.player, {
+    cascade: ["insert", "update"],
+  })
   @Field(() => User)
   user: User;
-  @OneToOne(() => Profile, (profile) => profile.player, { cascade: true })
+  @OneToOne(() => Profile, (profile) => profile.player, {
+    cascade: ["insert", "update"],
+  })
   @Field(() => Profile)
   profile: Profile;
 }

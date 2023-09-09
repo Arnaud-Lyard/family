@@ -3,6 +3,8 @@ import DataSource from "../database";
 import User from "./entities/user.entity";
 import { UserToBeRegistered } from "./dto/userInputDto";
 import { ProfileRepository } from "../profiles/profile.repository";
+import { PlayerRepository } from "../players/player.repository";
+import { Player } from "../players/entities/player.entity";
 
 export class UserRepository {
   static async getUserByUsername(username: string) {
@@ -26,6 +28,7 @@ export class UserRepository {
         where: { id },
         relations: {
           profile: true,
+          player: true,
         },
       });
       if (!user) throw new Error("USER_NOT_FOUND");
@@ -116,9 +119,23 @@ export class UserRepository {
   }
   static async register(user: UserToBeRegistered): Promise<User> {
     try {
-      const userRegistered = await DataSource.getRepository(User).save(user);
+      const player = await PlayerRepository.create();
+      const userRegistered = await this.create(user, player);
       await ProfileRepository.create(userRegistered);
       return userRegistered;
+    } catch (error) {
+      console.error("Error during user creation request", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
+  static async create(user: UserToBeRegistered, player: Player): Promise<User> {
+    try {
+      const userCreated = DataSource.getRepository(User).create({
+        ...user,
+        player: player,
+      });
+      await DataSource.getRepository(User).insert(userCreated);
+      return userCreated;
     } catch (error) {
       console.error("Error during user creation request", error);
       throw new Error("INTERNAL_SERVER_ERROR");

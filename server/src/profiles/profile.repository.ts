@@ -21,24 +21,73 @@ export class ProfileRepository {
     try {
       const { isPlayer, battletag } = params;
       const user = await UserRepository.getUserById(userId);
-      const userProfileUpdated = await DataSource.getRepository(User).save({
-        ...user,
-        profile: { ...user.profile, isPlayer: isPlayer, battletag: battletag },
-      });
-      return userProfileUpdated.profile;
+
+      if (isPlayer === true) {
+        const profileUpdated = await this.update(user, params);
+
+        return profileUpdated;
+      } else {
+        const profileDisabled = await this.disabled(user);
+        return profileDisabled;
+      }
     } catch (error) {
-      console.error("Error when switching player mode request", error);
+      console.error("Error when updating profile query", error);
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
   static async create(user: User): Promise<Profile> {
     try {
-      const profile = await DataSource.getRepository(Profile).save({
+      const profileCreated = DataSource.getRepository(Profile).create({
+        player: user.player,
         user: user,
+        isPlayer: false,
       });
-      return profile;
+      await DataSource.getRepository(Profile).insert(profileCreated);
+
+      return profileCreated;
     } catch (error) {
       console.error("Error during profile creation request", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
+  static async update(
+    user: User,
+    params: UpdateProfileInputDto
+  ): Promise<Profile> {
+    try {
+      const { isPlayer, battletag } = params;
+
+      const profileUpdated = await DataSource.createQueryBuilder()
+        .update(Profile)
+        .set({
+          isPlayer: isPlayer,
+          battletag: battletag,
+        })
+        .where("id = :id", { id: user.profile.id })
+        .returning("*")
+        .execute();
+      return profileUpdated.raw[0];
+    } catch (error) {
+      console.error("Error during profile update request", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
+
+  static async disabled(user: User): Promise<Profile> {
+    try {
+      const profileDisabled = await DataSource.createQueryBuilder()
+        .update(Profile)
+        .set({
+          isPlayer: false,
+          battletag: "",
+        })
+        .where("id = :id", { id: user.profile.id })
+        .returning("*")
+        .execute();
+
+      return profileDisabled.raw[0];
+    } catch (error) {
+      console.error("Error during disable profile request", error);
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
