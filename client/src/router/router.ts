@@ -8,11 +8,12 @@ import Profile from "../pages/Profile.vue";
 import Admin from "../pages/Admin.vue";
 import SuperAdmin from "../pages/SuperAdmin.vue";
 import Article from "../pages/Article.vue";
+import Player from "../pages/Player.vue";
 
 const routes = [
   { path: "/", component: Home, name: "home" },
   {
-    path: "/profil",
+    path: "/profile",
     component: Profile,
     name: "profile",
     meta: { requiresAuth: true },
@@ -35,6 +36,12 @@ const routes = [
     name: "dashboard",
     meta: { requiresAuth: true },
   },
+  {
+    path: "/player/:id",
+    component: Player,
+    name: "player",
+    meta: { requiresAuth: true },
+  },
   { path: "/login", component: Login, name: "login" },
   { path: "/register", component: Register, name: "register" },
   { path: "/article/:id", component: Article, name: "article" },
@@ -50,7 +57,12 @@ router.beforeEach((to, from) => {
   const isLoggedIn = userStore.isLoggedIn;
   const isAdmin = userStore.getIsAdmin;
   const isSuperAdmin = userStore.getIsSuperAdmin;
-  if (to.meta.requiresAuth && !isAdmin && to.name === "admin") {
+  if (
+    to.meta.requiresAuth &&
+    !isAdmin &&
+    !isSuperAdmin &&
+    to.name === "admin"
+  ) {
     return {
       name: "home",
     };

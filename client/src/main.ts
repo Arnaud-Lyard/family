@@ -30,6 +30,9 @@ import {
   faBoltLightning,
   faPen,
   faFloppyDisk,
+  faArrowUp,
+  faArrowDown,
+  faComments,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -56,7 +59,10 @@ library.add(
   faLightbulb,
   faBoltLightning,
   faPen,
-  faFloppyDisk
+  faFloppyDisk,
+  faArrowUp,
+  faArrowDown,
+  faComments
 );
 const pinia = createPinia();
 

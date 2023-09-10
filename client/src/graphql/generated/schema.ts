@@ -35,8 +35,8 @@ export type Mutation = {
   register: UserLoggedIn;
   saveArticle: Article;
   toggleAdminRole: UserInformations;
-  togglePlayerMode: Profile;
   updateArticle: Article;
+  updateProfile: Profile;
 };
 
 
@@ -60,18 +60,32 @@ export type MutationToggleAdminRoleArgs = {
 };
 
 
-export type MutationTogglePlayerModeArgs = {
-  data: TogglePlayerModeInputDto;
-};
-
-
 export type MutationUpdateArticleArgs = {
   data: UpdateArticleInputDto;
 };
 
+
+export type MutationUpdateProfileArgs = {
+  data: UpdateProfileInputDto;
+};
+
+export type Player = {
+  __typename?: 'Player';
+  defeat: Scalars['Float'];
+  id: Scalars['Float'];
+  profile: Profile;
+  rank: Scalars['Float'];
+  rating: Scalars['Float'];
+  user: User;
+  victory: Scalars['Float'];
+};
+
 export type Profile = {
   __typename?: 'Profile';
+  battletag: Scalars['String'];
   isPlayer: Scalars['Boolean'];
+  player: Player;
+  playerId: Scalars['Float'];
   user: User;
 };
 
@@ -86,6 +100,7 @@ export type Query = {
   getAdminArticles: Array<Article>;
   getAllAdminUsers: Array<UserAdminList>;
   getAllArticles: Array<Article>;
+  getAllPlayers: Array<Player>;
   getAllProfiles: Array<Profile>;
   getArticleByIdForAdmin: Article;
   getOneArticle: Article;
@@ -108,14 +123,17 @@ export type SaveArticleInputDto = {
   title: Scalars['String'];
 };
 
-export type TogglePlayerModeInputDto = {
-  isPlayer: Scalars['Boolean'];
-};
-
 export type UpdateArticleInputDto = {
   content: Scalars['String'];
   id: Scalars['Float'];
   title: Scalars['String'];
+};
+
+export type UpdateProfileInputDto = {
+  battletag: Scalars['String'];
+  email: Scalars['String'];
+  isPlayer: Scalars['Boolean'];
+  username: Scalars['String'];
 };
 
 export type User = {
@@ -123,6 +141,8 @@ export type User = {
   articles: Array<Article>;
   email: Scalars['String'];
   id: Scalars['Float'];
+  player: Player;
+  playerId: Scalars['Float'];
   profile: Profile;
   role: Scalars['String'];
   username: Scalars['String'];
@@ -139,11 +159,13 @@ export type UserInformations = {
   __typename?: 'UserInformations';
   email: Scalars['String'];
   id: Scalars['Float'];
+  profile: Profile;
   username: Scalars['String'];
 };
 
 export type UserLoggedIn = {
   __typename?: 'UserLoggedIn';
+  profile: Profile;
   role: Scalars['String'];
   username: Scalars['String'];
 };
@@ -159,6 +181,13 @@ export type UserRegisterInputDto = {
   username: Scalars['String'];
 };
 
+export type UpdateProfileMutationVariables = Exact<{
+  data: UpdateProfileInputDto;
+}>;
+
+
+export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'Profile', isPlayer: boolean } };
+
 export type GetAdminArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -168,6 +197,11 @@ export type GetAllArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllArticlesQuery = { __typename?: 'Query', getAllArticles: Array<{ __typename?: 'Article', id: number, title: string, content: string, user: { __typename?: 'User', username: string } }> };
+
+export type GetAllPlayersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllPlayersQuery = { __typename?: 'Query', getAllPlayers: Array<{ __typename?: 'Player', rank: number, id: number, victory: number, defeat: number, profile: { __typename?: 'Profile', battletag: string } }> };
 
 export type GetAllAdminUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -203,12 +237,12 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: string };
 export type PersonnalInformationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PersonnalInformationsQuery = { __typename?: 'Query', personnalInformations: { __typename?: 'UserInformations', username: string, email: string } };
+export type PersonnalInformationsQuery = { __typename?: 'Query', personnalInformations: { __typename?: 'UserInformations', username: string, email: string, profile: { __typename?: 'Profile', battletag: string, isPlayer: boolean } } };
 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserLoggedIn', username: string, role: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserLoggedIn', username: string, role: string, profile: { __typename?: 'Profile', isPlayer: boolean } } };
 
 export type RegisterMutationVariables = Exact<{
   data: UserRegisterInputDto;
@@ -239,6 +273,35 @@ export type UpdateArticleMutationVariables = Exact<{
 export type UpdateArticleMutation = { __typename?: 'Mutation', updateArticle: { __typename?: 'Article', id: number, title: string, content: string } };
 
 
+export const UpdateProfileDocument = gql`
+    mutation UpdateProfile($data: UpdateProfileInputDto!) {
+  updateProfile(data: $data) {
+    isPlayer
+  }
+}
+    `;
+
+/**
+ * __useUpdateProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfileMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfileMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateProfileMutation({
+ *   variables: {
+ *     data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateProfileMutation(options: VueApolloComposable.UseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<UpdateProfileMutation, UpdateProfileMutationVariables>(UpdateProfileDocument, options);
+}
+export type UpdateProfileMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateProfileMutation, UpdateProfileMutationVariables>;
 export const GetAdminArticlesDocument = gql`
     query GetAdminArticles {
   getAdminArticles {
@@ -300,6 +363,39 @@ export function useGetAllArticlesLazyQuery(options: VueApolloComposable.UseQuery
   return VueApolloComposable.useLazyQuery<GetAllArticlesQuery, GetAllArticlesQueryVariables>(GetAllArticlesDocument, {}, options);
 }
 export type GetAllArticlesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetAllArticlesQuery, GetAllArticlesQueryVariables>;
+export const GetAllPlayersDocument = gql`
+    query GetAllPlayers {
+  getAllPlayers {
+    rank
+    id
+    victory
+    defeat
+    profile {
+      battletag
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllPlayersQuery__
+ *
+ * To run a query within a Vue component, call `useGetAllPlayersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPlayersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetAllPlayersQuery();
+ */
+export function useGetAllPlayersQuery(options: VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetAllPlayersQuery, GetAllPlayersQueryVariables>(GetAllPlayersDocument, {}, options);
+}
+export function useGetAllPlayersLazyQuery(options: VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetAllPlayersQuery, GetAllPlayersQueryVariables>(GetAllPlayersDocument, {}, options);
+}
+export type GetAllPlayersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetAllPlayersQuery, GetAllPlayersQueryVariables>;
 export const GetAllAdminUsersDocument = gql`
     query getAllAdminUsers {
   getAllAdminUsers {
@@ -451,6 +547,10 @@ export const PersonnalInformationsDocument = gql`
   personnalInformations {
     username
     email
+    profile {
+      battletag
+      isPlayer
+    }
   }
 }
     `;
@@ -479,6 +579,9 @@ export const ProfileDocument = gql`
   profile {
     username
     role
+    profile {
+      isPlayer
+    }
   }
 }
     `;

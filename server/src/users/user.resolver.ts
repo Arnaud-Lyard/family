@@ -1,5 +1,4 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import datasource from "../database";
 import User, {
   UserAdminList,
   UserInformations,
@@ -10,9 +9,7 @@ import {
   PromoteUserInputDto,
   UserLoginInputDto,
   UserRegisterInputDto,
-  UserToBeRegistered,
 } from "./dto/userInputDto";
-import { AuthService } from "../auth/auth.service";
 import { UserService } from "./user.service";
 
 @Resolver(User)
@@ -20,30 +17,14 @@ export class UserResolver {
   @Mutation(() => UserLoggedIn)
   async register(
     @Arg("data") data: UserRegisterInputDto
-  ): Promise<UserLoggedIn> {
-    const exisitingEmail = await datasource
-      .getRepository(User)
-      .findOne({ where: { email: data.email } });
-
-    if (exisitingEmail !== null) throw new Error("INTERNAL_SERVER_ERROR");
-
-    const existingUsername = await datasource
-      .getRepository(User)
-      .findOne({ where: { username: data.username } });
-
-    if (existingUsername !== null) throw new Error("USERNAME_ALREADY_EXISTS");
-
-    const hashedPassword = await AuthService.hashPassword(data.password);
-
-    const user: UserToBeRegistered = {
-      username: data.username,
-      email: data.email,
-      hashedPassword: hashedPassword,
-    };
-
-    const userRegistered = await datasource.getRepository(User).save(user);
-
-    return { username: userRegistered.username, role: userRegistered.role };
+  ): Promise<UserInformations> {
+    try {
+      const userRegistered = await UserService.register(data);
+      return userRegistered;
+    } catch (err) {
+      console.error("error when registering user", err);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
   }
 
   @Mutation(() => String)

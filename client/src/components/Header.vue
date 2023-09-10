@@ -6,22 +6,22 @@
           <img src="/images/vue-js.png" alt="Logo">
         </li>
         <li>
-          <RouterLink to="/">Home</RouterLink>
+          <RouterLink :to="{ name: 'home' }">Home</RouterLink>
         </li>
       </ul>
       <ul class="usernavigation">
         <li>
           <span>Settings</span>
-          <label class="switch">
-            <input type="checkbox" @click="togglePreference()">
+          <label for="settings" class="switch">
+            <input type="checkbox" id="settings" name="settings" @click="togglePreference()">
             <span class="slider"></span>
           </label>
         </li>
         <li v-if="isLoggedIn && isSuperAdmin">
-          <RouterLink to="/superadmin">Super Admin</RouterLink>
+          <RouterLink :to="{ name: 'superadmin' }">Super Admin</RouterLink>
         </li>
         <li v-if="isLoggedIn && isAdmin || isLoggedIn && isSuperAdmin">
-          <RouterLink to="/admin">Admin</RouterLink>
+          <RouterLink :to="{ name: 'admin' }">Admin</RouterLink>
         </li>
         <li v-if="!isLoggedIn">
           <RouterLink :to="{ name: 'login' }">Login</RouterLink>
@@ -30,7 +30,7 @@
           <RouterLink :to="{ name: 'register' }">Register</RouterLink>
         </li>
         <li v-if="isLoggedIn">
-          <RouterLink to="/profil">Profile</RouterLink>
+          <RouterLink :to="{ name: 'profile' }">Profile</RouterLink>
         </li>
         <li v-if="isLoggedIn">
           <a><button @click="$emit('logout')">Logout</button></a>

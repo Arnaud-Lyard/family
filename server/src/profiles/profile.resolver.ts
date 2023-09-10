@@ -1,9 +1,10 @@
-import { Arg, Authorized, Ctx, Mutation, Query } from "type-graphql";
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Profile } from "./entities/profile.entity";
 import { ProfileService } from "./profile.service";
 import { ContextType } from "../index";
-import { TogglePlayerModeInputDto } from "./dto/profileInputDto";
+import { UpdateProfileInputDto } from "./dto/profileInputDto";
 
+@Resolver(Profile)
 export class ProfileResolver {
   @Authorized()
   @Query(() => [Profile])
@@ -20,17 +21,25 @@ export class ProfileResolver {
   }
   @Authorized()
   @Mutation(() => Profile)
-  async togglePlayerMode(
+  async updateProfile(
     @Ctx() ctx: ContextType,
-    @Arg("data") data: TogglePlayerModeInputDto
+    @Arg("data") data: UpdateProfileInputDto
   ): Promise<Profile> {
-    const params = { isPlayer: data.isPlayer, userId: ctx.currentUser!.id };
     try {
-      const playerMode = await ProfileService.togglePlayerMode(params);
+      const playerMode = await ProfileService.updateProfile(ctx, data);
       return playerMode;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error while switching player mode", error);
-      throw new Error("INTERNAL_SERVER_ERROR");
+      switch (error.message) {
+        case "EMAIL_ALREADY_USED":
+          throw new Error("EMAIL_ALREADY_USED");
+          break;
+        case "USERNAME_ALREADY_USED":
+          throw new Error("USERNAME_ALREADY_USED");
+          break;
+        default:
+          throw new Error("INTERNAL_SERVER_ERROR");
+      }
     }
   }
 }

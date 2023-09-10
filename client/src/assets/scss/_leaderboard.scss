@@ -5,3 +5,134 @@
   margin-top: 76px;
   width: 33%;
 }
+
+.leaderboard-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: "Titillium Web Regular";
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.leaderboard-table thead tr {
+  background-color: $--color-secondary;
+  text-align: left;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 12px 15px;
+}
+
+.leaderboard-table tbody tr {
+  border-bottom: 1px solid $--color-border-grey;
+}
+
+.leaderboard-table tbody tr:last-of-type {
+  border-bottom: 2px solid $--color-secondary;
+}
+
+.leaderboard-table tfoot tr {
+  background-color: $--color-secondary;
+}
+
+.leaderboard-table {
+  thead {
+    tr {
+      .arrow-rank {
+        span {
+          cursor: pointer;
+        }
+        &.arrow-rank.up {
+          i:nth-child(2) {
+            display: none;
+          }
+        }
+        &.arrow-rank.down {
+          i:nth-child(1) {
+            display: none;
+          }
+        }
+        &.arrow-rank.none {
+          i {
+            display: none;
+          }
+        }
+      }
+      .arrow-battletag {
+        span {
+          cursor: pointer;
+        }
+        &.arrow-battletag.up {
+          i:nth-child(2) {
+            display: none;
+          }
+        }
+        &.arrow-battletag.down {
+          i:nth-child(1) {
+            display: none;
+          }
+        }
+        &.arrow-battletag.none {
+          i {
+            display: none;
+          }
+        }
+      }
+      .arrow-victory {
+        span {
+          cursor: pointer;
+        }
+        &.arrow-victory.up {
+          i:nth-child(2) {
+            display: none;
+          }
+        }
+        &.arrow-victory.down {
+          i:nth-child(1) {
+            display: none;
+          }
+        }
+        &.arrow-victory.none {
+          i {
+            display: none;
+          }
+        }
+      }
+      .arrow-defeat {
+        span {
+          cursor: pointer;
+        }
+        &.arrow-defeat.up {
+          i:nth-child(2) {
+            display: none;
+          }
+        }
+        &.arrow-defeat.down {
+          i:nth-child(1) {
+            display: none;
+          }
+        }
+        &.arrow-defeat.none {
+          i {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  tbody {
+    tr {
+      td:last-of-type:hover {
+        cursor: pointer;
+        color: $--color-secondary;
+      }
+      td:nth-child(2):hover {
+        cursor: pointer;
+        color: $--color-secondary;
+        font-weight: bold;
+      }
+    }
+  }
+}

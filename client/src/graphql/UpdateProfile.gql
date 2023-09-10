@@ -1,0 +1,5 @@
+mutation UpdateProfile($data: UpdateProfileInputDto!) {
+  updateProfile(data: $data) {
+    isPlayer
+  }
+}

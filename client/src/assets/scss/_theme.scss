@@ -59,6 +59,9 @@ $theme-map: null;
         background-color: $--color-secondary;
       }
     }
+    .leaderboard-table tbody tr:nth-of-type(even) {
+      background-color: $--color-light;
+    }
   }
 }
 
@@ -106,6 +109,9 @@ $theme-map: null;
       &.router-link-active::after {
         background-color: $--color-secondary;
       }
+    }
+    .leaderboard-table tbody tr:nth-of-type(even) {
+      background-color: $--color-primary-light;
     }
   }
 }

@@ -1,6 +1,11 @@
 import { ContextType } from "..";
 import { AuthService } from "../auth/auth.service";
-import { PromoteUserInputDto, UserLoginInputDto } from "./dto/userInputDto";
+import {
+  PromoteUserInputDto,
+  UserLoginInputDto,
+  UserRegisterInputDto,
+  UserToBeRegistered,
+} from "./dto/userInputDto";
 import { UserRepository } from "./user.repository";
 import jwt from "jsonwebtoken";
 import config from "../config/config";
@@ -50,7 +55,11 @@ export class UserService {
   static async getProfile(ctx: ContextType): Promise<UserLoggedIn> {
     try {
       const user = await UserRepository.getUserById(ctx.currentUser!.id);
-      return { username: user.username, role: user.role };
+      return {
+        username: user.username,
+        role: user.role,
+        profile: user.profile,
+      };
     } catch (error) {
       console.error("Error when getting profile", error);
       throw new Error("INTERNAL_SERVER_ERROR");
@@ -79,9 +88,7 @@ export class UserService {
       try {
         const { id, isAdmin } = params;
         const userToPromote = await UserRepository.getUserById(id);
-        console.log(isAdmin);
         userToPromote.role = isAdmin === false ? "admin" : "visitor";
-        console.log(userToPromote);
         const userUpdated = await UserRepository.saveUser(userToPromote);
         return userUpdated;
       } catch (error) {
@@ -99,6 +106,30 @@ export class UserService {
       return users;
     } catch (error) {
       console.error("Error when getting all admin users", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
+  static async register(data: UserRegisterInputDto): Promise<UserInformations> {
+    try {
+      const exisitingEmail = await UserRepository.isEmailUsed(data.email);
+      if (exisitingEmail !== null) throw new Error("EMAIL_ALREADY_USED");
+      const exisitingUsername = await UserRepository.isUsernameUsed(
+        data.username
+      );
+      if (exisitingUsername !== null) throw new Error("USERNAME_ALREADY_USED");
+
+      const hashedPassword = await AuthService.hashPassword(data.password);
+
+      const UserToRegister: UserToBeRegistered = {
+        username: data.username,
+        email: data.email,
+        hashedPassword: hashedPassword,
+      };
+
+      const userRegistered = await UserRepository.register(UserToRegister);
+      return userRegistered;
+    } catch (error) {
+      console.error("Error when registering user", error);
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
