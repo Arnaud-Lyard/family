@@ -8,16 +8,23 @@
       <div>
         <span>Do you want to register for tournament ?</span>
         <label class="switch">
-          <input type="checkbox" v-model="user.isPlayer">
+          <input type="checkbox" v-model="user.isPlayer" @click="showModal(user.isPlayer)">
           <span class=" slider"></span>
         </label>
       </div>
       <label v-if="user.isPlayer" for="battletag">Battletag :</label>
       <input v-if="user.isPlayer" v-model.trim="user.battletag" type="text" name="firstname" id="firstname" required>
-      <button type="submit" class="button">Enregistrer</button>
+      <button type="submit" class="button">Save</button>
       <div class="error regular">{{ errorUpdatePersonnalInformations }}</div>
       <div class="success regular">{{ successUpdateProfile }}</div>
     </form>
+    <Modal v-show="isModalVisible" @confirm="confirmModal" @close="closeModal">
+      <template v-slot:header>Unregister tournament</template>
+      <template v-slot:body> If you unregister for tournament, your actual rank will be lost. Are you sure ?
+      </template>
+      <template v-slot:buttonOne> Accept </template>
+      <template v-slot:buttonTwo> Cancel </template>
+    </Modal>
   </div>
 </template>
 <script setup lang="ts">
@@ -25,6 +32,8 @@ import { reactive, ref } from 'vue';
 import { usePersonnalInformationsQuery } from '../graphql/generated/schema';
 import { useDrawerActive } from '../composables/drawerActive';
 import { useUpdateProfileMutation } from '../graphql/generated/schema';
+import Modal from "../components/Modal.vue";
+
 interface User {
   id: number;
   username: string;
@@ -32,6 +41,7 @@ interface User {
   email: string;
   isPlayer: boolean;
 }
+const isModalVisible = ref<boolean>(false);
 const user = reactive<User>({
   id: 0,
   username: "",
@@ -49,7 +59,6 @@ onResult(({ data }) => {
   user.battletag = data.personnalInformations.profile.battletag;
   user.isPlayer = data.personnalInformations.profile.isPlayer;
 })
-
 
 const submitForm = () => {
   const { mutate: sendUpdateProfileMutation, onDone } = useUpdateProfileMutation({
@@ -75,7 +84,16 @@ const submitForm = () => {
     }
   })
 }
-
+function showModal(isPlayer: boolean) {
+  isPlayer === false ? isModalVisible.value = false : isModalVisible.value = true;
+}
+function confirmModal() {
+  isModalVisible.value = false;
+}
+function closeModal() {
+  user.isPlayer = true;
+  isModalVisible.value = false;
+}
 const { drawerActive } = useDrawerActive();
 
 </script>

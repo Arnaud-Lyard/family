@@ -29,4 +29,19 @@ export class PlayerRepository {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
+
+  static async reinitializePlayer(playerId: number): Promise<Player> {
+    try {
+      const player = await DataSource.createQueryBuilder(Player, "player")
+        .update(Player)
+        .set({ rank: 1000, rating: 1000 })
+        .where("id = :playerId", { playerId })
+        .returning("*")
+        .execute();
+      return player.raw[0];
+    } catch (error) {
+      console.error("Error during player reinitialization query", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
 }

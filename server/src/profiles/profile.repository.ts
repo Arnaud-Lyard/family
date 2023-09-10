@@ -1,4 +1,5 @@
 import DataSource from "../database";
+import { PlayerRepository } from "../players/player.repository";
 import User from "../users/entities/user.entity";
 import { UserRepository } from "../users/user.repository";
 import { UpdateProfileInputDto } from "./dto/profileInputDto";
@@ -28,6 +29,7 @@ export class ProfileRepository {
         return profileUpdated;
       } else {
         const profileDisabled = await this.disabled(user);
+        await PlayerRepository.reinitializePlayer(user.player.id);
         return profileDisabled;
       }
     } catch (error) {
