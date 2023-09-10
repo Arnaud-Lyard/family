@@ -14,10 +14,10 @@ import { Player } from "../../players/entities/player.entity";
 export class Profile {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ nullable: true, default: false })
+  @Column({ default: false })
   @Field()
   isPlayer: boolean;
-  @Column({ nullable: true, default: "" })
+  @Column({ default: "" })
   @Field()
   battletag: string;
   @Column()

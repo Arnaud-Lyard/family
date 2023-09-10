@@ -4,7 +4,8 @@
     <table class="leaderboard-table">
       <thead>
         <tr>
-          <th class="arrow-rank" :class="arrowRankDirection"><span @click="switchTableHeader('rank')">
+          <th class="arrow-rank" :class="arrowRankDirection"><span
+              @click="switchTableHeader('rank'); sortPlayers('rank')">
               Rank <i>
                 <font-awesome-icon icon="fa-solid fa-arrow-up" />
               </i>
@@ -13,7 +14,8 @@
               </i>
             </span>
           </th>
-          <th class="arrow-battletag" :class="arrowBattletagDirection"><span @click="switchTableHeader('battletag')">
+          <th class="arrow-battletag" :class="arrowBattletagDirection"><span
+              @click="switchTableHeader('battletag'); sortPlayers('battletag')">
               Battletag <i>
                 <font-awesome-icon icon="fa-solid fa-arrow-up" />
               </i><i>
@@ -25,7 +27,7 @@
 
       <tbody>
         <tr v-for="player in playersList" :key="player.id">
-          <td>{{ player.rank }}</td>
+          <td>{{ player.rank === 1000 ? '-' : player.rank }}</td>
           <td>{{ player.battletag }}</td>
         </tr>
       </tbody>
@@ -42,7 +44,6 @@
 import { ref, watch } from 'vue';
 import { GetAllPlayersQuery, useGetAllPlayersQuery } from '../graphql/generated/schema';
 import { useSwitchTableHeader } from '../composables/switchTableHeader';
-
 interface Player {
   id: number;
   rank: number;
@@ -67,9 +68,41 @@ watch(result, () => {
     return;
   }
   handleResult(result.value);
+  sortPlayers('rank');
 }, {
   immediate: true
 });
+
+function sortPlayers(column: string) {
+  switch (column) {
+    case 'rank':
+      if (arrowRankDirection.value.down) {
+        playersList.value.sort((a, b) => {
+          return a.rank - b.rank;
+        });
+      } else {
+        playersList.value.sort((a, b) => {
+          return b.rank - a.rank;
+        });
+      }
+      break;
+
+    case 'battletag':
+      if (arrowBattletagDirection.value.down) {
+        playersList.value.sort((a, b) => {
+          return a.battletag.localeCompare(b.battletag);
+        });
+      } else {
+        playersList.value.sort((a, b) => {
+          return b.battletag.localeCompare(a.battletag);
+        });
+      }
+
+      break;
+    default:
+      break;
+  }
+}
 
 const { switchTableHeader, arrowRankDirection, arrowBattletagDirection } = useSwitchTableHeader();
 </script>

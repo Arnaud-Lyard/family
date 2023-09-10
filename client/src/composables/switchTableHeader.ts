@@ -37,6 +37,7 @@ export function useSwitchTableHeader() {
         break;
     }
   }
+
   return {
     arrowRankDirection,
     arrowBattletagDirection,

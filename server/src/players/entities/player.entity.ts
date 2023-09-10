@@ -15,7 +15,7 @@ export class Player {
   @PrimaryGeneratedColumn()
   @Field()
   id: number;
-  @Column({ default: 0 })
+  @Column({ default: 1000 })
   @Field()
   rank: number;
   @Column({ default: 1000 })
