@@ -1,19 +1,20 @@
 <template>
   <div :class="drawerActive" class="container flex flex-justify-center flex-align-center">
     <form @submit.prevent="submitForm()" class="form">
-      <label for="email">Nom d'utilisateur :</label>
-      <input v-model.trim="user.username" type="text" name="username" id="username" required>
+      <label for="username">Nom d'utilisateur :</label>
+      <input v-model.trim="user.username" type="text" name="username" id="username" autocomplete="true" required>
       <label for="email">Adresse email :</label>
-      <input v-model.trim="user.email" type="email" name="email" id="email" required>
+      <input v-model.trim="user.email" type="email" name="email" id="email" autocomplete="true" required>
       <div>
         <span>Do you want to register for tournament ?</span>
-        <label class="switch">
-          <input type="checkbox" v-model="user.isPlayer" @click="showModal(user.isPlayer)">
+        <label for="isPlayer" class="switch">
+          <input type="checkbox" name="isPlayer" id="isPlayer" v-model="user.isPlayer" @click="showModal(user.isPlayer)">
           <span class=" slider"></span>
         </label>
       </div>
       <label v-if="user.isPlayer" for="battletag">Battletag :</label>
-      <input v-if="user.isPlayer" v-model.trim="user.battletag" type="text" name="firstname" id="firstname" required>
+      <input v-if="user.isPlayer" v-model.trim="user.battletag" type="text" name="battletag" id="battletag"
+        autocomplete="true" required>
       <button type="submit" class="button">Save</button>
       <div class="error regular">{{ errorUpdatePersonnalInformations }}</div>
       <div class="success regular">{{ successUpdateProfile }}</div>
@@ -33,6 +34,8 @@ import { usePersonnalInformationsQuery } from '../graphql/generated/schema';
 import { useDrawerActive } from '../composables/drawerActive';
 import { useUpdateProfileMutation } from '../graphql/generated/schema';
 import Modal from "../components/Modal.vue";
+import { useUserStore } from '../store';
+const userStore = useUserStore();
 
 interface User {
   id: number;
@@ -81,6 +84,7 @@ const submitForm = () => {
       errorUpdatePersonnalInformations.value = "Error, please contact admin."
     } else {
       successUpdateProfile.value = "Profile updated successfully."
+      userStore.enablePlayer(user.isPlayer)
     }
   })
 }

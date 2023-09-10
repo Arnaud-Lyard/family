@@ -32,6 +32,7 @@ import {
   faFloppyDisk,
   faArrowUp,
   faArrowDown,
+  faComments,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -60,7 +61,8 @@ library.add(
   faPen,
   faFloppyDisk,
   faArrowUp,
-  faArrowDown
+  faArrowDown,
+  faComments
 );
 const pinia = createPinia();
 

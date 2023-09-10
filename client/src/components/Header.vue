@@ -12,8 +12,8 @@
       <ul class="usernavigation">
         <li>
           <span>Settings</span>
-          <label class="switch">
-            <input type="checkbox" @click="togglePreference()">
+          <label for="settings" class="switch">
+            <input type="checkbox" id="settings" name="settings" @click="togglePreference()">
             <span class="slider"></span>
           </label>
         </li>

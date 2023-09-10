@@ -55,7 +55,11 @@ export class UserService {
   static async getProfile(ctx: ContextType): Promise<UserLoggedIn> {
     try {
       const user = await UserRepository.getUserById(ctx.currentUser!.id);
-      return { username: user.username, role: user.role };
+      return {
+        username: user.username,
+        role: user.role,
+        profile: user.profile,
+      };
     } catch (error) {
       console.error("Error when getting profile", error);
       throw new Error("INTERNAL_SERVER_ERROR");

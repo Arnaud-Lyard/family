@@ -21,6 +21,12 @@ export class Player {
   @Column({ default: 1000 })
   @Field()
   rating: number;
+  @Column({ default: 0 })
+  @Field()
+  victory: number;
+  @Column({ default: 0 })
+  @Field()
+  defeat: number;
   @OneToOne(() => User, (user) => user.player, {
     cascade: ["insert", "update"],
   })

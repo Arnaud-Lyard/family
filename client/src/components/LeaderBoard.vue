@@ -22,6 +22,24 @@
                 <font-awesome-icon icon="fa-solid fa-arrow-down" />
               </i>
             </span></th>
+          <th class="arrow-victory" :class="arrowVictoryDirection"><span
+              @click="switchTableHeader('victory'); sortPlayers('victory')">
+              Victory <i>
+                <font-awesome-icon icon="fa-solid fa-arrow-up" />
+              </i><i>
+                <font-awesome-icon icon="fa-solid fa-arrow-down" />
+              </i>
+            </span></th>
+          <th class="arrow-defeat" :class="arrowDefeatDirection"><span
+              @click="switchTableHeader('defeat'); sortPlayers('defeat')">
+              Defeat <i>
+                <font-awesome-icon icon="fa-solid fa-arrow-up" />
+              </i><i>
+                <font-awesome-icon icon="fa-solid fa-arrow-down" />
+              </i>
+            </span></th>
+          <th v-if="userStore.getIsPlayer"><span>Request</span></th>
+
         </tr>
       </thead>
 
@@ -29,12 +47,17 @@
         <tr v-for="player in playersList" :key="player.id">
           <td>{{ player.rank === 1000 ? '-' : player.rank }}</td>
           <td>{{ player.battletag }}</td>
+          <td>{{ player.victory }}</td>
+          <td>{{ player.defeat }}</td>
+          <td v-if="userStore.getIsPlayer"><i>
+              <font-awesome-icon icon="fa-solid fa-comments" />
+            </i></td>
         </tr>
       </tbody>
 
       <tfoot>
         <tr>
-          <th colspan="4">Top 25 players</th>
+          <th colspan="5">Top 25 players</th>
         </tr>
       </tfoot>
     </table>
@@ -44,10 +67,15 @@
 import { ref, watch } from 'vue';
 import { GetAllPlayersQuery, useGetAllPlayersQuery } from '../graphql/generated/schema';
 import { useSwitchTableHeader } from '../composables/switchTableHeader';
+import { useUserStore } from '../store';
+const userStore = useUserStore();
+
 interface Player {
   id: number;
   rank: number;
   battletag: string;
+  victory: number;
+  defeat: number;
 }
 const playersList = ref<Player[]>([]);
 
@@ -58,7 +86,9 @@ const handleResult = (data: GetAllPlayersQuery) => {
     return {
       id: player.id,
       rank: player.rank,
-      battletag: player.profile.battletag
+      battletag: player.profile.battletag,
+      victory: player.victory,
+      defeat: player.defeat
     }
   })
 };
@@ -97,6 +127,30 @@ function sortPlayers(column: string) {
           return b.battletag.localeCompare(a.battletag);
         });
       }
+      break;
+
+    case 'victory':
+      if (arrowVictoryDirection.value.down) {
+        playersList.value.sort((a, b) => {
+          return a.victory - b.victory;
+        });
+      } else {
+        playersList.value.sort((a, b) => {
+          return b.victory - a.victory;
+        });
+      }
+      break;
+
+    case 'defeat':
+      if (arrowDefeatDirection.value.down) {
+        playersList.value.sort((a, b) => {
+          return a.defeat - b.defeat;
+        });
+      } else {
+        playersList.value.sort((a, b) => {
+          return b.defeat - a.defeat;
+        });
+      }
 
       break;
     default:
@@ -104,5 +158,5 @@ function sortPlayers(column: string) {
   }
 }
 
-const { switchTableHeader, arrowRankDirection, arrowBattletagDirection } = useSwitchTableHeader();
+const { switchTableHeader, arrowRankDirection, arrowBattletagDirection, arrowDefeatDirection, arrowVictoryDirection } = useSwitchTableHeader();
 </script>

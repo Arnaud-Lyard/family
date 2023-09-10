@@ -63,7 +63,6 @@ export class UserLoggedIn
       | "hashedPassword"
       | "role"
       | "articles"
-      | "profile"
       | "player"
       | "playerId"
     >
@@ -72,6 +71,8 @@ export class UserLoggedIn
   username: string;
   @Field()
   role: Role;
+  @Field()
+  profile: Profile;
 }
 
 @ObjectType()

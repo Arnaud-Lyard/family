@@ -5,6 +5,7 @@ import router from "../router/router";
 interface State {
   username: string;
   role: string;
+  isPlayer: boolean;
   themeLight: string;
   themeDark: string;
 }
@@ -16,6 +17,7 @@ export const useUserStore = defineStore("user", {
       role: JSON.parse(localStorage.getItem("role")!),
       themeLight: JSON.parse(localStorage.getItem("light-theme")!),
       themeDark: JSON.parse(localStorage.getItem("dark-theme")!),
+      isPlayer: JSON.parse(localStorage.getItem("is-player")!),
     };
   },
   getters: {
@@ -28,6 +30,9 @@ export const useUserStore = defineStore("user", {
     },
     getIsSuperAdmin: (state) => {
       return state.role === "superadmin" ? true : false;
+    },
+    getIsPlayer: (state) => {
+      return state.isPlayer;
     },
     getIsLightTheme: (state) => {
       return state.themeLight === "light-theme" ? true : false;
@@ -42,8 +47,10 @@ export const useUserStore = defineStore("user", {
       onResult(({ data }) => {
         this.username = data.profile.username;
         this.role = data.profile.role;
+        this.isPlayer = data.profile.profile.isPlayer ? true : false;
         localStorage.setItem("user", JSON.stringify(this.username));
         localStorage.setItem("role", JSON.stringify(this.role));
+        localStorage.setItem("is-player", JSON.stringify(this.isPlayer));
         router.push({ name: "dashboard" });
       });
     },
@@ -51,6 +58,10 @@ export const useUserStore = defineStore("user", {
       this.username = "";
       localStorage.removeItem("user");
       router.push({ name: "login" });
+    },
+    enablePlayer(isPlayer: boolean) {
+      this.isPlayer = isPlayer ? true : false;
+      localStorage.setItem("is-player", JSON.stringify(this.isPlayer));
     },
     enableLightTheme() {
       localStorage.setItem("light-theme", JSON.stringify("light-theme"));

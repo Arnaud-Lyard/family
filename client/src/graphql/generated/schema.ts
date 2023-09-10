@@ -71,11 +71,13 @@ export type MutationUpdateProfileArgs = {
 
 export type Player = {
   __typename?: 'Player';
+  defeat: Scalars['Float'];
   id: Scalars['Float'];
   profile: Profile;
   rank: Scalars['Float'];
   rating: Scalars['Float'];
   user: User;
+  victory: Scalars['Float'];
 };
 
 export type Profile = {
@@ -163,6 +165,7 @@ export type UserInformations = {
 
 export type UserLoggedIn = {
   __typename?: 'UserLoggedIn';
+  profile: Profile;
   role: Scalars['String'];
   username: Scalars['String'];
 };
@@ -198,7 +201,7 @@ export type GetAllArticlesQuery = { __typename?: 'Query', getAllArticles: Array<
 export type GetAllPlayersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllPlayersQuery = { __typename?: 'Query', getAllPlayers: Array<{ __typename?: 'Player', rank: number, id: number, profile: { __typename?: 'Profile', battletag: string } }> };
+export type GetAllPlayersQuery = { __typename?: 'Query', getAllPlayers: Array<{ __typename?: 'Player', rank: number, id: number, victory: number, defeat: number, profile: { __typename?: 'Profile', battletag: string } }> };
 
 export type GetAllAdminUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -239,7 +242,7 @@ export type PersonnalInformationsQuery = { __typename?: 'Query', personnalInform
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserLoggedIn', username: string, role: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserLoggedIn', username: string, role: string, profile: { __typename?: 'Profile', isPlayer: boolean } } };
 
 export type RegisterMutationVariables = Exact<{
   data: UserRegisterInputDto;
@@ -365,6 +368,8 @@ export const GetAllPlayersDocument = gql`
   getAllPlayers {
     rank
     id
+    victory
+    defeat
     profile {
       battletag
     }
@@ -574,6 +579,9 @@ export const ProfileDocument = gql`
   profile {
     username
     role
+    profile {
+      isPlayer
+    }
   }
 }
     `;

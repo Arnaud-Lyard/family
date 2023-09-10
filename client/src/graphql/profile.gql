@@ -2,5 +2,8 @@ query Profile {
   profile {
     username
     role
+    profile {
+      isPlayer
+    }
   }
 }

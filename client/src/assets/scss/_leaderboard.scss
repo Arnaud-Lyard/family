@@ -37,10 +37,6 @@
   background-color: $--color-secondary;
 }
 
-.leaderboard-table tbody tr:hover {
-  cursor: pointer;
-  font-weight: bold;
-}
 .leaderboard-table {
   thead {
     tr {
@@ -83,6 +79,59 @@
             display: none;
           }
         }
+      }
+      .arrow-victory {
+        span {
+          cursor: pointer;
+        }
+        &.arrow-victory.up {
+          i:nth-child(2) {
+            display: none;
+          }
+        }
+        &.arrow-victory.down {
+          i:nth-child(1) {
+            display: none;
+          }
+        }
+        &.arrow-victory.none {
+          i {
+            display: none;
+          }
+        }
+      }
+      .arrow-defeat {
+        span {
+          cursor: pointer;
+        }
+        &.arrow-defeat.up {
+          i:nth-child(2) {
+            display: none;
+          }
+        }
+        &.arrow-defeat.down {
+          i:nth-child(1) {
+            display: none;
+          }
+        }
+        &.arrow-defeat.none {
+          i {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  tbody {
+    tr {
+      td:last-of-type:hover {
+        cursor: pointer;
+        color: $--color-secondary;
+      }
+      td:nth-child(2):hover {
+        cursor: pointer;
+        color: $--color-secondary;
+        font-weight: bold;
       }
     }
   }
