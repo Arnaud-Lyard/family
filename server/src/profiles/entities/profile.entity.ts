@@ -14,23 +14,20 @@ import { Player } from "../../players/entities/player.entity";
 export class Profile {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ default: false })
+  @Column({ default: false, name: "is_player" })
   @Field()
   isPlayer: boolean;
   @Column({ default: "" })
   @Field()
   battletag: string;
-  @Column()
-  userId: number;
-  @Field()
-  playerId: number;
+
   @OneToOne(() => User, (user) => user.profile, { onDelete: "CASCADE" })
-  @JoinColumn()
+  @JoinColumn({ name: "user_id" })
   @Field(() => User)
   user: User;
 
   @OneToOne(() => Player, (player) => player.user)
-  @JoinColumn()
+  @JoinColumn({ name: "player_id" })
   @Field(() => Player)
   player: Player;
 }

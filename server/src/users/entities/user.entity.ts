@@ -28,7 +28,7 @@ class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ name: "hashed_password" })
   hashedPassword: string;
 
   @Field()
@@ -39,15 +39,12 @@ class User {
   @Field(() => [Article])
   articles: Article[];
 
-  @Field()
-  playerId: number;
-
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
   @Field(() => Profile)
   profile: Profile;
 
   @OneToOne(() => Player, (player) => player.user)
-  @JoinColumn()
+  @JoinColumn({ name: "player_id" })
   @Field(() => Player)
   player: Player;
 }

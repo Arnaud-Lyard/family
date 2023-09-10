@@ -2,12 +2,13 @@ import { Field, ObjectType } from "type-graphql";
 import {
   Column,
   Entity,
-  JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import User from "../../users/entities/user.entity";
 import { Profile } from "../../profiles/entities/profile.entity";
+import { PlayerToMatch } from "../../playerstomatchs/entities/playertomatch.entity";
 
 @Entity()
 @ObjectType()
@@ -37,4 +38,6 @@ export class Player {
   })
   @Field(() => Profile)
   profile: Profile;
+  @OneToMany(() => PlayerToMatch, (playerToMatch) => playerToMatch.player)
+  playerToMatchs: PlayerToMatch[];
 }

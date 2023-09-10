@@ -5,7 +5,7 @@ import {
   GetArticleInputDto,
   SaveArticleInputDto,
   UpdateArticleInputDto,
-} from "./entities/dto/articleInputDto";
+} from "./dto/articleInputDto";
 import { ContextType } from "../index";
 
 @Resolver(Article)

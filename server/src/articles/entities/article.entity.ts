@@ -1,5 +1,11 @@
 import { Field, ObjectType } from "type-graphql";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import User from "../../users/entities/user.entity";
 
 @Entity()
@@ -15,6 +21,7 @@ export class Article {
   @Column()
   content: string;
   @Field(() => User)
+  @JoinColumn({ name: "user_id" })
   @ManyToOne(() => User, (u) => u.articles)
   user: User;
 }

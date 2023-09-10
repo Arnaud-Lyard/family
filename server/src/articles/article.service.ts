@@ -1,9 +1,6 @@
 import { ArticleRepository } from "./article.repository";
 import { Article } from "./entities/article.entity";
-import {
-  ArticleToBeCreated,
-  ArticleToBeUpdated,
-} from "./entities/dto/articleInputDto";
+import { ArticleToBeCreated, ArticleToBeUpdated } from "./dto/articleInputDto";
 
 export class ArticleService {
   static async saveArticle(params: ArticleToBeCreated): Promise<Article> {
@@ -24,7 +21,6 @@ export class ArticleService {
       if (!articleExist) {
         throw new Error("ARTICLE_NOT_FOUND");
       }
-      console.log("count");
       const article = await ArticleRepository.updateOneArticle(params);
       return article;
     } catch (error) {

@@ -1,9 +1,6 @@
 import DataSource from "../database";
 import { Article } from "./entities/article.entity";
-import {
-  ArticleToBeCreated,
-  ArticleToBeUpdated,
-} from "./entities/dto/articleInputDto";
+import { ArticleToBeCreated, ArticleToBeUpdated } from "./dto/articleInputDto";
 
 export class ArticleRepository {
   static async createOneArticle(params: ArticleToBeCreated): Promise<Article> {

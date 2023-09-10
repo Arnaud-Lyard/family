@@ -15,6 +15,7 @@ import database from "./database";
 import { ArticleResolver } from "./articles/article.resolver";
 import { ProfileResolver } from "./profiles/profile.resolver";
 import { PlayerResolver } from "./players/player.resolver";
+import { MatchResolver } from "./matchs/match.resolver";
 export interface ContextType {
   req: express.Request;
   res: express.Response;
@@ -28,7 +29,13 @@ async function start(): Promise<void> {
   const httpServer = http.createServer(app);
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, ArticleResolver, ProfileResolver, PlayerResolver],
+    resolvers: [
+      UserResolver,
+      ArticleResolver,
+      ProfileResolver,
+      PlayerResolver,
+      MatchResolver,
+    ],
     validate: false,
     authChecker: async ({ context }: { context: ContextType }, roles = []) => {
       const { req } = context;
