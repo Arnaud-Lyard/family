@@ -8,6 +8,7 @@ import Profile from "../pages/Profile.vue";
 import Admin from "../pages/Admin.vue";
 import SuperAdmin from "../pages/SuperAdmin.vue";
 import Article from "../pages/Article.vue";
+import Player from "../pages/Player.vue";
 
 const routes = [
   { path: "/", component: Home, name: "home" },
@@ -33,6 +34,12 @@ const routes = [
     path: "/dashboard",
     component: Dashboard,
     name: "dashboard",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/player/:id",
+    component: Player,
+    name: "player",
     meta: { requiresAuth: true },
   },
   { path: "/login", component: Login, name: "login" },

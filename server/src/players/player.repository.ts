@@ -12,4 +12,21 @@ export class PlayerRepository {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
+
+  static async getAllPlayers(): Promise<Player[]> {
+    try {
+      const players = await DataSource.createQueryBuilder(Player, "player")
+        .innerJoinAndSelect(
+          "player.profile",
+          "profile",
+          "profile.isPlayer = :isPlayer",
+          { isPlayer: true }
+        )
+        .getMany();
+      return players;
+    } catch (error) {
+      console.error("Error during all player recuperation query", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
 }

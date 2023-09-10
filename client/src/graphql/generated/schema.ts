@@ -98,6 +98,7 @@ export type Query = {
   getAdminArticles: Array<Article>;
   getAllAdminUsers: Array<UserAdminList>;
   getAllArticles: Array<Article>;
+  getAllPlayers: Array<Player>;
   getAllProfiles: Array<Profile>;
   getArticleByIdForAdmin: Article;
   getOneArticle: Article;
@@ -193,6 +194,11 @@ export type GetAllArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllArticlesQuery = { __typename?: 'Query', getAllArticles: Array<{ __typename?: 'Article', id: number, title: string, content: string, user: { __typename?: 'User', username: string } }> };
+
+export type GetAllPlayersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllPlayersQuery = { __typename?: 'Query', getAllPlayers: Array<{ __typename?: 'Player', rank: number, id: number, profile: { __typename?: 'Profile', battletag: string } }> };
 
 export type GetAllAdminUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -354,6 +360,37 @@ export function useGetAllArticlesLazyQuery(options: VueApolloComposable.UseQuery
   return VueApolloComposable.useLazyQuery<GetAllArticlesQuery, GetAllArticlesQueryVariables>(GetAllArticlesDocument, {}, options);
 }
 export type GetAllArticlesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetAllArticlesQuery, GetAllArticlesQueryVariables>;
+export const GetAllPlayersDocument = gql`
+    query GetAllPlayers {
+  getAllPlayers {
+    rank
+    id
+    profile {
+      battletag
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllPlayersQuery__
+ *
+ * To run a query within a Vue component, call `useGetAllPlayersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPlayersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetAllPlayersQuery();
+ */
+export function useGetAllPlayersQuery(options: VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetAllPlayersQuery, GetAllPlayersQueryVariables>(GetAllPlayersDocument, {}, options);
+}
+export function useGetAllPlayersLazyQuery(options: VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetAllPlayersQuery, GetAllPlayersQueryVariables>(GetAllPlayersDocument, {}, options);
+}
+export type GetAllPlayersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetAllPlayersQuery, GetAllPlayersQueryVariables>;
 export const GetAllAdminUsersDocument = gql`
     query getAllAdminUsers {
   getAllAdminUsers {

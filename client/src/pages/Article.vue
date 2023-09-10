@@ -35,7 +35,6 @@ watch(
   },
   {
     immediate: true
-
   }
 )
 function fetchUser(id: string | string[]) {
@@ -45,7 +44,6 @@ function fetchUser(id: string | string[]) {
     }
   })
   onResult(({ data }) => {
-    console.log(data)
     if (data.getOneArticle) {
       const { title, content, user: { username } } = data.getOneArticle
       article.title = title

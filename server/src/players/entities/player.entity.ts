@@ -15,10 +15,10 @@ export class Player {
   @PrimaryGeneratedColumn()
   @Field()
   id: number;
-  @Column({ nullable: true })
+  @Column({ default: 0 })
   @Field()
   rank: number;
-  @Column({ nullable: true, default: 1000 })
+  @Column({ default: 1000 })
   @Field()
   rating: number;
   @OneToOne(() => User, (user) => user.player, {
