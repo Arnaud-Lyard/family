@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 import User from "../../users/entities/user.entity";
 import { Field, ObjectType } from "type-graphql";
 import { Player } from "../../players/entities/player.entity";
@@ -12,9 +6,9 @@ import { Player } from "../../players/entities/player.entity";
 @Entity()
 @ObjectType()
 export class Profile {
-  @PrimaryGeneratedColumn()
-  id: number;
-  @Column({ default: false, name: "is_player" })
+  @PrimaryColumn({ default: () => "gen_random_uuid()" })
+  id: string;
+  @Column({ default: false })
   @Field()
   isPlayer: boolean;
   @Column({ default: "" })
@@ -22,12 +16,12 @@ export class Profile {
   battletag: string;
 
   @OneToOne(() => User, (user) => user.profile, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "user_id" })
+  @JoinColumn()
   @Field(() => User)
   user: User;
 
   @OneToOne(() => Player, (player) => player.user)
-  @JoinColumn({ name: "player_id" })
+  @JoinColumn()
   @Field(() => Player)
   player: Player;
 }

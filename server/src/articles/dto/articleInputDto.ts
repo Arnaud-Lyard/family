@@ -11,23 +11,23 @@ export class SaveArticleInputDto {
 @InputType()
 export class GetArticleInputDto {
   @Field()
-  id: number;
+  id: string;
 }
 @InputType()
 export class UpdateArticleInputDto {
   @Field()
-  id: number;
+  id: string;
   @Field()
   title: string;
   @Field()
   content: string;
 }
 export interface ArticleToBeCreated {
-  userId: number;
+  userId: string;
   title: string;
   content: string;
 }
 
 export interface ArticleToBeUpdated extends ArticleToBeCreated {
-  id: number;
+  id: string;
 }

@@ -16,16 +16,14 @@ export class ProfileRepository {
     }
   }
   static async updateProfile(
-    userId: number,
+    userId: string,
     params: UpdateProfileInputDto
   ): Promise<Profile> {
     try {
       const { isPlayer, battletag } = params;
       const user = await UserRepository.getUserById(userId);
-
       if (isPlayer === true) {
         const profileUpdated = await this.update(user, params);
-
         return profileUpdated;
       } else {
         const profileDisabled = await this.disabled(user);

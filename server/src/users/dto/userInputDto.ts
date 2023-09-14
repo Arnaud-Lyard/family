@@ -38,7 +38,7 @@ export class UserLoginInputDto {
 export class PromoteUserInputDto {
   @Field()
   @IsNumber()
-  id: number;
+  id: string;
   @Field()
   isAdmin: boolean;
 }

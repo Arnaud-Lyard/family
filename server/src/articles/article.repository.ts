@@ -11,13 +11,13 @@ export class ArticleRepository {
     });
     return article;
   }
-  static async getArticlesByUserId(userId: number): Promise<Article[]> {
+  static async getArticlesByUserId(userId: string): Promise<Article[]> {
     const articles = await DataSource.getRepository(Article).find({
       where: { user: { id: userId } },
     });
     return articles;
   }
-  static async getOneArticleById(articleId: number): Promise<Article> {
+  static async getOneArticleById(articleId: string): Promise<Article> {
     const article = await DataSource.getRepository(Article).findOne({
       where: {
         id: articleId,
@@ -42,7 +42,7 @@ export class ArticleRepository {
     });
     return articles;
   }
-  static async getOneArticleByIdWithUser(articleId: number): Promise<Article> {
+  static async getOneArticleByIdWithUser(articleId: string): Promise<Article> {
     const article = await DataSource.getRepository(Article).findOne({
       where: { id: articleId },
       relations: ["user"],

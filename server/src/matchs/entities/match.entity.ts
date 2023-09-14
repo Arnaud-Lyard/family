@@ -4,20 +4,20 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from "typeorm";
 import { PlayerToMatch } from "../../playerstomatchs/entities/playertomatch.entity";
 
 @Entity()
 @ObjectType()
 export class Match {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({ default: () => "gen_random_uuid()" })
   @Field()
-  id: number;
-  @Column({ type: "timestamptz", name: "planned_date" })
+  id: string;
+  @Column({ type: "timestamptz" })
   @Field()
   plannedDate: Date;
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @CreateDateColumn({ type: "timestamptz" })
   @Field()
   createdAt: Date;
 

@@ -1,11 +1,5 @@
 import { Field, ObjectType } from "type-graphql";
-import {
-  Column,
-  Entity,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
 import User from "../../users/entities/user.entity";
 import { Profile } from "../../profiles/entities/profile.entity";
 import { PlayerToMatch } from "../../playerstomatchs/entities/playertomatch.entity";
@@ -13,9 +7,9 @@ import { PlayerToMatch } from "../../playerstomatchs/entities/playertomatch.enti
 @Entity()
 @ObjectType()
 export class Player {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({ default: () => "gen_random_uuid()" })
   @Field()
-  id: number;
+  id: string;
   @Column({ default: 1000 })
   @Field()
   rank: number;

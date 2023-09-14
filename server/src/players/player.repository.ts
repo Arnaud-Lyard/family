@@ -30,7 +30,7 @@ export class PlayerRepository {
     }
   }
 
-  static async reinitializePlayer(playerId: number): Promise<Player> {
+  static async reinitializePlayer(playerId: string): Promise<Player> {
     try {
       const player = await DataSource.createQueryBuilder(Player, "player")
         .update(Player)
@@ -41,6 +41,19 @@ export class PlayerRepository {
       return player.raw[0];
     } catch (error) {
       console.error("Error during player reinitialization query", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
+
+  static async getPlayerByUserId(userId: string): Promise<Player> {
+    try {
+      const player = await DataSource.getRepository(Player).findOne({
+        where: { id: userId },
+      });
+      if (player === null) throw new Error("PLAYER_NOT_FOUND");
+      return player;
+    } catch (error) {
+      console.error("Error during player recuperation query", error);
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }

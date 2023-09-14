@@ -1,19 +1,13 @@
 import { Field, ObjectType } from "type-graphql";
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import User from "../../users/entities/user.entity";
 
 @Entity()
 @ObjectType()
 export class Article {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({ default: () => "gen_random_uuid()" })
   @Field()
-  id: number;
+  id: string;
   @Field()
   @Column()
   title: string;
@@ -21,7 +15,7 @@ export class Article {
   @Column()
   content: string;
   @Field(() => User)
-  @JoinColumn({ name: "user_id" })
+  @JoinColumn()
   @ManyToOne(() => User, (u) => u.articles)
   user: User;
 }

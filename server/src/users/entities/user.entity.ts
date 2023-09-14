@@ -5,7 +5,7 @@ import {
   JoinColumn,
   OneToMany,
   OneToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from "typeorm";
 import { Article } from "../../articles/entities/article.entity";
 import { Profile } from "../../profiles/entities/profile.entity";
@@ -17,8 +17,8 @@ export type Role = "visitor" | "admin" | "superadmin";
 @ObjectType()
 class User {
   @Field()
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({ default: () => "gen_random_uuid()" })
+  id: string;
 
   @Field()
   @Column({ unique: true })
@@ -28,7 +28,7 @@ class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({ name: "hashed_password" })
+  @Column()
   hashedPassword: string;
 
   @Field()
@@ -44,7 +44,7 @@ class User {
   profile: Profile;
 
   @OneToOne(() => Player, (player) => player.user)
-  @JoinColumn({ name: "player_id" })
+  @JoinColumn()
   @Field(() => Player)
   player: Player;
 }
@@ -78,7 +78,7 @@ export class UserInformations
     Omit<User, "hashedPassword" | "role" | "articles" | "player" | "playerId">
 {
   @Field()
-  id: number;
+  id: string;
   @Field()
   username: string;
   @Field()
@@ -100,7 +100,7 @@ export class UserAdminList
     >
 {
   @Field()
-  id: number;
+  id: string;
   @Field()
   username: string;
 

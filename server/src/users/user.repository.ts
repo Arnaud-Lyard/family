@@ -22,7 +22,7 @@ export class UserRepository {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
-  static async getUserById(id: number) {
+  static async getUserById(id: string) {
     try {
       const user = await DataSource.getRepository(User).findOne({
         where: { id },
@@ -68,7 +68,7 @@ export class UserRepository {
     }
   }
   static async checkIfEmailIsAlreadyUsed(
-    userId: number,
+    userId: string,
     email: string
   ): Promise<User | null> {
     try {
@@ -82,7 +82,7 @@ export class UserRepository {
     }
   }
   static async checkIfUsernameIsAlreadyUsed(
-    userId: number,
+    userId: string,
     username: string
   ): Promise<User | null> {
     try {

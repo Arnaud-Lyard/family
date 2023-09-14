@@ -7,11 +7,11 @@ export class ArticleService {
     const article = await ArticleRepository.createOneArticle(params);
     return article;
   }
-  static async getAdminArticles(userId: number): Promise<Article[]> {
+  static async getAdminArticles(userId: string): Promise<Article[]> {
     const articles = await ArticleRepository.getArticlesByUserId(userId);
     return articles;
   }
-  static async getArticleByIdForAdmin(articleId: number): Promise<Article> {
+  static async getArticleByIdForAdmin(articleId: string): Promise<Article> {
     const article = await ArticleRepository.getOneArticleById(articleId);
     return article;
   }
@@ -37,7 +37,7 @@ export class ArticleService {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
-  static async getOneArticle(articleId: number): Promise<Article> {
+  static async getOneArticle(articleId: string): Promise<Article> {
     try {
       const article = await ArticleRepository.getOneArticleByIdWithUser(
         articleId
