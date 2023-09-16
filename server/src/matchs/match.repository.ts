@@ -5,11 +5,12 @@ import { Match } from "./entities/match.entity";
 export class MatchRepository {
   static async generateMatch(
     userId: string,
-    opponentId: string
+    opponentId: string,
+    date: Date
   ): Promise<Match> {
     try {
       const match = DataSource.getRepository(Match).create({
-        plannedDate: new Date(),
+        plannedDate: date,
       });
 
       await DataSource.getRepository(Match).insert(match);

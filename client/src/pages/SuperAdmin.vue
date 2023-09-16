@@ -17,7 +17,7 @@ import { useGetAllAdminUsersQuery } from '../graphql/generated/schema';
 import { useToggleAdminRoleMutation } from '../graphql/generated/schema';
 import { useDrawerActive } from '../composables/drawerActive';
 interface User {
-  id: number;
+  id: string;
   username: string;
   isAdmin: boolean;
 }

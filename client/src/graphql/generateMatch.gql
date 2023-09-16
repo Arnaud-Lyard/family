@@ -1,0 +1,7 @@
+mutation GenerateMatch($data: generateMatchInputDto!) {
+  generateMatch(data: $data) {
+    createdAt
+    id
+    plannedDate
+  }
+}

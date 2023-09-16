@@ -39,9 +39,45 @@
 
 .modal-body {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 20px 10px;
   font-family: "Titillium Web Regular";
   justify-content: center;
+
+  label {
+    width: 100%;
+    text-align: center;
+    font-size: $nm;
+    font-family: "Titillium Web Bold";
+  }
+  input {
+    width: 50%;
+    margin-bottom: $space-xs;
+    font-size: $nm;
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    text-align: left;
+    border: 1px solid $border-grey;
+    border-radius: 5px;
+    padding: 8px 8px 8px 8px;
+    font-family: "Titillium Web Regular";
+    overflow: hidden;
+    color: $primary;
+
+    &::placeholder {
+      font-size: 1em;
+    }
+
+    &[value] {
+      font-size: 1em;
+      font-family: Avenir-Book;
+      color: $grey-light;
+    }
+  }
 }
 
 .btn-open-modal {

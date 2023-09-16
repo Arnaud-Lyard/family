@@ -49,7 +49,7 @@
           <td>{{ player.battletag }}</td>
           <td>{{ player.victory }}</td>
           <td>{{ player.defeat }}</td>
-          <td v-if="userStore.getIsPlayer"><i>
+          <td v-if="userStore.getIsPlayer"><i @click="prepareMatch(player.id)">
               <font-awesome-icon icon="fa-solid fa-comments" />
             </i></td>
         </tr>
@@ -61,24 +61,29 @@
         </tr>
       </tfoot>
     </table>
+    <Modal v-show="isModalVisible" @confirm="sendMatchRequest()" @close="closeModal()">
+      <template v-slot:header>Propose a date for the match.</template>
+      <template v-slot:body>
+
+        <label for="matchTime">Planned date:</label>
+        <input type="datetime-local" v-model="matchTime" id="matchTime" name="matchTime">
+        <div v-if="errorMatch" class="error">{{ errorMatch }}</div>
+      </template>
+      <template v-slot:buttonOne> Accept </template>
+      <template v-slot:buttonTwo> Cancel </template>
+    </Modal>
   </div>
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { GetAllPlayersQuery, useGetAllPlayersQuery } from '../graphql/generated/schema';
-import { useSwitchTableHeader } from '../composables/switchTableHeader';
+import { GetAllPlayersQuery, useGenerateMatchMutation, useGetAllPlayersQuery } from '../graphql/generated/schema';
+import { useSortPlayers } from '../composables/sortPlayers';
 import { useUserStore } from '../store';
+import Modal from "../components/Modal.vue";
 const userStore = useUserStore();
 
-interface Player {
-  id: number;
-  rank: number;
-  battletag: string;
-  victory: number;
-  defeat: number;
-}
-const playersList = ref<Player[]>([]);
-
+const isModalVisible = ref<boolean>(false);
+const matchTime = ref<string>("");
 const { result } = useGetAllPlayersQuery()
 
 const handleResult = (data: GetAllPlayersQuery) => {
@@ -103,60 +108,53 @@ watch(result, () => {
   immediate: true
 });
 
-function sortPlayers(column: string) {
-  switch (column) {
-    case 'rank':
-      if (arrowRankDirection.value.down) {
-        playersList.value.sort((a, b) => {
-          return a.rank - b.rank;
-        });
-      } else {
-        playersList.value.sort((a, b) => {
-          return b.rank - a.rank;
-        });
-      }
-      break;
-
-    case 'battletag':
-      if (arrowBattletagDirection.value.down) {
-        playersList.value.sort((a, b) => {
-          return a.battletag.localeCompare(b.battletag);
-        });
-      } else {
-        playersList.value.sort((a, b) => {
-          return b.battletag.localeCompare(a.battletag);
-        });
-      }
-      break;
-
-    case 'victory':
-      if (arrowVictoryDirection.value.down) {
-        playersList.value.sort((a, b) => {
-          return a.victory - b.victory;
-        });
-      } else {
-        playersList.value.sort((a, b) => {
-          return b.victory - a.victory;
-        });
-      }
-      break;
-
-    case 'defeat':
-      if (arrowDefeatDirection.value.down) {
-        playersList.value.sort((a, b) => {
-          return a.defeat - b.defeat;
-        });
-      } else {
-        playersList.value.sort((a, b) => {
-          return b.defeat - a.defeat;
-        });
-      }
-
-      break;
-    default:
-      break;
-  }
+const playerId = ref<string>("");
+function prepareMatch(opponentId: string) {
+  isModalVisible.value = true;
+  playerId.value = opponentId;
 }
 
-const { switchTableHeader, arrowRankDirection, arrowBattletagDirection, arrowDefeatDirection, arrowVictoryDirection } = useSwitchTableHeader();
+const errorMatch = ref<string>("");
+function sendMatchRequest() {
+  const { mutate: sendGenerateMatchMutation, onDone } = useGenerateMatchMutation({
+    variables: {
+      data: {
+        opponentId: playerId.value,
+        date: matchTime.value
+      }
+    }
+  })
+  sendGenerateMatchMutation();
+  onDone(({ errors }) => {
+    if (errors && errors[0].message === "DATE_IS_PAST") {
+      errorMatch.value = 'You must choose a later date.';
+      setTimeout(() => {
+        errorMatch.value = '';
+      }, 3000);
+    } else if (errors && errors[0].message === "CANT_PLAY_AGAINST_YOURSELF") {
+      errorMatch.value = "You can't assign a match to yourself.";
+      setTimeout(() => {
+        errorMatch.value = "";
+      }, 3000);
+    }
+    else if (errors && errors[0].message === "INVALID_DATE") {
+      errorMatch.value = "Invalid date.";
+      setTimeout(() => {
+        errorMatch.value = "";
+      }, 3000);
+    } else {
+      isModalVisible.value = false;
+      playerId.value = "";
+    }
+  }
+  )
+}
+
+function closeModal() {
+  isModalVisible.value = false;
+  playerId.value = "";
+}
+
+
+const { playersList, sortPlayers, switchTableHeader, arrowRankDirection, arrowBattletagDirection, arrowDefeatDirection, arrowVictoryDirection } = useSortPlayers();
 </script>

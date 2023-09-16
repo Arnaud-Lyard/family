@@ -14,7 +14,7 @@ export class Match {
   @PrimaryColumn({ default: () => "gen_random_uuid()" })
   @Field()
   id: string;
-  @Column({ type: "timestamptz" })
+  @Column({ type: "timestamp" })
   @Field()
   plannedDate: Date;
   @CreateDateColumn({ type: "timestamptz" })

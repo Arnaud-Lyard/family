@@ -45,10 +45,10 @@ export class PlayerRepository {
     }
   }
 
-  static async getPlayerByUserId(userId: string): Promise<Player> {
+  static async getPlayerById(playerId: string): Promise<Player> {
     try {
       const player = await DataSource.getRepository(Player).findOne({
-        where: { id: userId },
+        where: { id: playerId },
       });
       if (player === null) throw new Error("PLAYER_NOT_FOUND");
       return player;
