@@ -1,11 +1,11 @@
 import { Player } from "./entities/player.entity";
-import DataSource from "../database";
+import { db } from "../database";
 
 export class PlayerRepository {
   static async create(): Promise<Player> {
     try {
-      const player = DataSource.getRepository(Player).create();
-      await DataSource.getRepository(Player).insert(player);
+      const player = db.getRepository(Player).create();
+      await db.getRepository(Player).insert(player);
       return player;
     } catch (error) {
       console.error("Error during player creation query", error);
@@ -15,7 +15,8 @@ export class PlayerRepository {
 
   static async getAllPlayers(): Promise<Player[]> {
     try {
-      const players = await DataSource.createQueryBuilder(Player, "player")
+      const players = await db
+        .createQueryBuilder(Player, "player")
         .innerJoinAndSelect(
           "player.profile",
           "profile",
@@ -32,7 +33,8 @@ export class PlayerRepository {
 
   static async reinitializePlayer(playerId: string): Promise<Player> {
     try {
-      const player = await DataSource.createQueryBuilder(Player, "player")
+      const player = await db
+        .createQueryBuilder(Player, "player")
         .update(Player)
         .set({ rank: 1000, rating: 1000 })
         .where("id = :playerId", { playerId })
@@ -47,7 +49,7 @@ export class PlayerRepository {
 
   static async getPlayerById(playerId: string): Promise<Player> {
     try {
-      const player = await DataSource.getRepository(Player).findOne({
+      const player = await db.getRepository(Player).findOne({
         where: { id: playerId },
       });
       if (player === null) throw new Error("PLAYER_NOT_FOUND");

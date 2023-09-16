@@ -1,4 +1,4 @@
-import DataSource from "../database";
+import { db } from "../database";
 import { PlayerRepository } from "../players/player.repository";
 import User from "../users/entities/user.entity";
 import { UserRepository } from "../users/user.repository";
@@ -8,7 +8,7 @@ import { Profile } from "./entities/profile.entity";
 export class ProfileRepository {
   static async getAllProfiles() {
     try {
-      const profiles = await DataSource.getRepository(Profile).find();
+      const profiles = await db.getRepository(Profile).find();
       return profiles;
     } catch (error) {
       console.error("Error during profiles recuperation request", error);
@@ -37,12 +37,12 @@ export class ProfileRepository {
   }
   static async create(user: User): Promise<Profile> {
     try {
-      const profileCreated = DataSource.getRepository(Profile).create({
+      const profileCreated = db.getRepository(Profile).create({
         player: user.player,
         user: user,
         isPlayer: false,
       });
-      await DataSource.getRepository(Profile).insert(profileCreated);
+      await db.getRepository(Profile).insert(profileCreated);
 
       return profileCreated;
     } catch (error) {
@@ -57,7 +57,8 @@ export class ProfileRepository {
     try {
       const { isPlayer, battletag } = params;
 
-      const profileUpdated = await DataSource.createQueryBuilder()
+      const profileUpdated = await db
+        .createQueryBuilder()
         .update(Profile)
         .set({
           isPlayer: isPlayer,
@@ -75,7 +76,8 @@ export class ProfileRepository {
 
   static async disabled(user: User): Promise<Profile> {
     try {
-      const profileDisabled = await DataSource.createQueryBuilder()
+      const profileDisabled = await db
+        .createQueryBuilder()
         .update(Profile)
         .set({
           isPlayer: false,

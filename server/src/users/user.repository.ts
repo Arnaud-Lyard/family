@@ -1,5 +1,5 @@
 import { Not } from "typeorm";
-import DataSource from "../database";
+import { db } from "../database";
 import User from "./entities/user.entity";
 import { UserToBeRegistered } from "./dto/userInputDto";
 import { ProfileRepository } from "../profiles/profile.repository";
@@ -9,7 +9,7 @@ import { Player } from "../players/entities/player.entity";
 export class UserRepository {
   static async getUserByUsername(username: string) {
     try {
-      const user = await DataSource.getRepository(User).findOne({
+      const user = await db.getRepository(User).findOne({
         where: { username },
         relations: {
           profile: true,
@@ -24,7 +24,7 @@ export class UserRepository {
   }
   static async getUserById(id: string) {
     try {
-      const user = await DataSource.getRepository(User).findOne({
+      const user = await db.getRepository(User).findOne({
         where: { id },
         relations: {
           profile: true,
@@ -40,7 +40,7 @@ export class UserRepository {
   }
   static async getUserToLogin(email: string) {
     try {
-      const user = await DataSource.getRepository(User).findOne({
+      const user = await db.getRepository(User).findOne({
         where: { email },
       });
       return user;
@@ -51,7 +51,7 @@ export class UserRepository {
   }
   static saveUser(user: User): Promise<User> {
     try {
-      const userUpdated = DataSource.getRepository(User).save(user);
+      const userUpdated = db.getRepository(User).save(user);
       return userUpdated;
     } catch (error) {
       console.error("Error during user creation request", error);
@@ -60,7 +60,7 @@ export class UserRepository {
   }
   static async getAllUsers(): Promise<User[]> {
     try {
-      const users = await DataSource.getRepository(User).find();
+      const users = await db.getRepository(User).find();
       return users;
     } catch (error) {
       console.error("Error during users recuperation request", error);
@@ -72,7 +72,7 @@ export class UserRepository {
     email: string
   ): Promise<User | null> {
     try {
-      const user = await DataSource.getRepository(User).findOne({
+      const user = await db.getRepository(User).findOne({
         where: { id: Not(userId), email },
       });
       return user;
@@ -86,7 +86,7 @@ export class UserRepository {
     username: string
   ): Promise<User | null> {
     try {
-      const user = await DataSource.getRepository(User).findOne({
+      const user = await db.getRepository(User).findOne({
         where: { id: Not(userId), username },
       });
       return user;
@@ -97,7 +97,7 @@ export class UserRepository {
   }
   static async isEmailUsed(email: string): Promise<User | null> {
     try {
-      const user = await DataSource.getRepository(User).findOne({
+      const user = await db.getRepository(User).findOne({
         where: { email },
       });
       return user;
@@ -108,7 +108,7 @@ export class UserRepository {
   }
   static async isUsernameUsed(username: string): Promise<User | null> {
     try {
-      const user = await DataSource.getRepository(User).findOne({
+      const user = await db.getRepository(User).findOne({
         where: { username },
       });
       return user;
@@ -130,11 +130,11 @@ export class UserRepository {
   }
   static async create(user: UserToBeRegistered, player: Player): Promise<User> {
     try {
-      const userCreated = DataSource.getRepository(User).create({
+      const userCreated = db.getRepository(User).create({
         ...user,
         player: player,
       });
-      await DataSource.getRepository(User).insert(userCreated);
+      await db.getRepository(User).insert(userCreated);
       return userCreated;
     } catch (error) {
       console.error("Error during user creation request", error);

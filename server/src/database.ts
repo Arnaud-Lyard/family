@@ -6,10 +6,10 @@ import { Profile } from "./profiles/entities/profile.entity";
 import { Player } from "./players/entities/player.entity";
 import { Match } from "./matchs/entities/match.entity";
 import { PlayerToMatch } from "./playerstomatchs/entities/playertomatch.entity";
-export default new DataSource({
+export const db = new DataSource({
   type: "postgres",
   host: config.DB_HOST || "database",
-  port: config.DB_PORT || 5432,
+  port: 5432,
   username: config.DB_USER,
   password: config.DB_PASSWORD,
   database: config.DB_NAME,

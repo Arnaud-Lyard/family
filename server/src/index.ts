@@ -11,7 +11,7 @@ import { UserResolver } from "./users/user.resolver";
 import User from "./users/entities/user.entity";
 import config from "./config/config";
 import cookie from "cookie";
-import database from "./database";
+import { db } from "./database";
 import { ArticleResolver } from "./articles/article.resolver";
 import { ProfileResolver } from "./profiles/profile.resolver";
 import { PlayerResolver } from "./players/player.resolver";
@@ -24,7 +24,7 @@ export interface ContextType {
 }
 
 async function start(): Promise<void> {
-  await database.initialize();
+  await db.initialize();
   const app = express();
   const httpServer = http.createServer(app);
 
@@ -49,7 +49,7 @@ async function start(): Promise<void> {
       if (typeof decoded !== "object") return false;
 
       const id = decoded.userId;
-      const currentUser = await database.getRepository(User).findOneBy({ id });
+      const currentUser = await db.getRepository(User).findOneBy({ id });
       if (currentUser === null) return false;
 
       context.currentUser = currentUser;

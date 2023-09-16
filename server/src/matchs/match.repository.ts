@@ -1,4 +1,4 @@
-import DataSource from "../database";
+import { db } from "../database";
 import { PlayerToMatch } from "../playerstomatchs/entities/playertomatch.entity";
 import { Match } from "./entities/match.entity";
 
@@ -9,29 +9,24 @@ export class MatchRepository {
     date: Date
   ): Promise<Match> {
     try {
-      const match = DataSource.getRepository(Match).create({
+      const match = db.getRepository(Match).create({
         plannedDate: date,
       });
 
-      await DataSource.getRepository(Match).insert(match);
+      await db.getRepository(Match).insert(match);
 
-      const playerToMatchCreated = DataSource.getRepository(
-        PlayerToMatch
-      ).create({
+      const playerToMatchCreated = db.getRepository(PlayerToMatch).create({
         playerId: userId,
         matchId: match.id,
       });
 
-      const opponentToMatchCreated = DataSource.getRepository(
-        PlayerToMatch
-      ).create({
+      const opponentToMatchCreated = db.getRepository(PlayerToMatch).create({
         playerId: opponentId,
         matchId: match.id,
       });
-      await DataSource.getRepository(PlayerToMatch).insert([
-        opponentToMatchCreated,
-        playerToMatchCreated,
-      ]);
+      await db
+        .getRepository(PlayerToMatch)
+        .insert([opponentToMatchCreated, playerToMatchCreated]);
       return match;
     } catch (error) {
       console.error("Error during match generation query", error);
