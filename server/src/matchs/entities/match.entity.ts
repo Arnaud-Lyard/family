@@ -8,12 +8,17 @@ import {
 } from "typeorm";
 import { PlayerToMatch } from "../../playerstomatchs/entities/playertomatch.entity";
 
+export type Status = "waiting" | "progress" | "done";
+
 @Entity()
 @ObjectType()
 export class Match {
   @PrimaryColumn({ default: () => "gen_random_uuid()" })
   @Field()
   id: string;
+  @Column({ enum: ["waiting", "progress", "done"], default: "waiting" })
+  status: Status;
+  @Field()
   @Column({ type: "timestamp" })
   @Field()
   plannedDate: Date;

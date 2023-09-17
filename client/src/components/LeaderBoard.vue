@@ -38,7 +38,7 @@
                 <font-awesome-icon icon="fa-solid fa-arrow-down" />
               </i>
             </span></th>
-          <th v-if="userStore.getIsPlayer"><span>Request</span></th>
+          <th v-if="userStore.getIsPlayer && userStore.isLoggedIn"><span>Request</span></th>
 
         </tr>
       </thead>
@@ -49,7 +49,7 @@
           <td>{{ player.battletag }}</td>
           <td>{{ player.victory }}</td>
           <td>{{ player.defeat }}</td>
-          <td v-if="userStore.getIsPlayer"><i @click="prepareMatch(player.id)">
+          <td v-if="userStore.getIsPlayer && userStore.isLoggedIn"><i @click="prepareMatch(player.id)">
               <font-awesome-icon icon="fa-solid fa-comments" />
             </i></td>
         </tr>

@@ -16,6 +16,7 @@ import { ArticleResolver } from "./articles/article.resolver";
 import { ProfileResolver } from "./profiles/profile.resolver";
 import { PlayerResolver } from "./players/player.resolver";
 import { MatchResolver } from "./matchs/match.resolver";
+import { PlayerToMatchResolver } from "./playerstomatchs/playertomatch.resolver";
 export interface ContextType {
   req: express.Request;
   res: express.Response;
@@ -35,6 +36,7 @@ async function start(): Promise<void> {
       ProfileResolver,
       PlayerResolver,
       MatchResolver,
+      PlayerToMatchResolver,
     ],
     validate: false,
     authChecker: async ({ context }: { context: ContextType }, roles = []) => {

@@ -57,6 +57,8 @@ export const useUserStore = defineStore("user", {
     logout() {
       this.username = "";
       localStorage.removeItem("user");
+      localStorage.removeItem("is-player");
+      localStorage.removeItem("role");
       router.push({ name: "login" });
     },
     enablePlayer(isPlayer: boolean) {
