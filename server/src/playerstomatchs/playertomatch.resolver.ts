@@ -9,7 +9,8 @@ export class PlayerToMatchResolver {
   @Query(() => Boolean)
   async checkIfNewMatch(@Ctx() ctx: ContextType): Promise<boolean> {
     try {
-      return await PlayerToMatchService.checkIfNewMatch(ctx);
+      const isNewMatch = await PlayerToMatchService.checkIfNewMatch(ctx);
+      return isNewMatch;
     } catch (error: any) {
       console.error("Error during new match check", error);
       throw new Error("INTERNAL_SERVER_ERROR");

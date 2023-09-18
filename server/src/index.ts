@@ -17,11 +17,20 @@ import { ProfileResolver } from "./profiles/profile.resolver";
 import { PlayerResolver } from "./players/player.resolver";
 import { MatchResolver } from "./matchs/match.resolver";
 import { PlayerToMatchResolver } from "./playerstomatchs/playertomatch.resolver";
+import { WebSocketServer } from "ws";
+import { Extra, useServer } from "graphql-ws/lib/use/ws";
+import { Context, SubscribeMessage } from "graphql-ws";
+import { ExecutionArgs } from "graphql";
+
 export interface ContextType {
   req: express.Request;
   res: express.Response;
   currentUser?: User;
   jwtPayload?: jwt.JwtPayload;
+}
+
+export interface SubScriptionContextType {
+  currentUser: User;
 }
 
 async function start(): Promise<void> {
@@ -63,11 +72,85 @@ async function start(): Promise<void> {
     schema,
     csrfPrevention: true,
     cache: "bounded",
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose();
+            },
+          };
+        },
+      },
+    ],
   });
 
   await server.start();
 
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: "/subscriptions",
+  });
+
+  const serverCleanup = useServer(
+    {
+      schema,
+      onConnect: async (ctx) => {
+        if (tokenIsNotValid(ctx.connectionParams)) {
+          throw new Error("Auth token missing!");
+        }
+      },
+      onDisconnect(ctx, code, reason) {
+        console.log("Disconnected!");
+      },
+      context: async (ctx, msg, args) => {
+        return getDynamicContext(ctx, msg, args);
+      },
+    },
+    wsServer
+  );
+
+  const getDynamicContext = async (
+    ctx: Context<
+      Record<string, unknown> | undefined,
+      Extra & Partial<Record<PropertyKey, never>>
+    >,
+    msg: SubscribeMessage,
+    args: ExecutionArgs
+  ) => {
+    if (ctx.connectionParams?.Authorization) {
+      const bearerToken = ctx.connectionParams?.Authorization as string;
+      const tokenInAuthHeaders = bearerToken.split(" ")[1];
+      const token = tokenInAuthHeaders;
+
+      const decoded = jwt.verify(token, config.JWT_PRIVATE_KEY);
+      if (typeof decoded !== "object") return false;
+      const id = decoded.userId;
+
+      const currentUser = await db.getRepository(User).findOneBy({ id });
+      if (currentUser === null) return false;
+      return { currentUser };
+    }
+  };
+
+  function tokenIsNotValid(
+    params: Readonly<Record<string, unknown> | undefined>
+  ): boolean {
+    if (params?.Authorization === undefined) return true;
+    const bearerToken = params.Authorization as string;
+
+    const tokenInAuthHeaders = bearerToken.split(" ")[1];
+
+    const token = tokenInAuthHeaders;
+    if (typeof token !== "string") return true;
+
+    const decoded = jwt.verify(token, config.JWT_PRIVATE_KEY);
+
+    if (typeof decoded !== "object") return true;
+
+    return false;
+  }
   app.use(
     ["/", "/graphql"],
     cors<cors.CorsRequest>({

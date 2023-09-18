@@ -133,4 +133,13 @@ export class UserService {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
+  static async getUserByPlayerId(playerId: string): Promise<UserInformations> {
+    try {
+      const user = await UserRepository.getUserByPlayerId(playerId);
+      return user;
+    } catch (error) {
+      console.error("Error when getting user by player id", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
 }

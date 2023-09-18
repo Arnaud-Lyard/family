@@ -10,3 +10,8 @@ export class generateMatchInputDto {
   @IsDate()
   date: Date;
 }
+
+export interface ISubscriptionPayload {
+  id: string;
+  isNewMatch: boolean;
+}

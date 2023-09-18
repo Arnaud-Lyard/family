@@ -141,4 +141,16 @@ export class UserRepository {
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
+  static async getUserByPlayerId(playerId: string): Promise<User> {
+    try {
+      const user = await db.getRepository(User).findOne({
+        where: { player: { id: playerId } },
+      });
+      if (!user) throw new Error("USER_NOT_FOUND");
+      return user;
+    } catch (error) {
+      console.error("Error during user recuperation request", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
 }
