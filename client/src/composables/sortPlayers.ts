@@ -1,5 +1,15 @@
 import { computed, ref } from "vue";
 
+interface Player {
+  id: string;
+  rank: number;
+  battletag: string;
+  victory: number;
+  defeat: number;
+}
+
+const playersList = ref<Player[]>([]);
+
 const arrowrank = ref({
   isArrowNotSelected: false,
   isArrowDown: true,
@@ -36,7 +46,7 @@ const arrowDefeatDirection = computed(() => ({
   up: !arrowDefeat.value.isArrowDown,
   none: arrowDefeat.value.isArrowNotSelected,
 }));
-export function useSwitchTableHeader() {
+export function useSortPlayers() {
   function switchTableHeader(tableHeaderName: string) {
     switch (tableHeaderName) {
       case "rank":
@@ -76,7 +86,64 @@ export function useSwitchTableHeader() {
     }
   }
 
+  function sortPlayers(column: string) {
+    switch (column) {
+      case "rank":
+        if (arrowRankDirection.value.down) {
+          playersList.value.sort((a, b) => {
+            return a.rank - b.rank;
+          });
+        } else {
+          playersList.value.sort((a, b) => {
+            return b.rank - a.rank;
+          });
+        }
+        break;
+
+      case "battletag":
+        if (arrowBattletagDirection.value.down) {
+          playersList.value.sort((a, b) => {
+            return a.battletag.localeCompare(b.battletag);
+          });
+        } else {
+          playersList.value.sort((a, b) => {
+            return b.battletag.localeCompare(a.battletag);
+          });
+        }
+        break;
+
+      case "victory":
+        if (arrowVictoryDirection.value.down) {
+          playersList.value.sort((a, b) => {
+            return a.victory - b.victory;
+          });
+        } else {
+          playersList.value.sort((a, b) => {
+            return b.victory - a.victory;
+          });
+        }
+        break;
+
+      case "defeat":
+        if (arrowDefeatDirection.value.down) {
+          playersList.value.sort((a, b) => {
+            return a.defeat - b.defeat;
+          });
+        } else {
+          playersList.value.sort((a, b) => {
+            return b.defeat - a.defeat;
+          });
+        }
+
+        break;
+      default:
+        break;
+    }
+  }
+
   return {
+    playersList,
+    sortPlayers,
     arrowRankDirection,
     arrowBattletagDirection,
     arrowVictoryDirection,

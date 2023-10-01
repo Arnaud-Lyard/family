@@ -1,20 +1,26 @@
 import { Field, ObjectType } from "type-graphql";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import User from "../../users/entities/user.entity";
 
+import { User } from "../../users/entities/user.entity";
+import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
 @Entity()
 @ObjectType()
 export class Article {
-  @PrimaryGeneratedColumn()
+  @PrimaryKey({ type: "uuid", defaultRaw: "uuid_generate_v4()" })
   @Field()
-  id: number;
+  id!: string;
   @Field()
-  @Column()
-  title: string;
+  @Property()
+  title!: string;
   @Field()
-  @Column()
-  content: string;
+  @Property()
+  content!: string;
   @Field(() => User)
-  @ManyToOne(() => User, (u) => u.articles)
-  user: User;
+  @ManyToOne(() => User)
+  user!: User;
+
+  constructor(title: string, content: string, user: User) {
+    this.title = title;
+    this.content = content;
+    this.user = user;
+  }
 }

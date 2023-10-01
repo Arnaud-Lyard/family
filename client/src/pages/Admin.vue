@@ -35,7 +35,7 @@ import { useUpdateArticleMutation } from "../graphql/generated/schema";
 import Modal from "../components/Modal.vue";
 
 interface ArticleRegistered {
-  id: number;
+  id: string;
   title: string;
   content: string;
 }
@@ -47,7 +47,7 @@ const articlesList = ref<ArticleRegistered[]>([]);
 const isArticleExist = ref(false);
 const isModalVisible = ref(false);
 const modalTitle = ref("");
-const articleToUpdate = ref<number>(0);
+const articleToUpdate = ref<string>('');
 
 const validateTitle = () => {
   errorSaveArticle.value = title.value === "" ? "The title is required." : "";

@@ -1,23 +1,19 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Article } from "./entities/article.entity";
-import { ArticleService } from "./article.service";
 import {
   GetArticleInputDto,
   SaveArticleInputDto,
   UpdateArticleInputDto,
-} from "./entities/dto/articleInputDto";
-import { ContextType } from "../index";
+} from "./dto/articleInputDto";
+import { IContext } from "../utils/interfaces/context.interface";
+import { Role } from "../users/entities/user.entity";
 
 @Resolver(Article)
 export class ArticleResolver {
-  @Query(() => [Article])
-  async articles(): Promise<Article[]> {
-    return [];
-  }
   @Authorized()
   @Mutation(() => Article)
   async saveArticle(
-    @Ctx() ctx: ContextType,
+    @Ctx() ctx: IContext,
     @Arg("data") data: SaveArticleInputDto
   ): Promise<Article> {
     try {
@@ -26,8 +22,7 @@ export class ArticleResolver {
         title: data.title,
         content: data.content,
       };
-      const articleCreated = await ArticleService.saveArticle(params);
-      return articleCreated;
+      return await ctx.services.articleService.saveArticle(params, ctx);
     } catch (error) {
       console.error(error);
       throw new Error("INTERNAL_SERVER_ERROR");
@@ -36,14 +31,16 @@ export class ArticleResolver {
 
   @Authorized()
   @Query(() => [Article])
-  async getAdminArticles(@Ctx() ctx: ContextType): Promise<Article[]> {
+  async getAdminArticles(@Ctx() ctx: IContext): Promise<Article[]> {
     try {
       const user = ctx.currentUser!;
-      if (user.role !== "admin" && user.role !== "superadmin") {
+      if (
+        !user.roles.includes(Role.ADMIN) &&
+        !user.roles.includes(Role.SUPERADMIN)
+      ) {
         throw new Error("UNAUTHORIZED");
       }
-      const articles = await ArticleService.getAdminArticles(user.id);
-      return articles;
+      return await ctx.services.articleService.getAdminArticles(user.id, ctx);
     } catch (error) {
       console.error("Error during admin articles recuperation", error);
       throw new Error("INTERNAL_SERVER_ERROR");
@@ -52,16 +49,21 @@ export class ArticleResolver {
   @Authorized()
   @Query(() => Article)
   async getArticleByIdForAdmin(
-    @Ctx() ctx: ContextType,
+    @Ctx() ctx: IContext,
     @Arg("data") data: GetArticleInputDto
   ): Promise<Article> {
     try {
       const user = ctx.currentUser!;
-      if (user.role !== "admin" && user.role !== "superadmin") {
+      if (
+        !user.roles.includes(Role.ADMIN) &&
+        !user.roles.includes(Role.SUPERADMIN)
+      ) {
         throw new Error("UNAUTHORIZED");
       }
-      const article = await ArticleService.getArticleByIdForAdmin(data.id);
-      return article;
+      return await ctx.services.articleService.getArticleByIdForAdmin(
+        data.id,
+        ctx
+      );
     } catch (error) {
       console.error("Error during admin article recuperation", error);
       throw new Error("INTERNAL_SERVER_ERROR");
@@ -70,7 +72,7 @@ export class ArticleResolver {
   @Authorized()
   @Mutation(() => Article)
   async updateArticle(
-    @Ctx() ctx: ContextType,
+    @Ctx() ctx: IContext,
     @Arg("data") data: UpdateArticleInputDto
   ): Promise<Article> {
     try {
@@ -82,30 +84,37 @@ export class ArticleResolver {
         content: data.content,
       };
 
-      if (user.role !== "admin" && user.role !== "superadmin") {
+      if (
+        !user.roles.includes(Role.ADMIN) &&
+        !user.roles.includes(Role.SUPERADMIN)
+      ) {
         throw new Error("UNAUTHORIZED");
       }
-      const articleUpdated = await ArticleService.updateArticle(params);
-      return articleUpdated;
+      return await ctx.services.articleService.updateArticle(params, ctx);
     } catch (error) {
       console.error("Error during article update", error);
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
   @Query(() => [Article])
-  async getAllArticles(): Promise<Article[]> {
+  async getAllArticles(@Ctx() ctx: IContext): Promise<Article[]> {
     try {
-      const articles = await ArticleService.getAllArticles();
-      return articles;
+      return await ctx.services.articleService.getAllArticles(ctx);
     } catch (error) {
       console.error("Error during articles recuperation", error);
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
   @Query(() => Article)
-  async getOneArticle(@Arg("data") data: GetArticleInputDto): Promise<Article> {
+  async getOneArticle(
+    @Arg("data") data: GetArticleInputDto,
+    @Ctx() ctx: IContext
+  ): Promise<Article> {
     try {
-      const article = await ArticleService.getOneArticle(data.id);
+      const article = await ctx.services.articleService.getOneArticle(
+        data.id,
+        ctx
+      );
       return article;
     } catch (error) {
       console.error("Error during one article recuperation", error);

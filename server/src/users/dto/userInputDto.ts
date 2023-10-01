@@ -1,12 +1,5 @@
-import {
-  IsEmail,
-  IsNumber,
-  IsString,
-  Matches,
-  MinLength,
-} from "class-validator";
+import { IsEmail, IsString, Matches, MinLength } from "class-validator";
 import { Field, InputType } from "type-graphql";
-
 @InputType()
 export class UserRegisterInputDto {
   @Field()
@@ -19,7 +12,9 @@ export class UserRegisterInputDto {
   password: string;
 
   @Field()
-  @MinLength(8)
+  @MinLength(3, {
+    message: "Username must be at least 3 characters long",
+  })
   username: string;
 }
 
@@ -37,8 +32,8 @@ export class UserLoginInputDto {
 @InputType()
 export class PromoteUserInputDto {
   @Field()
-  @IsNumber()
-  id: number;
+  @IsString()
+  id: string;
   @Field()
   isAdmin: boolean;
 }

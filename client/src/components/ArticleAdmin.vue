@@ -9,7 +9,7 @@
 </template>
 <script lang="ts" setup>
 interface ArticleRegistered {
-  id: number;
+  id: string;
   title: string;
   content: string;
 }

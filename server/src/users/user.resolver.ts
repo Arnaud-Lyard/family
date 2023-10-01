@@ -1,50 +1,53 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import User, {
+import {
+  User,
   UserAdminList,
   UserInformations,
   UserLoggedIn,
-} from "./entities/user.entity";
-import { ContextType } from "../index";
-import {
-  PromoteUserInputDto,
-  UserLoginInputDto,
   UserRegisterInputDto,
-} from "./dto/userInputDto";
-import { UserService } from "./user.service";
+  UserRegistered,
+} from "./entities/user.entity";
+import { IContext } from "../utils/interfaces/context.interface";
+import { PromoteUserInputDto, UserLoginInputDto } from "./dto/userInputDto";
 
 @Resolver(User)
 export class UserResolver {
-  @Mutation(() => UserLoggedIn)
-  async register(
-    @Arg("data") data: UserRegisterInputDto
-  ): Promise<UserInformations> {
+  @Mutation(() => UserRegistered)
+  public async register(
+    @Arg("data") data: UserRegisterInputDto,
+    @Ctx() ctx: IContext
+  ): Promise<UserRegistered> {
     try {
-      const userRegistered = await UserService.register(data);
-      return userRegistered;
-    } catch (err) {
-      console.error("error when registering user", err);
-      throw new Error("INTERNAL_SERVER_ERROR");
+      return await ctx.services.userService.register(data, ctx);
+    } catch (error: any) {
+      console.error("error when registering user", error);
+      if (error.message === "EMAIL_ALREADY_USED") {
+        throw new Error("EMAIL_ALREADY_USED");
+      } else if (error.message === "USERNAME_ALREADY_USED") {
+        throw new Error("USERNAME_ALREADY_USED");
+      } else throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
 
   @Mutation(() => String)
   async login(
     @Arg("data") params: UserLoginInputDto,
-    @Ctx() ctx: ContextType
+    @Ctx() ctx: IContext
   ): Promise<string> {
     try {
-      const token = await UserService.login(params, ctx);
-      return token;
-    } catch (err) {
-      console.error("error when login process", err);
-      throw new Error("INVALID_CREDENTIALS");
+      return await ctx.services.userService.login(params, ctx);
+    } catch (error: any) {
+      console.error("error when login process", error);
+      if ((error.message = "INVALID_CREDENTIALS"))
+        throw new Error("INVALID_CREDENTIALS");
+      else throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
   @Authorized()
   @Mutation(() => String)
-  async logout(@Ctx() ctx: ContextType): Promise<string> {
+  async logout(@Ctx() ctx: IContext): Promise<string> {
     try {
-      await UserService.logout(ctx);
+      await ctx.services.userService.logout(ctx);
       return "OK";
     } catch (err) {
       console.error("error when logout process", err);
@@ -54,10 +57,9 @@ export class UserResolver {
 
   @Authorized()
   @Query(() => UserLoggedIn)
-  async profile(@Ctx() ctx: ContextType): Promise<UserLoggedIn> {
+  async profile(@Ctx() ctx: IContext): Promise<UserLoggedIn> {
     try {
-      const userLoggedIn = await UserService.getProfile(ctx);
-      return userLoggedIn;
+      return await ctx.services.userService.getProfile(ctx);
     } catch (err) {
       console.error("error when getting profile", err);
       throw new Error("INTERNAL_SERVER_ERROR");
@@ -65,12 +67,9 @@ export class UserResolver {
   }
   @Authorized()
   @Query(() => UserInformations)
-  async personnalInformations(
-    @Ctx() ctx: ContextType
-  ): Promise<UserInformations> {
+  async personnalInformations(@Ctx() ctx: IContext): Promise<UserInformations> {
     try {
-      const personnalInformations = UserService.getPersonnalInformations(ctx);
-      return personnalInformations;
+      return ctx.services.userService.getPersonnalInformations(ctx);
     } catch (err) {
       console.error("error when getting personnal informations", err);
       throw new Error("INTERNAL_SERVER_ERROR");
@@ -79,12 +78,11 @@ export class UserResolver {
   @Authorized()
   @Mutation(() => UserInformations)
   async toggleAdminRole(
-    @Ctx() ctx: ContextType,
+    @Ctx() ctx: IContext,
     @Arg("data") data: PromoteUserInputDto
   ): Promise<UserInformations> {
     try {
-      const user = await UserService.toggleAdminRole(ctx, data);
-      return user;
+      return await ctx.services.userService.toggleAdminRole(ctx, data);
     } catch (err) {
       console.error("error when promoting user", err);
       throw new Error("INTERNAL_SERVER_ERROR");
@@ -92,10 +90,9 @@ export class UserResolver {
   }
   @Authorized()
   @Query(() => [UserAdminList])
-  async getAllAdminUsers(@Ctx() ctx: ContextType): Promise<UserAdminList[]> {
+  async getAllAdminUsers(@Ctx() ctx: IContext): Promise<UserAdminList[]> {
     try {
-      const adminList = await UserService.getAllAdminUsers(ctx);
-      return adminList;
+      return await ctx.services.userService.getAllAdminUsers(ctx);
     } catch (err) {
       console.error("error when getting admin list", err);
       throw new Error("INTERNAL_SERVER_ERROR");

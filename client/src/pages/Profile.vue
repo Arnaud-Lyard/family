@@ -22,6 +22,9 @@
     <Modal v-show="isModalVisible" @confirm="confirmModal" @close="closeModal">
       <template v-slot:header>Unregister tournament</template>
       <template v-slot:body> If you unregister for tournament, your actual rank will be lost. Are you sure ?
+        <br>
+        <br>
+        Dont forget to save your profile.
       </template>
       <template v-slot:buttonOne> Accept </template>
       <template v-slot:buttonTwo> Cancel </template>
@@ -38,7 +41,7 @@ import { useUserStore } from '../store';
 const userStore = useUserStore();
 
 interface User {
-  id: number;
+  id: string;
   username: string;
   battletag: string;
   email: string;
@@ -46,7 +49,7 @@ interface User {
 }
 const isModalVisible = ref<boolean>(false);
 const user = reactive<User>({
-  id: 0,
+  id: '',
   username: "",
   battletag: "",
   email: "",

@@ -13,7 +13,7 @@
 import { ref } from 'vue';
 import { useGetAllArticlesQuery } from '../graphql/generated/schema';
 interface ArticleRegistered {
-  id: number;
+  id: string;
   title: string;
   content: string;
   username: string;
