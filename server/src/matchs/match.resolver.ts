@@ -9,27 +9,32 @@ import {
   Subscription,
 } from "type-graphql";
 import { Match } from "./entities/match.entity";
-import { MatchService } from "./match.service";
-import { ContextType, SubScriptionContextType } from "..";
+import {
+  IContext,
+  ISubscriptionContext,
+} from "../utils/interfaces/context.interface";
 import {
   ISubscriptionPayload,
+  generateMatchDto,
   generateMatchInputDto,
 } from "./dto/matchInputDto";
-import { UserService } from "../users/user.service";
 
 export class MatchResolver {
   @Authorized()
   @Mutation(() => Match)
   async generateMatch(
     @PubSub() pubSub: PubSubEngine,
-    @Ctx() ctx: ContextType,
+    @Ctx() ctx: IContext,
     @Arg("data") data: generateMatchInputDto
   ): Promise<Match> {
     try {
-      const match = await MatchService.generateMatch(ctx, data);
-      const user = await UserService.getUserByPlayerId(data.opponentId);
-      const subPayload = { id: user.id, isNewMatch: true };
-      await pubSub.publish("NEW_MATCH", subPayload);
+      const match = await ctx.services.matchService.generateMatch(ctx, data);
+      // const user = await ctx.services.matchService.getUserByPlayerId(
+      //   data.opponentId,
+      //   ctx
+      // );
+      // const subPayload = { id: user.id, isNewMatch: true };
+      // await pubSub.publish("NEW_MATCH", subPayload);
       return match;
     } catch (error: any) {
       console.error("Error during match generation", error);
@@ -50,7 +55,7 @@ export class MatchResolver {
     }: {
       payload: ISubscriptionPayload;
       args: any;
-      context: SubScriptionContextType;
+      context: ISubscriptionContext;
     }) => {
       return payload.id === context.currentUser.id;
     },

@@ -1,28 +1,33 @@
 import { Field, ObjectType } from "type-graphql";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Player } from "../../players/entities/player.entity";
 import { Match } from "../../matchs/entities/match.entity";
+import { Entity, Enum, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
 
-export type League = "bronze" | "silver" | "gold";
+export enum League {
+  BRONZE = "bronze",
+  SILVER = "silver",
+  GOLD = "gold",
+}
 
 @Entity()
 @ObjectType()
 export class PlayerToMatch {
-  @PrimaryColumn({ default: () => "gen_random_uuid()" })
+  @PrimaryKey({ type: "uuid", defaultRaw: "uuid_generate_v4()" })
   @Field()
-  id: string;
+  id!: string;
 
-  @Column({ enum: ["bronze", "silver", "gold"], default: "bronze" })
+  @Enum(() => League)
   @Field()
-  league: League;
-  @Column()
-  playerId: string;
-  @Column()
-  matchId: string;
-  @ManyToOne(() => Player, (player) => player.playerToMatchs)
-  @JoinColumn()
+  league: League = League.BRONZE;
+
+  @ManyToOne(() => Player, { primary: true })
   player: Player;
-  @ManyToOne(() => Match, (match) => match.playerToMatchs)
-  @JoinColumn()
+  @ManyToOne(() => Match, { primary: true })
   match: Match;
+
+  constructor(league: League = League.BRONZE, player: Player, match: Match) {
+    this.league = league;
+    this.player = player;
+    this.match = match;
+  }
 }

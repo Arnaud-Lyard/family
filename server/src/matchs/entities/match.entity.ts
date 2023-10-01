@@ -1,31 +1,44 @@
 import { Field, ObjectType } from "type-graphql";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryColumn,
-} from "typeorm";
-import { PlayerToMatch } from "../../playerstomatchs/entities/playertomatch.entity";
 
-export type Status = "waiting" | "progress" | "done";
+import { PlayerToMatch } from "../../playerstomatchs/entities/playertomatch.entity";
+import {
+  Collection,
+  Entity,
+  Enum,
+  ManyToMany,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
+import { Player } from "../../players/entities/player.entity";
+import { Role } from "../../users/entities/user.entity";
+
+export enum Status {
+  PENDING = "pending",
+  PROGRESS = "progress",
+  DONE = "done",
+}
 
 @Entity()
 @ObjectType()
 export class Match {
-  @PrimaryColumn({ default: () => "gen_random_uuid()" })
+  @PrimaryKey({ type: "uuid", defaultRaw: "uuid_generate_v4()" })
   @Field()
-  id: string;
-  @Column({ enum: ["waiting", "progress", "done"], default: "waiting" })
-  status: Status;
+  id!: string;
+  @Enum({ items: () => Status, default: Status.PENDING })
   @Field()
-  @Column({ type: "timestamp" })
+  status: Status = Status.PENDING;
+  @Property()
   @Field()
   plannedDate: Date;
-  @CreateDateColumn({ type: "timestamptz" })
+  @Property()
   @Field()
-  createdAt: Date;
+  createdAt: Date = new Date();
 
-  @OneToMany(() => PlayerToMatch, (playerToMatch) => playerToMatch.player)
-  playerToMatchs: PlayerToMatch[];
+  @ManyToMany({ entity: () => Player, pivotEntity: () => PlayerToMatch })
+  players = new Collection<Player>(this);
+
+  constructor(status: Status = Status.PENDING, plannedDate: Date) {
+    this.status = status;
+    this.plannedDate = plannedDate;
+  }
 }

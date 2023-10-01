@@ -1,5 +1,4 @@
 import { argon2id, hash, verify } from "argon2";
-import User from "../users/entities/user.entity";
 
 export class AuthService {
   static hashingOptions = {

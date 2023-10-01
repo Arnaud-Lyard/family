@@ -1,15 +1,14 @@
-import { ContextType } from "..";
-import { PlayerRepository } from "../players/player.repository";
-import { UserRepository } from "../users/user.repository";
-import { generateMatchInputDto } from "./dto/generateMatchInputDto";
-import { Match } from "./entities/match.entity";
-import { MatchRepository } from "./match.repository";
+import { generateMatchInputDto } from "./dto/matchInputDto";
 import { isPastDate } from "../utils/isPastDate";
 import dayjs from "dayjs";
+import { Role, User } from "../users/entities/user.entity";
+import { IContext } from "../utils/interfaces/context.interface";
+import { Match, Status } from "./entities/match.entity";
+import { Player } from "../players/entities/player.entity";
 
 export class MatchService {
-  static async generateMatch(
-    userId: ContextType,
+  async generateMatch(
+    ctx: IContext,
     data: generateMatchInputDto
   ): Promise<Match> {
     try {
@@ -20,16 +19,24 @@ export class MatchService {
 
       if (isPastDate(date)) throw new Error("DATE_IS_PAST");
 
-      const user = await UserRepository.getUserById(userId.currentUser!.id);
-      if (user.player.id === opponentId)
+      const user = await ctx.em.findOneOrFail(User, ctx.currentUser!.id);
+      const player = await ctx.em.findOneOrFail(Player, user.player.id);
+      if (player.id === opponentId)
         throw new Error("CANT_PLAY_AGAINST_YOURSELF");
+      const opponent = await ctx.em.findOneOrFail(Player, opponentId);
+      const match = new Match(Status.PENDING, date);
 
-      const opponent = await PlayerRepository.getPlayerById(opponentId);
-      return await MatchRepository.generateMatch(
-        user.player.id,
-        opponent.id,
-        date
-      );
+      match.players.add(player);
+      player.matchs.add(match);
+
+      match.players.add(opponent);
+      opponent.matchs.add(match);
+
+      ctx.em.persist(match);
+      ctx.em.persist(opponent);
+      ctx.em.persist(player);
+      await ctx.em.flush();
+      return match;
     } catch (error: any) {
       console.error("Error during match generation", error);
       if (error.message === "INVALID_DATE") throw new Error("INVALID_DATE");
@@ -38,6 +45,15 @@ export class MatchService {
       else if (error.message === "CANT_PLAY_AGAINST_YOURSELF")
         throw new Error("CANT_PLAY_AGAINST_YOURSELF");
       else throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
+  async getUserByPlayerId(playerId: string, ctx: IContext): Promise<User> {
+    try {
+      const user = await ctx.em.findOneOrFail(User, playerId);
+      return user;
+    } catch (error) {
+      console.error("Error during user recuperation", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
     }
   }
 }

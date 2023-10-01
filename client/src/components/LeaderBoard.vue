@@ -120,7 +120,7 @@ function sendMatchRequest() {
     variables: {
       data: {
         opponentId: playerId.value,
-        date: matchTime.value
+        date: new Date(matchTime.value).toISOString()
       }
     }
   })

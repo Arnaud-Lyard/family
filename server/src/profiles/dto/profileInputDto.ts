@@ -1,7 +1,7 @@
 import { Field, InputType } from "type-graphql";
 
 @InputType()
-export class UpdateProfileInputDto {
+export class UpdateProfileDto {
   @Field()
   battletag: string;
   @Field()

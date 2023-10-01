@@ -1,5 +1,7 @@
+import { Loaded } from "@mikro-orm/core";
 import { IsDate, IsString } from "class-validator";
 import { Field, InputType } from "type-graphql";
+import { Player } from "../../players/entities/player.entity";
 
 @InputType()
 export class generateMatchInputDto {
@@ -14,4 +16,13 @@ export class generateMatchInputDto {
 export interface ISubscriptionPayload {
   id: string;
   isNewMatch: boolean;
+}
+@InputType()
+export class generateMatchDto {
+  @Field()
+  opponent: Player;
+  @Field()
+  date: Date;
+  @Field()
+  user: string;
 }

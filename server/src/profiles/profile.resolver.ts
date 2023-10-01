@@ -1,18 +1,18 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Profile } from "./entities/profile.entity";
-import { ProfileService } from "./profile.service";
-import { ContextType } from "../index";
-import { UpdateProfileInputDto } from "./dto/profileInputDto";
+import { IContext } from "../utils/interfaces/context.interface";
+import { UpdateProfileDto } from "./dto/profileInputDto";
+import { Role } from "../users/entities/user.entity";
 
 @Resolver(Profile)
 export class ProfileResolver {
   @Authorized()
   @Query(() => [Profile])
-  async getAllProfiles(@Ctx() ctx: ContextType) {
+  async getAllProfiles(@Ctx() ctx: IContext) {
     try {
-      if (ctx.currentUser!.role !== "superadmin")
+      if (!ctx.currentUser!.roles.includes(Role.SUPERADMIN))
         throw new Error("UNAUTHORIZED");
-      const profiles = await ProfileService.getAllProfiles();
+      const profiles = await ctx.services.profileService.getAllProfiles(ctx);
       return profiles;
     } catch (error) {
       console.error("Error during profiles recuperation", error);
@@ -22,12 +22,11 @@ export class ProfileResolver {
   @Authorized()
   @Mutation(() => Profile)
   async updateProfile(
-    @Ctx() ctx: ContextType,
-    @Arg("data") data: UpdateProfileInputDto
+    @Ctx() ctx: IContext,
+    @Arg("data") data: UpdateProfileDto
   ): Promise<Profile> {
     try {
-      const playerMode = await ProfileService.updateProfile(ctx, data);
-      return playerMode;
+      return await ctx.services.profileService.updateProfile(ctx, data);
     } catch (error: any) {
       console.error("Error while switching player mode", error);
       switch (error.message) {

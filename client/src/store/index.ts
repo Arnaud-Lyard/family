@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import { useProfileQuery } from "../graphql/generated/schema";
 import router from "../router/router";
+import { Role } from "../types/state.interface";
 
 interface State {
   username: string;
-  role: string;
+  roles: string[];
   isPlayer: boolean;
   themeLight: string;
   themeDark: string;
@@ -14,7 +15,7 @@ export const useUserStore = defineStore("user", {
   state: (): State => {
     return {
       username: JSON.parse(localStorage.getItem("user")!),
-      role: JSON.parse(localStorage.getItem("role")!),
+      roles: JSON.parse(localStorage.getItem("role")!),
       themeLight: JSON.parse(localStorage.getItem("light-theme")!),
       themeDark: JSON.parse(localStorage.getItem("dark-theme")!),
       isPlayer: JSON.parse(localStorage.getItem("is-player")!),
@@ -26,10 +27,12 @@ export const useUserStore = defineStore("user", {
       return state.username ? true : false;
     },
     getIsAdmin: (state) => {
-      return state.role === "admin" ? true : false;
+      return state.roles ?? false ? state.roles.includes(Role.ADMIN) : true;
     },
     getIsSuperAdmin: (state) => {
-      return state.role === "superadmin" ? true : false;
+      return state.roles ?? false
+        ? state.roles.includes(Role.SUPERADMIN)
+        : true;
     },
     getIsPlayer: (state) => {
       return state.isPlayer;
@@ -46,10 +49,10 @@ export const useUserStore = defineStore("user", {
       const { onResult } = useProfileQuery();
       onResult(({ data }) => {
         this.username = data.profile.username;
-        this.role = data.profile.role;
+        this.roles = data.profile.roles;
         this.isPlayer = data.profile.profile.isPlayer ? true : false;
         localStorage.setItem("user", JSON.stringify(this.username));
-        localStorage.setItem("role", JSON.stringify(this.role));
+        localStorage.setItem("role", JSON.stringify(this.roles));
         localStorage.setItem("is-player", JSON.stringify(this.isPlayer));
         router.push({ name: "dashboard" });
       });

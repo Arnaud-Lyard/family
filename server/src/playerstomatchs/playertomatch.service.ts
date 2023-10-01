@@ -1,13 +1,19 @@
-import { ContextType } from "..";
-import { UserRepository } from "../users/user.repository";
+import { User } from "../users/entities/user.entity";
+import { IContext } from "../utils/interfaces/context.interface";
 import { PlayerToMatch } from "./entities/playertomatch.entity";
-import { PlayerToMatchRepository } from "./playertomatch.repository";
+import { EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 
 export class PlayerToMatchService {
-  static async checkIfNewMatch(ctx: ContextType): Promise<boolean> {
+  constructor(
+    private readonly playerToMatchRepository: EntityRepository<PlayerToMatch>,
+    private readonly userRepository: EntityRepository<User>,
+    private readonly orm: MikroORM
+  ) {}
+
+  async checkIfNewMatch(ctx: IContext): Promise<boolean> {
     try {
-      const user = await UserRepository.getUserById(ctx.currentUser!.id);
-      const userToMatch = await PlayerToMatchRepository.checkIfNewMatch(
+      const user = await this.userRepository.findOneOrFail(ctx.currentUser!.id);
+      const userToMatch = await this.playerToMatchRepository.find(
         user.player.id
       );
       if (userToMatch.length > 0) return true;

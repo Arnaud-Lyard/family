@@ -22,12 +22,12 @@ export class UpdateArticleInputDto {
   @Field()
   content: string;
 }
-export interface ArticleToBeCreated {
+export interface SaveArticle {
   userId: string;
   title: string;
   content: string;
 }
 
-export interface ArticleToBeUpdated extends ArticleToBeCreated {
+export interface ArticleToBeUpdated extends SaveArticle {
   id: string;
 }

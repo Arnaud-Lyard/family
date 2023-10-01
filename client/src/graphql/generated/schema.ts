@@ -14,7 +14,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  DateTime: any;
+  DateTimeISO: any;
 };
 
 export type Article = {
@@ -31,9 +31,10 @@ export type GetArticleInputDto = {
 
 export type Match = {
   __typename?: 'Match';
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTimeISO'];
   id: Scalars['String'];
-  plannedDate: Scalars['DateTime'];
+  plannedDate: Scalars['DateTimeISO'];
+  status: Scalars['String'];
 };
 
 export type Mutation = {
@@ -41,7 +42,7 @@ export type Mutation = {
   generateMatch: Match;
   login: Scalars['String'];
   logout: Scalars['String'];
-  register: UserLoggedIn;
+  register: UserRegistered;
   saveArticle: Article;
   toggleAdminRole: UserInformations;
   updateArticle: Article;
@@ -80,7 +81,7 @@ export type MutationUpdateArticleArgs = {
 
 
 export type MutationUpdateProfileArgs = {
-  data: UpdateProfileInputDto;
+  data: UpdateProfileDto;
 };
 
 export type Player = {
@@ -109,7 +110,7 @@ export type PromoteUserInputDto = {
 
 export type Query = {
   __typename?: 'Query';
-  articles: Array<Article>;
+  checkIfNewMatch: Scalars['Boolean'];
   getAdminArticles: Array<Article>;
   getAllAdminUsers: Array<UserAdminList>;
   getAllArticles: Array<Article>;
@@ -136,13 +137,18 @@ export type SaveArticleInputDto = {
   title: Scalars['String'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  messageSent: Scalars['Boolean'];
+};
+
 export type UpdateArticleInputDto = {
   content: Scalars['String'];
   id: Scalars['String'];
   title: Scalars['String'];
 };
 
-export type UpdateProfileInputDto = {
+export type UpdateProfileDto = {
   battletag: Scalars['String'];
   email: Scalars['String'];
   isPlayer: Scalars['Boolean'];
@@ -151,19 +157,18 @@ export type UpdateProfileInputDto = {
 
 export type User = {
   __typename?: 'User';
-  articles: Array<Article>;
   email: Scalars['String'];
   id: Scalars['String'];
   player: Player;
   profile: Profile;
-  role: Scalars['String'];
+  roles: Array<Scalars['String']>;
   username: Scalars['String'];
 };
 
 export type UserAdminList = {
   __typename?: 'UserAdminList';
   id: Scalars['String'];
-  role: Scalars['String'];
+  roles: Array<Scalars['String']>;
   username: Scalars['String'];
 };
 
@@ -178,7 +183,7 @@ export type UserInformations = {
 export type UserLoggedIn = {
   __typename?: 'UserLoggedIn';
   profile: Profile;
-  role: Scalars['String'];
+  roles: Array<Scalars['String']>;
   username: Scalars['String'];
 };
 
@@ -193,13 +198,19 @@ export type UserRegisterInputDto = {
   username: Scalars['String'];
 };
 
+export type UserRegistered = {
+  __typename?: 'UserRegistered';
+  email: Scalars['String'];
+  username: Scalars['String'];
+};
+
 export type GenerateMatchInputDto = {
-  date: Scalars['DateTime'];
+  date: Scalars['DateTimeISO'];
   opponentId: Scalars['String'];
 };
 
 export type UpdateProfileMutationVariables = Exact<{
-  data: UpdateProfileInputDto;
+  data: UpdateProfileDto;
 }>;
 
 
@@ -230,7 +241,7 @@ export type GetAllPlayersQuery = { __typename?: 'Query', getAllPlayers: Array<{ 
 export type GetAllAdminUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllAdminUsersQuery = { __typename?: 'Query', getAllAdminUsers: Array<{ __typename?: 'UserAdminList', id: string, username: string, role: string }> };
+export type GetAllAdminUsersQuery = { __typename?: 'Query', getAllAdminUsers: Array<{ __typename?: 'UserAdminList', id: string, username: string, roles: Array<string> }> };
 
 export type GetArticleByIdForAdminQueryVariables = Exact<{
   data: GetArticleInputDto;
@@ -266,14 +277,14 @@ export type PersonnalInformationsQuery = { __typename?: 'Query', personnalInform
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserLoggedIn', username: string, role: string, profile: { __typename?: 'Profile', isPlayer: boolean } } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserLoggedIn', username: string, roles: Array<string>, profile: { __typename?: 'Profile', isPlayer: boolean } } };
 
 export type RegisterMutationVariables = Exact<{
   data: UserRegisterInputDto;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserLoggedIn', username: string } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserRegistered', username: string } };
 
 export type SaveArticleMutationVariables = Exact<{
   data: SaveArticleInputDto;
@@ -298,7 +309,7 @@ export type UpdateArticleMutation = { __typename?: 'Mutation', updateArticle: { 
 
 
 export const UpdateProfileDocument = gql`
-    mutation UpdateProfile($data: UpdateProfileInputDto!) {
+    mutation UpdateProfile($data: UpdateProfileDto!) {
   updateProfile(data: $data) {
     isPlayer
   }
@@ -456,7 +467,7 @@ export const GetAllAdminUsersDocument = gql`
   getAllAdminUsers {
     id
     username
-    role
+    roles
   }
 }
     `;
@@ -633,7 +644,7 @@ export const ProfileDocument = gql`
     query Profile {
   profile {
     username
-    role
+    roles
     profile {
       isPlayer
     }

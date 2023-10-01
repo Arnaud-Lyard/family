@@ -1,4 +1,4 @@
-mutation UpdateProfile($data: UpdateProfileInputDto!) {
+mutation UpdateProfile($data: UpdateProfileDto!) {
   updateProfile(data: $data) {
     isPlayer
   }
