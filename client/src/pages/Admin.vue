@@ -87,7 +87,7 @@ onResult(({ data }) => {
   }
 });
 
-function changeArticle(id: number) {
+function changeArticle(id: string) {
   isArticleExist.value = true;
   const { onResult } = useGetArticleByIdForAdminQuery({
     data: {
