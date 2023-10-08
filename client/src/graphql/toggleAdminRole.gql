@@ -1,0 +1,5 @@
+mutation ToggleAdminRole($data: PromoteUserInputDto!) {
+  toggleAdminRole(data: $data) {
+    username
+  }
+}

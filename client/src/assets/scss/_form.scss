@@ -1,14 +1,15 @@
 .side-form {
   min-width: 600px;
-  height: 100%;
+  height: calc(100vh - 76px);
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 10px;
+  margin-top: 76px;
   @media screen and (max-width: $xlg) {
     display: none;
   }
 }
-.login {
+.form {
   display: flex;
   flex-wrap: wrap;
   width: 600px;
@@ -18,7 +19,6 @@
     width: 100%;
     font-size: $nm;
     font-family: "Titillium Web Bold";
-    color: $black;
   }
   input {
     width: 100%;
@@ -50,6 +50,7 @@
   button {
     width: 100%;
     margin-top: $space-md;
+    margin-bottom: $space-xs;
   }
 }
 

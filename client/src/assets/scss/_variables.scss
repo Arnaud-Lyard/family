@@ -1,12 +1,46 @@
+$themes: (
+  light: (
+    primary: #247ba0,
+    secondary: #70c1b3,
+    tertiary: #b2dbbf,
+    black: #2e2f35,
+    white: #fff,
+    light: #f3f3f3,
+    red: #ff1654,
+    border-grey: rgb(216, 218, 232),
+    grey-light: rgb(149, 157, 175),
+  ),
+  dark: (
+    primary: #b2dbbf,
+    secondary: #70c1b3,
+    tertiary: #247ba0,
+    black: #fff,
+    white: #2e2f35,
+    light: #1d1e22,
+    red: #ff1654,
+    border-grey: rgb(216, 218, 232),
+    grey-light: rgb(149, 157, 175),
+  ),
+);
+$black: #2e2f35;
+$white: #fff;
 $primary: #247ba0;
 $secondary: #70c1b3;
 $tertiary: #b2dbbf;
-
-$black: #2e2f35;
-$white: #fff;
-
+$red: #ff1654;
 $border-grey: rgb(216, 218, 232);
 $grey-light: rgb(149, 157, 175);
+
+$--color-primary: #247ba0;
+$--color-secondary: #70c1b3;
+$--color-tertiary: #b2dbbf;
+$--color-black: #2e2f35;
+$--color-white: #fff;
+$--color-light: #f3f3f3;
+$--color-red: #ff1654;
+$--color-border-grey: rgb(216, 218, 232);
+$--color-grey-light: rgb(149, 157, 175);
+$--color-primary-light: #247ba0d5;
 
 /* font size */
 $xxl: 2em;

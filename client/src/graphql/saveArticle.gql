@@ -1,0 +1,6 @@
+mutation SaveArticle($data: SaveArticleInputDto!) {
+  saveArticle(data: $data) {
+    title
+    content
+  }
+}

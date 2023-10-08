@@ -1,5 +1,4 @@
 import { argon2id, hash, verify } from "argon2";
-import User from "../users/entities/user.entity";
 
 export class AuthService {
   static hashingOptions = {
@@ -16,9 +15,4 @@ export class AuthService {
     hashedPassword: string
   ): Promise<boolean> =>
     await verify(hashedPassword, plainPassword, this.hashingOptions);
-
-  static getSafeAttributes = (user: User): User => ({
-    ...user,
-    hashedPassword: undefined,
-  });
 }

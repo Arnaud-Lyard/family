@@ -33,3 +33,36 @@
     cursor: not-allowed;
   }
 }
+.button-grey {
+  color: #fff;
+  text-align: center;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  background-color: $grey-light;
+  border: 2px solid $black;
+  border-radius: 15px;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 50px;
+  font-size: $nm;
+  font-weight: 700;
+  line-height: 20px;
+  transition: all 0.2s;
+  box-shadow: 3px 3px #2e2f35;
+  cursor: pointer;
+  font-family: "Titillium Web Black";
+
+  &:hover {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 #2e2f35;
+  }
+
+  &:visited {
+    color: $white;
+  }
+
+  &:disabled {
+    background-color: $grey-light;
+    cursor: not-allowed;
+  }
+}

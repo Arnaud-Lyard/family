@@ -1,7 +1,5 @@
-mutation Register($data: UserInputDto!) {
+mutation Register($data: UserRegisterInputDto!) {
   register(data: $data) {
-    id
-    email
-    role
+    username
   }
 }

@@ -5,6 +5,7 @@ import router from "./router/router";
 import {
   ApolloClient,
   createHttpLink,
+  DefaultOptions,
   InMemoryCache,
 } from "@apollo/client/core";
 import { createPinia } from "pinia";
@@ -25,13 +26,19 @@ import {
   faLock,
   faFileLines,
   faUpRightFromSquare,
+  faLightbulb,
+  faBoltLightning,
+  faPen,
+  faFloppyDisk,
+  faArrowUp,
+  faArrowDown,
+  faComments,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   DefaultApolloClient,
   provideApolloClient,
 } from "@vue/apollo-composable";
-import { useUserStore } from "./store";
 
 library.add(
   faCode,
@@ -48,7 +55,14 @@ library.add(
   faLock,
   faGithub,
   faFileLines,
-  faUpRightFromSquare
+  faUpRightFromSquare,
+  faLightbulb,
+  faBoltLightning,
+  faPen,
+  faFloppyDisk,
+  faArrowUp,
+  faArrowDown,
+  faComments
 );
 const pinia = createPinia();
 
@@ -57,19 +71,25 @@ const httpLink = createHttpLink({
   credentials: "include",
 });
 
-const cache = new InMemoryCache();
+const defaultOptions: DefaultOptions = {
+  watchQuery: {
+    fetchPolicy: "no-cache",
+    errorPolicy: "ignore",
+  },
+  query: {
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  },
+  mutate: {
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  },
+};
 
 const apolloClient = new ApolloClient({
   link: httpLink,
-  cache,
-  defaultOptions: {
-    query: {
-      errorPolicy: "ignore",
-    },
-    mutate: {
-      errorPolicy: "ignore",
-    },
-  },
+  cache: new InMemoryCache(),
+  defaultOptions: defaultOptions,
 });
 
 provideApolloClient(apolloClient);
@@ -82,11 +102,7 @@ const app = createApp({
   render: () => h(App),
 });
 
-app
-  .component("font-awesome-icon", FontAwesomeIcon)
-  .use(router)
-  .use(pinia)
-  .mount("#app");
-
-const userStore = useUserStore();
-userStore.userProfile();
+app.component("font-awesome-icon", FontAwesomeIcon);
+app.use(pinia);
+app.use(router);
+app.mount("#app");

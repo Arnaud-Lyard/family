@@ -1,0 +1,26 @@
+.button-center {
+  margin-top: 10px;
+}
+.admin {
+  padding-top: 76px;
+  label {
+    width: 100%;
+    font-size: $nm;
+    font-family: "Titillium Web Bold";
+    color: $black;
+  }
+  .editor-bloc {
+    width: 60%;
+
+    .form {
+      justify-content: center;
+      width: 100%;
+      padding: 0;
+    }
+    .button {
+      width: 45%;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
+}

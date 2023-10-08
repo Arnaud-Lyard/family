@@ -1,7 +1,9 @@
 query Profile {
   profile {
-    id
-    email
-    role
+    username
+    roles
+    profile {
+      isPlayer
+    }
   }
 }

@@ -1,11 +1,13 @@
 <template>
-    <div>
-        <p class="bold xxl">Home</p>
-        <h1>Titre</h1>
-        <h2>Titre</h2>
-        <h3>Titre</h3>
-        <h4>Titre</h4>
+    <div :class="drawerActive" class="container flex flex-justify-center">
+        <Blog />
+        <LeaderBoard />
     </div>
 </template>
 <script setup lang="ts">
+import { useDrawerActive } from '../composables/drawerActive';
+import Blog from '../components/Blog.vue';
+import LeaderBoard from '../components/LeaderBoard.vue';
+
+const { drawerActive } = useDrawerActive();
 </script>

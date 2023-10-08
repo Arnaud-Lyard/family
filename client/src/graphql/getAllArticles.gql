@@ -1,0 +1,10 @@
+query GetAllArticles {
+  getAllArticles {
+    id
+    title
+    content
+    user {
+      username
+    }
+  }
+}

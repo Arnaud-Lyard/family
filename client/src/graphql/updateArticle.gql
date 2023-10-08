@@ -1,0 +1,7 @@
+mutation UpdateArticle($data: UpdateArticleInputDto!) {
+  updateArticle(data: $data) {
+    id
+    title
+    content
+  }
+}

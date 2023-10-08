@@ -1,0 +1,11 @@
+query GetAllPlayers {
+  getAllPlayers {
+    rank
+    id
+    victory
+    defeat
+    profile {
+      battletag
+    }
+  }
+}

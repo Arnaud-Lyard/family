@@ -1,0 +1,96 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: #ffffff;
+  box-shadow: 2px 2px 20px 1px;
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  width: 50%;
+}
+
+.modal-header,
+.modal-footer {
+  padding: 15px;
+  display: flex;
+  font-family: "Titillium Web Bold";
+}
+
+.modal-header {
+  border-bottom: 1px solid rgb(227, 231, 233);
+  color: $primary;
+  justify-content: center;
+}
+
+.modal-footer {
+  border-top: 1px solid rgb(227, 231, 233);
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 10px;
+  font-family: "Titillium Web Regular";
+  justify-content: center;
+
+  label {
+    width: 100%;
+    text-align: center;
+    font-size: $nm;
+    font-family: "Titillium Web Bold";
+  }
+  input {
+    width: 50%;
+    margin-bottom: $space-xs;
+    font-size: $nm;
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    text-align: left;
+    border: 1px solid $border-grey;
+    border-radius: 5px;
+    padding: 8px 8px 8px 8px;
+    font-family: "Titillium Web Regular";
+    overflow: hidden;
+    color: $primary;
+
+    &::placeholder {
+      font-size: 1em;
+    }
+
+    &[value] {
+      font-size: 1em;
+      font-family: Avenir-Book;
+      color: $grey-light;
+    }
+  }
+}
+
+.btn-open-modal {
+  margin: 20px auto;
+  width: 30%;
+}
+
+.modal-fade-enter,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
