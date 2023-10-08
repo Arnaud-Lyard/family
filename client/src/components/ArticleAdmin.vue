@@ -18,7 +18,7 @@ const props = defineProps<{
   articlesList: ArticleRegistered[]
 }>()
 const emit = defineEmits<{
-  selectArticle: [id: number],
+  selectArticle: [id: string],
   updateArticle: [article: ArticleRegistered]
 }>()
 </script>
