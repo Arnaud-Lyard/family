@@ -5,10 +5,9 @@ import { Profile } from "./profiles/entities/profile.entity";
 import { Player } from "./players/entities/player.entity";
 import { Match } from "./matchs/entities/match.entity";
 import { PlayerToMatch } from "./playerstomatchs/entities/playertomatch.entity";
-import { MikroORM } from "@mikro-orm/postgresql";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { Options } from "@mikro-orm/core";
-export const ormConfig = {
+const ormConfig = {
   migrations: {
     path: "./src/migrations",
     tableName: "migrations",
@@ -23,3 +22,5 @@ export const ormConfig = {
   entities: [User, Article, Profile, Player, Match, PlayerToMatch],
   driver: PostgreSqlDriver,
 } as Options<PostgreSqlDriver>;
+
+export default ormConfig;

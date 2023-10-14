@@ -10,7 +10,7 @@ import { UserResolver } from "./users/user.resolver";
 import { User } from "./users/entities/user.entity";
 import { envConfig } from "./config/config";
 import cookie from "cookie";
-import { ormConfig } from "./database";
+import ormConfig from "./database";
 import { ArticleResolver } from "./articles/article.resolver";
 import { ProfileResolver } from "./profiles/profile.resolver";
 import { PlayerResolver } from "./players/player.resolver";
