@@ -1,10 +1,10 @@
 .side-form {
   min-width: 600px;
-  height: calc(100vh - 76px);
+  height: calc(100vh - 106px);
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 10px;
-  margin-top: 76px;
+  margin-top: 106px;
   @media screen and (max-width: $xlg) {
     display: none;
   }
