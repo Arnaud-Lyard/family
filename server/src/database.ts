@@ -9,7 +9,8 @@ import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { Options } from "@mikro-orm/core";
 const ormConfig = {
   migrations: {
-    path: "./src/migrations",
+    path: "dist/migrations",
+    pathTs: "src/migrations",
     tableName: "migrations",
     transactional: true,
   },
