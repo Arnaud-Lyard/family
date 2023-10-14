@@ -3,7 +3,9 @@ import { useUserStore } from "../store";
 
 export function usePreferenceActive() {
   const userStore = useUserStore();
-  const isLightTheme = ref(userStore.getIsLightTheme ? true : false);
+  const isLightTheme = ref(
+    userStore.getIsLightTheme ? true : userStore.getIsDarkTheme ? false : true
+  );
   const isDarkTheme = ref(userStore.getIsDarkTheme ? true : false);
 
   function enableLightTheme() {
