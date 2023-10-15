@@ -3,7 +3,10 @@
   flex-direction: column;
   align-items: center;
   margin-top: 106px;
-  width: 33%;
+  min-width: 400px;
+  @media screen and (max-width: $lg) {
+    width: 100%;
+  }
 }
 
 .leaderboard-table {

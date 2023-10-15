@@ -5,7 +5,9 @@
   width: 60%;
   margin-top: 106px;
   font-family: "Titillium Web Regular";
-
+  @media screen and (max-width: $lg) {
+    width: 100%;
+  }
   .blogElement {
     border: 2px solid $--color-primary;
     border-radius: 5px;
