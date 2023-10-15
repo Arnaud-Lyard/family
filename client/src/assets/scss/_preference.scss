@@ -6,6 +6,9 @@
   ul {
     margin-top: 106px;
     list-style-type: none;
+    @media screen and (max-width: $lg) {
+      margin-top: 212px;
+    }
     li {
       cursor: pointer;
       text-align: center;

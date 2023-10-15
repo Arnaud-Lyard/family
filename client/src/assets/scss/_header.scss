@@ -14,11 +14,33 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
+    @media screen and (max-width: $lg) {
+      flex-direction: column;
+      min-height: 28px;
+    }
 
     .navigation,
     .usernavigation {
       display: flex;
       align-items: center;
+      @media screen and (max-width: $lg) {
+        display: block;
+      }
+    }
+    .closed {
+      @media screen and (max-width: $lg) {
+        display: none;
+      }
+    }
+    i {
+      display: none;
+      @media screen and (max-width: $lg) {
+        cursor: pointer;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        display: block;
+      }
     }
     li {
       list-style: none;
@@ -41,12 +63,21 @@
           left: 0;
           transform: scaleX(0);
           transition: transform 0.3s ease;
+          @media screen and (max-width: $lg) {
+            display: none;
+          }
         }
         &:hover::after {
           transform: scaleX(1);
+          @media screen and (max-width: $lg) {
+            transform: none;
+          }
         }
         &.router-link-active::after {
           transform: scaleX(1);
+          @media screen and (max-width: $lg) {
+            transform: none;
+          }
         }
       }
       button,
