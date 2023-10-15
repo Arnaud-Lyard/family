@@ -3,7 +3,7 @@
     <nav>
       <ul class="navigation">
         <li>
-          <img src="/images/relaxing-hippoquests.jpeg" alt="Logo">
+          <img src="/images/relaxing-hippoquests.png" alt="Logo">
         </li>
         <li>
           <RouterLink :to="{ name: 'home' }">Home</RouterLink>
