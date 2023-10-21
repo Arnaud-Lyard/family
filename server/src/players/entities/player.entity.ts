@@ -36,7 +36,8 @@ export class Player {
   @OneToOne(() => Profile, (profile) => profile.player)
   @Field(() => Profile)
   profile!: Profile;
-  @ManyToMany({ entity: () => Match, mappedBy: (m) => m.players })
+  @Field(() => [Match])
+  @ManyToMany(() => Match, (m) => m.players)
   matchs = new Collection<Match>(this);
   constructor(
     rank: number = 1000,

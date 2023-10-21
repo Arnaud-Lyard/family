@@ -5,6 +5,7 @@ import {
   Mutation,
   PubSub,
   PubSubEngine,
+  Query,
   Root,
   Subscription,
 } from "type-graphql";
@@ -29,12 +30,12 @@ export class MatchResolver {
   ): Promise<Match> {
     try {
       const match = await ctx.services.matchService.generateMatch(ctx, data);
-      // const user = await ctx.services.matchService.getUserByPlayerId(
-      //   data.opponentId,
-      //   ctx
-      // );
-      // const subPayload = { id: user.id, isNewMatch: true };
-      // await pubSub.publish("NEW_MATCH", subPayload);
+      const user = await ctx.services.matchService.getUserByPlayerId(
+        data.opponentId,
+        ctx
+      );
+      const subPayload = { id: user.id, isNewMatch: true };
+      await pubSub.publish("NEW_MATCH", subPayload);
       return match;
     } catch (error: any) {
       console.error("Error during match generation", error);
@@ -62,5 +63,17 @@ export class MatchResolver {
   })
   messageSent(@Root() subPayload: ISubscriptionPayload): Boolean {
     return subPayload.isNewMatch;
+  }
+
+  @Authorized()
+  @Query(() => [Match])
+  async getWaitingMatchs(@Ctx() ctx: IContext): Promise<Match[]> {
+    try {
+      const matchs = await ctx.services.matchService.getWaitingMatchs(ctx);
+      return matchs;
+    } catch (error: any) {
+      console.error("Error during getting waiting matchs", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
   }
 }

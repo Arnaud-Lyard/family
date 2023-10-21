@@ -36,7 +36,6 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { ProfileService } from "./profiles/profile.service";
 import { MatchService } from "./matchs/match.service";
 export class Application {
-  private readonly userRepository: EntityRepository<User>;
   public orm: MikroORM<IDatabaseDriver<Connection>>;
   public host: express.Application;
   public server: ApolloServer<IContext>;
@@ -159,7 +158,9 @@ export class Application {
           if (typeof decoded !== "object") return false;
           const id = decoded.userId;
 
-          const currentUser = await this.userRepository.findOne({ id });
+          const em = this.orm.em.fork();
+          const currentUser = await em.findOne(User, { id });
+
           if (currentUser === null) return false;
           return { currentUser };
         }

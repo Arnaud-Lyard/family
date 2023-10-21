@@ -34,6 +34,7 @@ export class Match {
   @Field()
   createdAt: Date = new Date();
 
+  @Field(() => [Player])
   @ManyToMany({ entity: () => Player, pivotEntity: () => PlayerToMatch })
   players = new Collection<Player>(this);
 
