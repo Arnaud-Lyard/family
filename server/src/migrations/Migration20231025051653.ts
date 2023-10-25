@@ -1,6 +1,6 @@
 import { Migration } from "@mikro-orm/migrations";
 
-export class Migration20231021091053 extends Migration {
+export class Migration20231025051653 extends Migration {
   async up(): Promise<void> {
     this.addSql('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
 
@@ -13,7 +13,7 @@ export class Migration20231021091053 extends Migration {
     );
 
     this.addSql(
-      'create table "player_to_match" ("id" uuid not null default uuid_generate_v4(), "player_id" uuid not null, "match_id" uuid not null, "league" text check ("league" in (\'bronze\', \'silver\', \'gold\')) not null default \'bronze\', constraint "player_to_match_pkey" primary key ("id", "player_id", "match_id"));'
+      'create table "match_players" ("match_id" uuid not null, "player_id" uuid not null, constraint "match_players_pkey" primary key ("match_id", "player_id"));'
     );
 
     this.addSql(
@@ -47,10 +47,10 @@ export class Migration20231021091053 extends Migration {
     );
 
     this.addSql(
-      'alter table "player_to_match" add constraint "player_to_match_player_id_foreign" foreign key ("player_id") references "player" ("id") on update cascade;'
+      'alter table "match_players" add constraint "match_players_match_id_foreign" foreign key ("match_id") references "match" ("id") on update cascade on delete cascade;'
     );
     this.addSql(
-      'alter table "player_to_match" add constraint "player_to_match_match_id_foreign" foreign key ("match_id") references "match" ("id") on update cascade;'
+      'alter table "match_players" add constraint "match_players_player_id_foreign" foreign key ("player_id") references "player" ("id") on update cascade on delete cascade;'
     );
 
     this.addSql(

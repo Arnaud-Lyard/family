@@ -1,7 +1,6 @@
 import { Field, ObjectType } from "type-graphql";
 import { User } from "../../users/entities/user.entity";
 import { Profile } from "../../profiles/entities/profile.entity";
-import { PlayerToMatch } from "../../playerstomatchs/entities/playertomatch.entity";
 import {
   Collection,
   Entity,
@@ -11,6 +10,7 @@ import {
   Property,
 } from "@mikro-orm/core";
 import { Match } from "../../matchs/entities/match.entity";
+import { match } from "assert";
 
 @Entity()
 @ObjectType()
@@ -37,7 +37,7 @@ export class Player {
   @Field(() => Profile)
   profile!: Profile;
   @Field(() => [Match])
-  @ManyToMany(() => Match, (m) => m.players)
+  @ManyToMany(() => Match, (match) => match.players)
   matchs = new Collection<Match>(this);
   constructor(
     rank: number = 1000,

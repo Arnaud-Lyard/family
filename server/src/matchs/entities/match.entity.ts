@@ -1,6 +1,5 @@
 import { Field, ObjectType } from "type-graphql";
 
-import { PlayerToMatch } from "../../playerstomatchs/entities/playertomatch.entity";
 import {
   Collection,
   Entity,
@@ -35,7 +34,7 @@ export class Match {
   createdAt: Date = new Date();
 
   @Field(() => [Player])
-  @ManyToMany({ entity: () => Player, pivotEntity: () => PlayerToMatch })
+  @ManyToMany(() => Player, "matchs", { owner: true })
   players = new Collection<Player>(this);
 
   constructor(status: Status = Status.PENDING, plannedDate: Date) {

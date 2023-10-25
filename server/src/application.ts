@@ -15,7 +15,6 @@ import { ArticleResolver } from "./articles/article.resolver";
 import { ProfileResolver } from "./profiles/profile.resolver";
 import { PlayerResolver } from "./players/player.resolver";
 import { MatchResolver } from "./matchs/match.resolver";
-import { PlayerToMatchResolver } from "./playerstomatchs/playertomatch.resolver";
 import { WebSocketServer } from "ws";
 import { Extra, useServer } from "graphql-ws/lib/use/ws";
 import { Context, SubscribeMessage } from "graphql-ws";
@@ -66,7 +65,6 @@ export class Application {
           ProfileResolver,
           PlayerResolver,
           MatchResolver,
-          PlayerToMatchResolver,
         ],
         validate: true,
         authChecker: CustomAuthChecker,
