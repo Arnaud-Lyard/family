@@ -4,7 +4,6 @@ import { Article } from "./articles/entities/article.entity";
 import { Profile } from "./profiles/entities/profile.entity";
 import { Player } from "./players/entities/player.entity";
 import { Match } from "./matchs/entities/match.entity";
-import { PlayerToMatch } from "./playerstomatchs/entities/playertomatch.entity";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { Options } from "@mikro-orm/core";
 const ormConfig = {
@@ -20,7 +19,7 @@ const ormConfig = {
   host: envConfig.DB_HOST,
   port: envConfig.DB_PORT,
   type: "postgresql",
-  entities: [User, Article, Profile, Player, Match, PlayerToMatch],
+  entities: [User, Article, Profile, Player, Match],
   driver: PostgreSqlDriver,
 } as Options<PostgreSqlDriver>;
 

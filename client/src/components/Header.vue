@@ -18,6 +18,9 @@
         </li>
       </ul>
       <ul class="usernavigation" :class="toggleMenuCss">
+        <li v-if="isLoggedIn">
+          <RouterLink :to="{ name: 'match' }">Match</RouterLink>
+        </li>
         <li>
           <span>Settings</span>
           <label for="settings" class="switch">

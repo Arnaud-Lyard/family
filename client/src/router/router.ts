@@ -9,6 +9,7 @@ import Admin from "../pages/Admin.vue";
 import SuperAdmin from "../pages/SuperAdmin.vue";
 import Article from "../pages/Article.vue";
 import Player from "../pages/Player.vue";
+import Match from "../pages/Match.vue";
 
 const routes = [
   { path: "/", component: Home, name: "home" },
@@ -40,6 +41,12 @@ const routes = [
     path: "/player/:id",
     component: Player,
     name: "player",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/match",
+    component: Match,
+    name: "match",
     meta: { requiresAuth: true },
   },
   { path: "/login", component: Login, name: "login" },

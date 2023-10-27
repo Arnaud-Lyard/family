@@ -27,10 +27,11 @@
     "cli@3.2.2": "link:graphql-codegen/cli@3.2.2",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
+    "graphql-ws": "^5.14.1",
     "pinia": "^2.0.33",
+    "sass": "^1.64.1",
     "vue": "^3.2.47",
-    "vue-router": "^4.1.6",
-    "sass": "^1.64.1"
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",
