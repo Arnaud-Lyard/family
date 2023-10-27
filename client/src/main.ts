@@ -7,8 +7,12 @@ import {
   createHttpLink,
   DefaultOptions,
   InMemoryCache,
+  split,
 } from "@apollo/client/core";
 import { createPinia } from "pinia";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { createClient } from "graphql-ws";
+import { getMainDefinition } from "@apollo/client/utilities";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -33,6 +37,8 @@ import {
   faArrowUp,
   faArrowDown,
   faComments,
+  faBars,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -62,14 +68,35 @@ library.add(
   faFloppyDisk,
   faArrowUp,
   faArrowDown,
-  faComments
+  faComments,
+  faBars,
+  faXmark
 );
+
 const pinia = createPinia();
+
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: import.meta.env.VITE_WEBSOCKET_URL,
+  })
+);
 
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_GRAPHQL_API_URL,
   credentials: "include",
 });
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
+  },
+  wsLink,
+  httpLink
+);
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
@@ -87,7 +114,7 @@ const defaultOptions: DefaultOptions = {
 };
 
 const apolloClient = new ApolloClient({
-  link: httpLink,
+  link: splitLink,
   cache: new InMemoryCache(),
   defaultOptions: defaultOptions,
 });

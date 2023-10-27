@@ -15,7 +15,6 @@ import { ArticleResolver } from "./articles/article.resolver";
 import { ProfileResolver } from "./profiles/profile.resolver";
 import { PlayerResolver } from "./players/player.resolver";
 import { MatchResolver } from "./matchs/match.resolver";
-import { PlayerToMatchResolver } from "./playerstomatchs/playertomatch.resolver";
 import { WebSocketServer } from "ws";
 import { Extra, useServer } from "graphql-ws/lib/use/ws";
 import { Context, SubscribeMessage } from "graphql-ws";
@@ -36,7 +35,6 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { ProfileService } from "./profiles/profile.service";
 import { MatchService } from "./matchs/match.service";
 export class Application {
-  private readonly userRepository: EntityRepository<User>;
   public orm: MikroORM<IDatabaseDriver<Connection>>;
   public host: express.Application;
   public server: ApolloServer<IContext>;
@@ -67,7 +65,6 @@ export class Application {
           ProfileResolver,
           PlayerResolver,
           MatchResolver,
-          PlayerToMatchResolver,
         ],
         validate: true,
         authChecker: CustomAuthChecker,
@@ -159,7 +156,9 @@ export class Application {
           if (typeof decoded !== "object") return false;
           const id = decoded.userId;
 
-          const currentUser = await this.userRepository.findOne({ id });
+          const em = this.orm.em.fork();
+          const currentUser = await em.findOne(User, { id });
+
           if (currentUser === null) return false;
           return { currentUser };
         }

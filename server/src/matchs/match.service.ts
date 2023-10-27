@@ -49,10 +49,36 @@ export class MatchService {
   }
   async getUserByPlayerId(playerId: string, ctx: IContext): Promise<User> {
     try {
-      const user = await ctx.em.findOneOrFail(User, playerId);
+      const player = await ctx.em.findOneOrFail(
+        Player,
+        { id: playerId },
+        {
+          populate: ["user"],
+        }
+      );
+      const user = player.user;
       return user;
     } catch (error) {
       console.error("Error during user recuperation", error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+  }
+
+  async getWaitingMatchs(ctx: IContext): Promise<Match[]> {
+    try {
+      const player = ctx.currentUser!.player.id;
+      const matchs = await ctx.em.find(
+        Match,
+        { status: Status.PENDING, players: { id: player } },
+
+        {
+          populate: ["players"],
+        }
+      );
+      console.log(matchs);
+      return matchs;
+    } catch (error) {
+      console.error("Error during waiting matchs recuperation", error);
       throw new Error("INTERNAL_SERVER_ERROR");
     }
   }

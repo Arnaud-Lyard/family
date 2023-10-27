@@ -1,15 +1,26 @@
 <template>
   <header class="header">
     <nav>
-      <ul class="navigation">
+      <i v-if="!isMobileMenuActive" @click="toggleMenu()">
+        <font-awesome-icon icon="fa-bars" />
+
+      </i>
+      <i v-if="isMobileMenuActive" @click="toggleMenu()">
+        <font-awesome-icon icon="fa-xmark" />
+
+      </i>
+      <ul class="navigation" :class="toggleMenuCss">
         <li>
-          <img src="/images/relaxing-hippoquests.jpeg" alt="Logo">
+          <img src="/images/relaxing-hippoquests.png" alt="Logo">
         </li>
         <li>
           <RouterLink :to="{ name: 'home' }">Home</RouterLink>
         </li>
       </ul>
-      <ul class="usernavigation">
+      <ul class="usernavigation" :class="toggleMenuCss">
+        <li v-if="isLoggedIn">
+          <RouterLink :to="{ name: 'match' }">Match</RouterLink>
+        </li>
         <li>
           <span>Settings</span>
           <label for="settings" class="switch">
@@ -40,7 +51,7 @@
   </header>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useUserStore } from '../store';
 import { useDrawerActive } from '../composables/drawerActive';
 
@@ -57,5 +68,13 @@ const isSuperAdmin = computed(() => {
   return userStore.getIsSuperAdmin;
 })
 
+const isMobileMenuActive = ref(false);
+function toggleMenu() {
+  isMobileMenuActive.value = !isMobileMenuActive.value;
+}
+const toggleMenuCss = computed(() => ({
+  open: isMobileMenuActive.value,
+  closed: !isMobileMenuActive.value
+}))
 const { togglePreference } = useDrawerActive();
 </script>

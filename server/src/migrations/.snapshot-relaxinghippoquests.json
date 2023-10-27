@@ -38,7 +38,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "mappedType": "datetime"
         },
         "created_at": {
@@ -48,7 +48,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "mappedType": "datetime"
         }
       },
@@ -139,14 +139,13 @@
     },
     {
       "columns": {
-        "id": {
-          "name": "id",
+        "match_id": {
+          "name": "match_id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "default": "uuid_generate_v4()",
           "mappedType": "uuid"
         },
         "player_id": {
@@ -157,41 +156,16 @@
           "primary": false,
           "nullable": false,
           "mappedType": "uuid"
-        },
-        "match_id": {
-          "name": "match_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "league": {
-          "name": "league",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "'bronze'",
-          "enumItems": [
-            "bronze",
-            "silver",
-            "gold"
-          ],
-          "mappedType": "enum"
         }
       },
-      "name": "player_to_match",
+      "name": "match_players",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "player_to_match_pkey",
+          "keyName": "match_players_pkey",
           "columnNames": [
-            "id",
-            "player_id",
-            "match_id"
+            "match_id",
+            "player_id"
           ],
           "composite": true,
           "primary": true,
@@ -200,28 +174,30 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "player_to_match_player_id_foreign": {
-          "constraintName": "player_to_match_player_id_foreign",
-          "columnNames": [
-            "player_id"
-          ],
-          "localTableName": "public.player_to_match",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.player",
-          "updateRule": "cascade"
-        },
-        "player_to_match_match_id_foreign": {
-          "constraintName": "player_to_match_match_id_foreign",
+        "match_players_match_id_foreign": {
+          "constraintName": "match_players_match_id_foreign",
           "columnNames": [
             "match_id"
           ],
-          "localTableName": "public.player_to_match",
+          "localTableName": "public.match_players",
           "referencedColumnNames": [
             "id"
           ],
           "referencedTableName": "public.match",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "match_players_player_id_foreign": {
+          "constraintName": "match_players_player_id_foreign",
+          "columnNames": [
+            "player_id"
+          ],
+          "localTableName": "public.match_players",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.player",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       }

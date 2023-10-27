@@ -6,7 +6,7 @@ import { User } from "../users/entities/user.entity";
 export class PlayerService {
   async getAllPlayers(ctx: IContext): Promise<Player[]> {
     try {
-      const players = ctx.em.find(
+      const players = await ctx.em.find(
         Player,
         { profile: { isPlayer: true } },
         { populate: ["profile"] }

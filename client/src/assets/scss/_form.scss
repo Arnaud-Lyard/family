@@ -2,9 +2,9 @@
   min-width: 600px;
   height: calc(100vh - 106px);
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
+  background-position: center;
   border-radius: 10px;
-  margin-top: 106px;
   @media screen and (max-width: $xlg) {
     display: none;
   }
@@ -56,9 +56,9 @@
 
 /* login form */
 .login-background {
-  background-image: url("/images/familly.jpg");
+  background-image: url("/images/relaxing-hippoquests.png");
 }
 /* register form */
 .register-background {
-  background-image: url("/images/vue-js.png");
+  background-image: url("/images/relaxing-hippoquests.png");
 }
