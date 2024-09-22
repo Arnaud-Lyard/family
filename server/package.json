@@ -22,7 +22,7 @@
     "@mikro-orm/postgresql": "^5.8.10",
     "argon2": "^0.31.1",
     "class-validator": "^0.14.0",
-    "cookie": "^0.5.0",
+    "cookie": "^0.6.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.9",
     "dotenv": "^16.0.3",
