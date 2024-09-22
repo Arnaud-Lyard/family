@@ -1,5 +1,5 @@
 # Tournament-Manager
-Welcome to Relaxing-HippoQuests, a community platform for passionate gamers. This application allows players to connect, join rankings, propose matches, and much more.
+Welcome to Tournament-manager, a community platform for passionate gamers. This application allows players to connect, join rankings, propose matches, and much more.
 
 ## Table of Contents
 - [Installation](#installation)
